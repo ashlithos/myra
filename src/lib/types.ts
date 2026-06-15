@@ -49,3 +49,32 @@ export interface ExperiencePhoto {
 export interface TripWithExperiences extends Trip {
   experiences: Experience[];
 }
+
+export type AffinityTier = "take-me-there" | "interested" | "open";
+export const AFFINITY_TIERS: AffinityTier[] = ["take-me-there", "interested", "open"];
+
+export interface Buddy {
+  id: number;
+  userId: string;
+  name: string;
+  createdAt: string;
+}
+
+export interface Affinity {
+  id: number;
+  buddyId: number;
+  experienceId: number;
+  tier: AffinityTier;
+  updatedAt: string;
+}
+
+export interface MatrixCell {
+  buddyId: number;
+  buddyName: string;
+  tier: AffinityTier | null;
+}
+
+export interface MatrixRow {
+  experience: Experience;
+  cells: MatrixCell[];
+}

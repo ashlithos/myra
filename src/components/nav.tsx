@@ -12,6 +12,7 @@ export default function Nav() {
   const links = [
     { href: "/trips/new", label: t("nav.discover") },
     { href: "/bucket-list", label: t("nav.bucketList") },
+    { href: "/travel", label: "MATCHING" },
   ];
 
   return (
