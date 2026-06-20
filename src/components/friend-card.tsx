@@ -104,9 +104,9 @@ export default function FriendCard({
       </div>
 
       {/* Places */}
-      <div className="px-5 pb-3 flex-1">
+      <div className="px-5 pb-4 flex-1">
         {myExperiences.length === 0 ? (
-          <p className="text-xs text-[#1A1A1A]/25 text-center">No places yet</p>
+          <p className="text-xs text-[#1A1A1A]/30 text-center py-1">No places added yet</p>
         ) : (
           <div className="flex flex-wrap gap-1.5">
             {myExperiences.map((exp) => {
@@ -115,7 +115,7 @@ export default function FriendCard({
                 <button
                   key={exp.id}
                   onClick={() => onFilterChange(isMatch ? null : exp.id)}
-                  title={isMatch ? "Clear filter" : `Show all friends who want ${exp.name}`}
+                  title={isMatch ? "Clear filter" : `Show all friends who want to visit ${exp.name}`}
                   className={`group text-xs px-2.5 py-1 border transition-all flex items-center gap-1 ${
                     isMatch
                       ? "border-[#1A1A1A] bg-[#1A1A1A] text-white"
@@ -125,7 +125,8 @@ export default function FriendCard({
                   {exp.name}
                   <span
                     onClick={(e) => { e.stopPropagation(); onRemovePlace(exp.id); }}
-                    className="opacity-0 group-hover:opacity-50 hover:!opacity-100 transition-opacity leading-none"
+                    className="opacity-0 group-hover:opacity-60 hover:!opacity-100 transition-opacity leading-none"
+                    title="Remove"
                   >
                     ×
                   </span>
@@ -136,33 +137,51 @@ export default function FriendCard({
         )}
       </div>
 
-      {/* Add place */}
-      {availableToAdd.length > 0 && (
-        <div className="px-5 pb-5 relative" ref={addRef}>
-          <button
-            onClick={() => setAddOpen(!addOpen)}
-            className="text-[10px] tracking-[0.15em] uppercase text-[#1A1A1A]/30 hover:text-[#1A1A1A]/60 transition-colors"
+      {/* Add place — full-width, always visible */}
+      <div className="px-5 pb-5 relative" ref={addRef}>
+        {experiences.length === 0 ? (
+          <a
+            href="/bucket-list"
+            className="block w-full py-2 border border-dashed border-[#D4D0C8] text-xs text-center text-[#1A1A1A]/35 hover:text-[#1A1A1A]/60 hover:border-[#1A1A1A]/30 transition-colors"
           >
-            + add place
-          </button>
-          {addOpen && (
-            <div className="absolute bottom-full mb-1 left-5 z-10 bg-white border border-[#D4D0C8] shadow-md w-60 max-h-52 overflow-y-auto">
-              {availableToAdd.map((exp) => (
-                <button
-                  key={exp.id}
-                  onClick={() => { onAddPlace(exp.id); setAddOpen(false); }}
-                  className="w-full text-left px-3 py-2.5 text-sm text-[#1A1A1A]/70 hover:bg-[#F3F0EB] border-b border-[#D4D0C8] last:border-b-0 transition-colors"
-                >
-                  {exp.name}
-                  {exp.country && (
-                    <span className="text-xs text-[#1A1A1A]/35 ml-1.5">{exp.country}</span>
-                  )}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
+            Add to bucket list first →
+          </a>
+        ) : availableToAdd.length === 0 ? (
+          <p className="text-xs text-center text-[#1A1A1A]/25">All your places added ✓</p>
+        ) : (
+          <>
+            <button
+              onClick={() => setAddOpen(!addOpen)}
+              className={`w-full py-2 border border-dashed text-xs text-center transition-colors ${
+                addOpen
+                  ? "border-[#1A1A1A]/40 text-[#1A1A1A]/70 bg-[#F3F0EB]"
+                  : "border-[#D4D0C8] text-[#1A1A1A]/40 hover:border-[#1A1A1A]/30 hover:text-[#1A1A1A]/60"
+              }`}
+            >
+              + Add a place
+            </button>
+            {addOpen && (
+              <div className="absolute bottom-full mb-1 left-5 right-5 z-10 bg-white border border-[#D4D0C8] shadow-md max-h-52 overflow-y-auto">
+                <div className="px-3 py-2 border-b border-[#D4D0C8] text-[10px] tracking-[0.1em] uppercase text-[#1A1A1A]/35">
+                  From your bucket list
+                </div>
+                {availableToAdd.map((exp) => (
+                  <button
+                    key={exp.id}
+                    onClick={() => { onAddPlace(exp.id); setAddOpen(false); }}
+                    className="w-full text-left px-3 py-2.5 text-sm text-[#1A1A1A]/70 hover:bg-[#F3F0EB] border-b border-[#D4D0C8] last:border-b-0 transition-colors"
+                  >
+                    {exp.name}
+                    {exp.country && (
+                      <span className="text-xs text-[#1A1A1A]/35 ml-1.5">{exp.country}</span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 }
