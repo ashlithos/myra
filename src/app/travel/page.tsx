@@ -13,9 +13,10 @@ export default async function TravelPage() {
   try {
     session = await auth();
   } catch {}
-  const isDev = process.env.NODE_ENV === "development";
+  const isDevOrPreview =
+    process.env.NODE_ENV === "development" || process.env.VERCEL_ENV === "preview";
 
-  if (!session?.user?.id && !isDev) {
+  if (!session?.user?.id && !isDevOrPreview) {
     return <AuthGate>{null}</AuthGate>;
   }
 
