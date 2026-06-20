@@ -5,6 +5,36 @@ import { NextRequest, NextResponse } from "next/server";
 import { getUser, unauthorized } from "@/lib/get-user";
 import type { AffinityTier } from "@/lib/types";
 
+// Owner removes a single place from a friend — auth required
+export async function DELETE(request: NextRequest) {
+  const user = await getUser();
+  if (!user) return unauthorized();
+
+  const { searchParams } = new URL(request.url);
+  const buddyId = parseInt(searchParams.get("buddyId") ?? "");
+  const experienceId = parseInt(searchParams.get("experienceId") ?? "");
+
+  if (!buddyId || !experienceId) {
+    return NextResponse.json({ error: "buddyId and experienceId required" }, { status: 400 });
+  }
+
+  const buddy = await db
+    .select()
+    .from(buddies)
+    .where(and(eq(buddies.id, buddyId), eq(buddies.userId, user.id!)))
+    .limit(1);
+
+  if (buddy.length === 0) {
+    return NextResponse.json({ error: "Buddy not found" }, { status: 404 });
+  }
+
+  await db
+    .delete(affinities)
+    .where(and(eq(affinities.buddyId, buddyId), eq(affinities.experienceId, experienceId)));
+
+  return NextResponse.json({ ok: true });
+}
+
 // Ashley reads the full matrix — auth required
 export async function GET() {
   const user = await getUser();

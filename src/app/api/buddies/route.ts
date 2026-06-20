@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
 
   const result = await db
     .insert(buddies)
-    .values({ userId: user.id!, name: body.name.trim() })
+    .values({ userId: user.id!, name: body.name.trim(), emoji: body.emoji?.trim() || "🌍" })
     .returning();
 
   return NextResponse.json(result[0], { status: 201 });

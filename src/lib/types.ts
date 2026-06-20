@@ -57,6 +57,7 @@ export interface Buddy {
   id: number;
   userId: string;
   name: string;
+  emoji: string;
   createdAt: string;
 }
 

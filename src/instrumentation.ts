@@ -11,9 +11,16 @@ export async function register() {
           id integer PRIMARY KEY AUTOINCREMENT NOT NULL,
           user_id text NOT NULL,
           name text NOT NULL,
+          emoji text NOT NULL DEFAULT '🌍',
           created_at text NOT NULL
         )
       `);
+      // Add emoji column to existing tables that predate this field
+      try {
+        await client.execute(`ALTER TABLE buddies ADD COLUMN emoji text NOT NULL DEFAULT '🌍'`);
+      } catch {
+        // Column already exists — safe to ignore
+      }
       await client.execute(`
         CREATE TABLE IF NOT EXISTS affinities (
           id integer PRIMARY KEY AUTOINCREMENT NOT NULL,

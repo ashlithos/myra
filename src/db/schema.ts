@@ -59,6 +59,7 @@ export const buddies = sqliteTable("buddies", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   userId: text("user_id").notNull(),
   name: text("name").notNull(),
+  emoji: text("emoji").notNull().default("🌍"),
   createdAt: text("created_at")
     .notNull()
     .$defaultFn(() => new Date().toISOString()),
