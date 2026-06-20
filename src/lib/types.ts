@@ -53,6 +53,13 @@ export interface TripWithExperiences extends Trip {
 export type AffinityTier = "take-me-there" | "interested" | "open";
 export const AFFINITY_TIERS: AffinityTier[] = ["take-me-there", "interested", "open"];
 
+export interface FriendPlace {
+  id: number;
+  buddyId: number;
+  name: string;
+  createdAt: string;
+}
+
 export interface Buddy {
   id: number;
   userId: string;

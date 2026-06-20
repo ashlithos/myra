@@ -1,10 +1,10 @@
 import { db } from "@/db";
-import { experiences, buddies, affinities } from "@/db/schema";
-import { eq, inArray, desc } from "drizzle-orm";
+import { buddies, friendPlaces } from "@/db/schema";
+import { eq, inArray } from "drizzle-orm";
 import { auth } from "@/lib/auth";
 import AuthGate from "@/components/auth-gate";
 import TravelDashboard from "@/components/travel-dashboard";
-import type { Affinity } from "@/lib/types";
+import type { FriendPlace } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
@@ -24,26 +24,21 @@ export default async function TravelPage() {
   const rankUrl = `${process.env.NEXT_PUBLIC_BASE_URL || ""}/rank/${userId}`;
 
   try {
-    const [allExperiences, allBuddies] = await Promise.all([
-      db.select().from(experiences).where(eq(experiences.userId, userId)).orderBy(desc(experiences.createdAt)),
-      db.select().from(buddies).where(eq(buddies.userId, userId)),
-    ]);
+    const allBuddies = await db.select().from(buddies).where(eq(buddies.userId, userId));
 
-    let allAffinities: Affinity[] = [];
+    let allFriendPlaces: FriendPlace[] = [];
     if (allBuddies.length > 0) {
       const buddyIds = allBuddies.map((b: { id: number }) => b.id);
-      const rows = await db
+      allFriendPlaces = await db
         .select()
-        .from(affinities)
-        .where(inArray(affinities.buddyId, buddyIds));
-      allAffinities = rows as unknown as Affinity[];
+        .from(friendPlaces)
+        .where(inArray(friendPlaces.buddyId, buddyIds)) as FriendPlace[];
     }
 
     return (
       <TravelDashboard
-        experiences={allExperiences}
         initialBuddies={allBuddies}
-        initialAffinities={allAffinities}
+        initialFriendPlaces={allFriendPlaces}
         rankUrl={rankUrl}
         userId={userId}
       />

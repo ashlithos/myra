@@ -22,6 +22,14 @@ export async function register() {
         // Column already exists — safe to ignore
       }
       await client.execute(`
+        CREATE TABLE IF NOT EXISTS friend_places (
+          id integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+          buddy_id integer NOT NULL REFERENCES buddies(id) ON DELETE CASCADE,
+          name text NOT NULL,
+          created_at text NOT NULL
+        )
+      `);
+      await client.execute(`
         CREATE TABLE IF NOT EXISTS affinities (
           id integer PRIMARY KEY AUTOINCREMENT NOT NULL,
           buddy_id integer NOT NULL REFERENCES buddies(id) ON DELETE CASCADE,

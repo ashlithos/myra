@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { Experience, Buddy, Affinity } from "@/lib/types";
+import type { Buddy, FriendPlace } from "@/lib/types";
 import FriendCard from "@/components/friend-card";
 
 const EMOJI_OPTIONS = [
@@ -12,29 +12,27 @@ const EMOJI_OPTIONS = [
 ];
 
 export default function TravelDashboard({
-  experiences,
   initialBuddies,
-  initialAffinities,
+  initialFriendPlaces,
   rankUrl,
-  userId,
+  userId: _userId,
 }: {
-  experiences: Experience[];
   initialBuddies: Buddy[];
-  initialAffinities: Affinity[];
+  initialFriendPlaces: FriendPlace[];
   rankUrl: string;
   userId: string;
 }) {
   const [buddies, setBuddies] = useState<Buddy[]>(initialBuddies);
-  const [affinities, setAffinities] = useState<Affinity[]>(initialAffinities);
-  const [activeExpId, setActiveExpId] = useState<number | null>(null);
+  const [friendPlaces, setFriendPlaces] = useState<FriendPlace[]>(initialFriendPlaces);
+  const [activeName, setActiveName] = useState<string | null>(null);
   const [addingFriend, setAddingFriend] = useState(false);
   const [newName, setNewName] = useState("");
   const [newEmoji, setNewEmoji] = useState("🌍");
   const [adding, setAdding] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  function getAffinities(buddyId: number) {
-    return affinities.filter((a) => a.buddyId === buddyId);
+  function getPlaces(buddyId: number) {
+    return friendPlaces.filter((p) => p.buddyId === buddyId);
   }
 
   async function addBuddy() {
@@ -58,8 +56,8 @@ export default function TravelDashboard({
   async function removeBuddy(id: number) {
     await fetch(`/api/buddies/${id}`, { method: "DELETE" });
     setBuddies((prev) => prev.filter((b) => b.id !== id));
-    setAffinities((prev) => prev.filter((a) => a.buddyId !== id));
-    setActiveExpId(null);
+    setFriendPlaces((prev) => prev.filter((p) => p.buddyId !== id));
+    setActiveName(null);
   }
 
   async function changeEmoji(buddyId: number, emoji: string) {
@@ -71,34 +69,22 @@ export default function TravelDashboard({
     setBuddies((prev) => prev.map((b) => (b.id === buddyId ? { ...b, emoji } : b)));
   }
 
-  async function addPlace(buddyId: number, expId: number) {
-    await fetch("/api/affinities", {
+  async function addPlace(buddyId: number, name: string) {
+    const res = await fetch("/api/friend-places", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        buddyId,
-        ownerUserId: userId,
-        ratings: [{ experienceId: expId, tier: "take-me-there" }],
-      }),
+      body: JSON.stringify({ buddyId, name }),
     });
-    setAffinities((prev) => [
-      ...prev,
-      {
-        id: Date.now(),
-        buddyId,
-        experienceId: expId,
-        tier: "take-me-there" as const,
-        updatedAt: new Date().toISOString(),
-      },
-    ]);
+    if (res.ok) {
+      const place = await res.json();
+      setFriendPlaces((prev) => [...prev, place]);
+    }
   }
 
-  async function removePlace(buddyId: number, expId: number) {
-    await fetch(`/api/affinities?buddyId=${buddyId}&experienceId=${expId}`, { method: "DELETE" });
-    setAffinities((prev) =>
-      prev.filter((a) => !(a.buddyId === buddyId && a.experienceId === expId))
-    );
-    if (activeExpId === expId) setActiveExpId(null);
+  async function removePlace(id: number, name: string) {
+    await fetch(`/api/friend-places/${id}`, { method: "DELETE" });
+    setFriendPlaces((prev) => prev.filter((p) => p.id !== id));
+    if (activeName === name) setActiveName(null);
   }
 
   function copyLink() {
@@ -106,10 +92,6 @@ export default function TravelDashboard({
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   }
-
-  const activeExpName = activeExpId
-    ? experiences.find((e) => e.id === activeExpId)?.name
-    : null;
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-10">
@@ -122,14 +104,14 @@ export default function TravelDashboard({
       </div>
 
       {/* Active filter banner */}
-      {activeExpName && (
+      {activeName && (
         <div className="mb-5 flex items-center gap-3 text-sm">
           <span className="text-[#1A1A1A]/50">
-            Showing friends who want to visit{" "}
-            <strong className="text-[#1A1A1A]">{activeExpName}</strong>
+            Friends who want to visit{" "}
+            <strong className="text-[#1A1A1A]">{activeName}</strong>
           </span>
           <button
-            onClick={() => setActiveExpId(null)}
+            onClick={() => setActiveName(null)}
             className="text-xs text-[#1A1A1A]/40 hover:text-[#1A1A1A] underline underline-offset-2 transition-colors"
           >
             Clear
@@ -140,22 +122,19 @@ export default function TravelDashboard({
       {/* Card grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-12">
         {buddies.map((buddy) => {
-          const buddyAffinities = getAffinities(buddy.id);
-          const hasActive =
-            activeExpId !== null &&
-            buddyAffinities.some((a) => a.experienceId === activeExpId);
-          const dimmed = activeExpId !== null && !hasActive;
+          const places = getPlaces(buddy.id);
+          const hasActive = activeName !== null && places.some((p) => p.name === activeName);
+          const dimmed = activeName !== null && !hasActive;
           return (
             <FriendCard
               key={buddy.id}
               buddy={buddy}
-              experiences={experiences}
-              affinities={buddyAffinities}
-              activeExpId={activeExpId}
-              onFilterChange={(id) => setActiveExpId((prev) => (prev === id ? null : id))}
+              places={places}
+              activeName={activeName}
+              onFilterChange={setActiveName}
               onEmojiChange={(emoji) => changeEmoji(buddy.id, emoji)}
-              onAddPlace={(expId) => addPlace(buddy.id, expId)}
-              onRemovePlace={(expId) => removePlace(buddy.id, expId)}
+              onAddPlace={(name) => addPlace(buddy.id, name)}
+              onRemovePlace={(id, name) => removePlace(id, name)}
               onRemove={() => removeBuddy(buddy.id)}
               dimmed={dimmed}
             />
@@ -165,21 +144,21 @@ export default function TravelDashboard({
         {/* Add friend */}
         {addingFriend ? (
           <div className="border border-[#D4D0C8] bg-white p-5 flex flex-col gap-3">
-            {/* Emoji picker */}
             <div className="grid grid-cols-6 gap-1">
               {EMOJI_OPTIONS.map((e) => (
                 <button
                   key={e}
                   onClick={() => setNewEmoji(e)}
                   className={`text-xl p-1 rounded transition-colors ${
-                    newEmoji === e ? "bg-[#1A1A1A]/10 ring-1 ring-[#1A1A1A]/20" : "hover:bg-[#F3F0EB]"
+                    newEmoji === e
+                      ? "bg-[#1A1A1A]/10 ring-1 ring-[#1A1A1A]/20"
+                      : "hover:bg-[#F3F0EB]"
                   }`}
                 >
                   {e}
                 </button>
               ))}
             </div>
-            {/* Preview */}
             <div className="flex justify-center">
               <div className="w-16 h-16 rounded-full bg-[#F3F0EB] flex items-center justify-center text-4xl">
                 {newEmoji}
@@ -202,7 +181,11 @@ export default function TravelDashboard({
                 {adding ? "Adding…" : "Add"}
               </button>
               <button
-                onClick={() => { setAddingFriend(false); setNewName(""); setNewEmoji("🌍"); }}
+                onClick={() => {
+                  setAddingFriend(false);
+                  setNewName("");
+                  setNewEmoji("🌍");
+                }}
                 className="px-3 py-2 text-xs border border-[#D4D0C8] text-[#1A1A1A]/50 hover:border-[#1A1A1A]/40 transition-colors"
               >
                 Cancel
@@ -221,17 +204,6 @@ export default function TravelDashboard({
           </button>
         )}
       </div>
-
-      {/* Empty state note */}
-      {experiences.length === 0 && (
-        <p className="text-sm text-[#1A1A1A]/40 mb-8 text-center">
-          Add experiences to your{" "}
-          <a href="/bucket-list" className="underline underline-offset-2 hover:text-[#1A1A1A]">
-            bucket list
-          </a>{" "}
-          — they&apos;ll appear here so you can add them to friends.
-        </p>
-      )}
 
       {/* Share link — secondary */}
       <div className="border-t border-[#D4D0C8] pt-5 flex items-center gap-4">

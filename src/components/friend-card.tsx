@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import type { Experience, Buddy, Affinity } from "@/lib/types";
+import type { Buddy, FriendPlace } from "@/lib/types";
 
 const EMOJI_OPTIONS = [
   "🌍","🌸","🏔️","🌊","🌴","🦋",
@@ -12,9 +12,8 @@ const EMOJI_OPTIONS = [
 
 export default function FriendCard({
   buddy,
-  experiences,
-  affinities,
-  activeExpId,
+  places,
+  activeName,
   onFilterChange,
   onEmojiChange,
   onAddPlace,
@@ -23,38 +22,39 @@ export default function FriendCard({
   dimmed,
 }: {
   buddy: Buddy;
-  experiences: Experience[];
-  affinities: Affinity[];
-  activeExpId: number | null;
-  onFilterChange: (id: number | null) => void;
+  places: FriendPlace[];
+  activeName: string | null;
+  onFilterChange: (name: string | null) => void;
   onEmojiChange: (emoji: string) => void;
-  onAddPlace: (expId: number) => void;
-  onRemovePlace: (expId: number) => void;
+  onAddPlace: (name: string) => void;
+  onRemovePlace: (id: number, name: string) => void;
   onRemove: () => void;
   dimmed: boolean;
 }) {
   const [pickerOpen, setPickerOpen] = useState(false);
-  const [addOpen, setAddOpen] = useState(false);
+  const [input, setInput] = useState("");
   const pickerRef = useRef<HTMLDivElement>(null);
-  const addRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const myExpIds = new Set(affinities.map((a) => a.experienceId));
-  const myExperiences = experiences.filter((e) => myExpIds.has(e.id));
-  const availableToAdd = experiences.filter((e) => !myExpIds.has(e.id));
-  const hasActive = activeExpId !== null && myExpIds.has(activeExpId);
+  const hasActive = activeName !== null && places.some((p) => p.name === activeName);
 
   useEffect(() => {
     function close(e: MouseEvent) {
       if (pickerRef.current && !pickerRef.current.contains(e.target as Node)) {
         setPickerOpen(false);
       }
-      if (addRef.current && !addRef.current.contains(e.target as Node)) {
-        setAddOpen(false);
-      }
     }
     document.addEventListener("mousedown", close);
     return () => document.removeEventListener("mousedown", close);
   }, []);
+
+  function handleAdd() {
+    const trimmed = input.trim();
+    if (!trimmed) return;
+    onAddPlace(trimmed);
+    setInput("");
+    inputRef.current?.focus();
+  }
 
   return (
     <div
@@ -105,28 +105,30 @@ export default function FriendCard({
 
       {/* Places */}
       <div className="px-5 pb-4 flex-1">
-        {myExperiences.length === 0 ? (
-          <p className="text-xs text-[#1A1A1A]/30 text-center py-1">No places added yet</p>
+        {places.length === 0 ? (
+          <p className="text-xs text-[#1A1A1A]/25 text-center py-1">
+            No places yet — add one below
+          </p>
         ) : (
           <div className="flex flex-wrap gap-1.5">
-            {myExperiences.map((exp) => {
-              const isMatch = exp.id === activeExpId;
+            {places.map((place) => {
+              const isMatch = place.name === activeName;
               return (
                 <button
-                  key={exp.id}
-                  onClick={() => onFilterChange(isMatch ? null : exp.id)}
-                  title={isMatch ? "Clear filter" : `Show all friends who want to visit ${exp.name}`}
+                  key={place.id}
+                  onClick={() => onFilterChange(isMatch ? null : place.name)}
+                  title={isMatch ? "Clear filter" : `Show all friends who want to visit ${place.name}`}
                   className={`group text-xs px-2.5 py-1 border transition-all flex items-center gap-1 ${
                     isMatch
                       ? "border-[#1A1A1A] bg-[#1A1A1A] text-white"
                       : "border-[#D4D0C8] text-[#1A1A1A]/60 hover:border-[#1A1A1A]/40"
                   }`}
                 >
-                  {exp.name}
+                  {place.name}
                   <span
-                    onClick={(e) => { e.stopPropagation(); onRemovePlace(exp.id); }}
-                    className="opacity-0 group-hover:opacity-60 hover:!opacity-100 transition-opacity leading-none"
+                    onClick={(e) => { e.stopPropagation(); onRemovePlace(place.id, place.name); }}
                     title="Remove"
+                    className="opacity-0 group-hover:opacity-60 hover:!opacity-100 transition-opacity leading-none"
                   >
                     ×
                   </span>
@@ -137,50 +139,25 @@ export default function FriendCard({
         )}
       </div>
 
-      {/* Add place — full-width, always visible */}
-      <div className="px-5 pb-5 relative" ref={addRef}>
-        {experiences.length === 0 ? (
-          <a
-            href="/bucket-list"
-            className="block w-full py-2 border border-dashed border-[#D4D0C8] text-xs text-center text-[#1A1A1A]/35 hover:text-[#1A1A1A]/60 hover:border-[#1A1A1A]/30 transition-colors"
+      {/* Inline add input */}
+      <div className="px-5 pb-5">
+        <div className="flex gap-1.5">
+          <input
+            ref={inputRef}
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleAdd()}
+            placeholder="Add a place…"
+            className="flex-1 border border-[#D4D0C8] px-3 py-2 text-xs focus:outline-none focus:border-[#1A1A1A]/50 bg-transparent placeholder:text-[#1A1A1A]/25 min-w-0"
+          />
+          <button
+            onClick={handleAdd}
+            disabled={!input.trim()}
+            className="px-3 py-2 border border-[#D4D0C8] text-xs text-[#1A1A1A]/50 hover:border-[#1A1A1A]/40 hover:text-[#1A1A1A] transition-colors disabled:opacity-30"
           >
-            Add to bucket list first →
-          </a>
-        ) : availableToAdd.length === 0 ? (
-          <p className="text-xs text-center text-[#1A1A1A]/25">All your places added ✓</p>
-        ) : (
-          <>
-            <button
-              onClick={() => setAddOpen(!addOpen)}
-              className={`w-full py-2 border border-dashed text-xs text-center transition-colors ${
-                addOpen
-                  ? "border-[#1A1A1A]/40 text-[#1A1A1A]/70 bg-[#F3F0EB]"
-                  : "border-[#D4D0C8] text-[#1A1A1A]/40 hover:border-[#1A1A1A]/30 hover:text-[#1A1A1A]/60"
-              }`}
-            >
-              + Add a place
-            </button>
-            {addOpen && (
-              <div className="absolute bottom-full mb-1 left-5 right-5 z-10 bg-white border border-[#D4D0C8] shadow-md max-h-52 overflow-y-auto">
-                <div className="px-3 py-2 border-b border-[#D4D0C8] text-[10px] tracking-[0.1em] uppercase text-[#1A1A1A]/35">
-                  From your bucket list
-                </div>
-                {availableToAdd.map((exp) => (
-                  <button
-                    key={exp.id}
-                    onClick={() => { onAddPlace(exp.id); setAddOpen(false); }}
-                    className="w-full text-left px-3 py-2.5 text-sm text-[#1A1A1A]/70 hover:bg-[#F3F0EB] border-b border-[#D4D0C8] last:border-b-0 transition-colors"
-                  >
-                    {exp.name}
-                    {exp.country && (
-                      <span className="text-xs text-[#1A1A1A]/35 ml-1.5">{exp.country}</span>
-                    )}
-                  </button>
-                ))}
-              </div>
-            )}
-          </>
-        )}
+            +
+          </button>
+        </div>
       </div>
     </div>
   );

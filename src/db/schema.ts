@@ -65,6 +65,17 @@ export const buddies = sqliteTable("buddies", {
     .$defaultFn(() => new Date().toISOString()),
 });
 
+export const friendPlaces = sqliteTable("friend_places", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  buddyId: integer("buddy_id")
+    .notNull()
+    .references(() => buddies.id, { onDelete: "cascade" }),
+  name: text("name").notNull(),
+  createdAt: text("created_at")
+    .notNull()
+    .$defaultFn(() => new Date().toISOString()),
+});
+
 // tier: "take-me-there" | "interested" | "open"
 export const affinities = sqliteTable("affinities", {
   id: integer("id").primaryKey({ autoIncrement: true }),
