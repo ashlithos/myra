@@ -66,33 +66,34 @@ export default function FriendCard({
           : "border border-[#D4D0C8] opacity-100"
       }`}
     >
-      {/* Remove */}
-      <div className="flex justify-end px-4 pt-3">
+      {/* Remove — large tap area, visually small */}
+      <div className="flex justify-end px-3 pt-2">
         <button
           onClick={onRemove}
-          className="text-[10px] text-[#1A1A1A]/20 hover:text-[#1A1A1A]/50 transition-colors"
+          aria-label="Remove friend"
+          className="min-w-[40px] min-h-[40px] flex items-center justify-center text-[10px] text-[#1A1A1A]/25 hover:text-[#1A1A1A]/55 transition-colors -mr-1"
         >
           ✕
         </button>
       </div>
 
       {/* Emoji + name */}
-      <div className="flex flex-col items-center px-6 pt-1 pb-5 gap-3 relative" ref={pickerRef}>
+      <div className="flex flex-col items-center px-6 pt-0 pb-5 gap-3 relative" ref={pickerRef}>
         <button
           onClick={() => setPickerOpen(!pickerOpen)}
-          className="w-20 h-20 rounded-full bg-[#F3F0EB] flex items-center justify-center text-5xl hover:bg-[#E8E4DC] transition-colors select-none"
-          title="Change emoji"
+          className="w-20 h-20 rounded-full bg-[#F3F0EB] flex items-center justify-center text-5xl hover:bg-[#E8E4DC] active:bg-[#E0DCD3] transition-colors select-none"
+          aria-label="Change emoji"
         >
           {buddy.emoji || "🌍"}
         </button>
 
         {pickerOpen && (
-          <div className="absolute top-[88px] left-1/2 -translate-x-1/2 z-20 bg-white border border-[#D4D0C8] shadow-lg p-2 grid grid-cols-6 gap-1 w-52">
+          <div className="absolute top-[84px] left-1/2 -translate-x-1/2 z-20 bg-white border border-[#D4D0C8] shadow-lg p-2 grid grid-cols-6 gap-1 w-52 max-w-[calc(100vw-2rem)]">
             {EMOJI_OPTIONS.map((e) => (
               <button
                 key={e}
                 onClick={() => { onEmojiChange(e); setPickerOpen(false); }}
-                className="text-xl p-1.5 hover:bg-[#F3F0EB] rounded transition-colors"
+                className="text-xl p-2 hover:bg-[#F3F0EB] active:bg-[#E8E4DC] rounded transition-colors min-w-[36px] min-h-[36px] flex items-center justify-center"
               >
                 {e}
               </button>
@@ -110,29 +111,37 @@ export default function FriendCard({
             No places yet — add one below
           </p>
         ) : (
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex flex-wrap gap-2">
             {places.map((place) => {
               const isMatch = place.name === activeName;
               return (
-                <button
+                <span
                   key={place.id}
-                  onClick={() => onFilterChange(isMatch ? null : place.name)}
-                  title={isMatch ? "Clear filter" : `Show all friends who want to visit ${place.name}`}
-                  className={`group text-xs px-2.5 py-1 border transition-all flex items-center gap-1 ${
+                  className={`group inline-flex items-center gap-1 text-xs border transition-all ${
                     isMatch
                       ? "border-[#1A1A1A] bg-[#1A1A1A] text-white"
-                      : "border-[#D4D0C8] text-[#1A1A1A]/60 hover:border-[#1A1A1A]/40"
+                      : "border-[#D4D0C8] text-[#1A1A1A]/60"
                   }`}
                 >
-                  {place.name}
-                  <span
-                    onClick={(e) => { e.stopPropagation(); onRemovePlace(place.id, place.name); }}
-                    title="Remove"
-                    className="opacity-0 group-hover:opacity-60 hover:!opacity-100 transition-opacity leading-none"
+                  <button
+                    onClick={() => onFilterChange(isMatch ? null : place.name)}
+                    title={isMatch ? "Clear filter" : `Show all friends who want to visit ${place.name}`}
+                    className="px-2.5 py-2 leading-none"
+                  >
+                    {place.name}
+                  </button>
+                  <button
+                    onClick={() => onRemovePlace(place.id, place.name)}
+                    aria-label={`Remove ${place.name}`}
+                    className={`pr-2 py-2 leading-none transition-opacity ${
+                      isMatch
+                        ? "opacity-60 hover:opacity-100"
+                        : "opacity-30 sm:opacity-0 sm:group-hover:opacity-50 hover:opacity-100"
+                    }`}
                   >
                     ×
-                  </span>
-                </button>
+                  </button>
+                </span>
               );
             })}
           </div>
@@ -141,19 +150,20 @@ export default function FriendCard({
 
       {/* Inline add input */}
       <div className="px-5 pb-5">
-        <div className="flex gap-1.5">
+        <div className="flex gap-2">
           <input
             ref={inputRef}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleAdd()}
             placeholder="Add a place…"
-            className="flex-1 border border-[#D4D0C8] px-3 py-2 text-xs focus:outline-none focus:border-[#1A1A1A]/50 bg-transparent placeholder:text-[#1A1A1A]/25 min-w-0"
+            className="flex-1 border border-[#D4D0C8] px-3 py-3 text-sm focus:outline-none focus:border-[#1A1A1A]/50 bg-transparent placeholder:text-[#1A1A1A]/25 min-w-0"
           />
           <button
             onClick={handleAdd}
             disabled={!input.trim()}
-            className="px-3 py-2 border border-[#D4D0C8] text-xs text-[#1A1A1A]/50 hover:border-[#1A1A1A]/40 hover:text-[#1A1A1A] transition-colors disabled:opacity-30"
+            aria-label="Add place"
+            className="min-w-[44px] min-h-[44px] border border-[#D4D0C8] text-sm text-[#1A1A1A]/50 hover:border-[#1A1A1A]/40 hover:text-[#1A1A1A] active:bg-[#F3F0EB] transition-colors disabled:opacity-30 flex items-center justify-center"
           >
             +
           </button>
