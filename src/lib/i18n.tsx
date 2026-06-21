@@ -101,8 +101,11 @@ const translations = {
   "discover.recommended": { en: "RECOMMENDED FOR YOU", zh: "为你推荐" },
   "discover.inYourList": { en: "IN YOUR LIST", zh: "在你的心愿单中" },
   "discover.addToPlan": { en: "ADD TO MY PLAN", zh: "加入计划" },
+  "discover.addToWishlist": { en: "ADD TO WISHLIST", zh: "加入心愿单" },
+  "discover.save": { en: "SAVE", zh: "保存" },
   "discover.adding": { en: "ADDING...", zh: "添加中..." },
-  "discover.planned": { en: "VIEW IN MY LIST", zh: "查看我的列表" },
+  "discover.planned": { en: "VIEW IN MY PLAN", zh: "查看我的计划" },
+  "discover.wishlisted": { en: "VIEW WISHLIST", zh: "查看心愿单" },
   "discover.discoverMore": { en: "DISCOVER MORE", zh: "发现更多" },
   "discover.viewBucketList": { en: "VIEW BUCKET LIST", zh: "查看心愿单" },
 

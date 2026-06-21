@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { PARTNER_TYPES } from "@/lib/types";
 import type { Experience } from "@/lib/types";
-import { Search, ArrowRight, BookmarkPlus, ExternalLink } from "lucide-react";
+import { Search, ArrowRight, BookmarkPlus, ExternalLink, ChevronDown } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useI18n } from "@/lib/i18n";
@@ -55,7 +55,8 @@ export default function TripContextForm({
   const [result, setResult] = useState<DiscoverResult | null>(null);
   const [error, setError] = useState("");
   const [addingToList, setAddingToList] = useState<Set<number>>(new Set());
-  const [addedToList, setAddedToList] = useState<Set<number>>(new Set());
+  const [addedToList, setAddedToList] = useState<Map<number, "wishlist" | "planned">>(new Map());
+  const [openDropdown, setOpenDropdown] = useState<number | null>(null);
   const [thinkingStep, setThinkingStep] = useState(0);
   const thinkingInterval = useRef<ReturnType<typeof setInterval> | null>(null);
   const [photos, setPhotos] = useState<Record<number, PhotoResult>>({});
@@ -115,6 +116,16 @@ export default function TripContextForm({
     };
   }, [loading]);
 
+  useEffect(() => {
+    if (openDropdown === null) return;
+    function close(e: MouseEvent) {
+      const target = e.target as HTMLElement;
+      if (!target.closest("[data-save-dropdown]")) setOpenDropdown(null);
+    }
+    document.addEventListener("mousedown", close);
+    return () => document.removeEventListener("mousedown", close);
+  }, [openDropdown]);
+
   async function handleDiscover() {
     setLoading(true);
     setError("");
@@ -141,7 +152,7 @@ export default function TripContextForm({
     setLoading(false);
   }
 
-  async function addToBucketList(rec: Recommendation, index: number) {
+  async function addToBucketList(rec: Recommendation, index: number, status: "wishlist" | "planned") {
     setAddingToList((prev) => new Set(prev).add(index));
 
     const seasonMap: Record<string, string[]> = {
@@ -163,13 +174,12 @@ export default function TripContextForm({
         idealSeasons: seasons.join(","),
         idealPartnerTypes: companion || "",
         doByAge: ageRange ? (ageRange === "60+" ? "60+" : String(parseInt(ageRange) + 10)) : null,
-        status: "planned",
+        status,
       }),
     });
 
     if (!res.ok) {
       if (res.status === 401) {
-        // Not signed in — redirect to sign in
         window.location.href = "/api/auth/signin?callbackUrl=" + encodeURIComponent(window.location.pathname);
         return;
       }
@@ -179,7 +189,6 @@ export default function TripContextForm({
 
     const saved = await res.json();
 
-    // Attach the photo shown in the recommendation
     const photo = photos[index];
     if (photo && saved.id) {
       await fetch(`/api/experiences/${saved.id}/photos`, {
@@ -194,7 +203,7 @@ export default function TripContextForm({
       next.delete(index);
       return next;
     });
-    setAddedToList((prev) => new Set(prev).add(index));
+    setAddedToList((prev) => new Map(prev).set(index, status));
   }
 
   function googleSearchUrl(name: string, country: string) {
@@ -501,27 +510,48 @@ export default function TripContextForm({
                               <div className="mt-3 md:hidden">
                                 {addedToList.has(i) ? (
                                   <a
-                                    href="/bucket-list?tab=planned"
+                                    href={`/bucket-list?tab=${addedToList.get(i)}`}
                                     className="inline-flex items-center gap-1.5 px-4 py-3 text-[11px] tracking-[0.15em] uppercase border border-[#EBCFBE] bg-[#EBCFBE] text-[#1A1A1A]/70 hover:bg-[#EBCFBE]/80 transition-all"
                                   >
                                     <ArrowRight size={10} />
-                                    {t("discover.planned")}
+                                    {addedToList.get(i) === "planned" ? t("discover.planned") : t("discover.wishlisted")}
                                   </a>
                                 ) : (
-                                  <button
-                                    onClick={() => addToBucketList(rec, i)}
-                                    disabled={addingToList.has(i)}
-                                    className={`inline-flex items-center gap-1.5 px-4 py-3 text-[11px] tracking-[0.15em] uppercase border transition-all ${
-                                      addingToList.has(i)
-                                        ? "border-[#D4D0C8] text-[#1A1A1A]/30 animate-pulse"
-                                        : "border-[#D4D0C8] text-[#1A1A1A]/55 hover:border-[#1A1A1A] hover:text-[#1A1A1A]"
-                                    }`}
-                                  >
-                                    <BookmarkPlus size={10} />
-                                    {addingToList.has(i)
-                                      ? t("discover.adding")
-                                      : t("discover.addToPlan")}
-                                  </button>
+                                  <div className="relative inline-block" data-save-dropdown>
+                                    <button
+                                      onClick={() => setOpenDropdown(openDropdown === i ? null : i)}
+                                      disabled={addingToList.has(i)}
+                                      className={`inline-flex items-center gap-1.5 px-4 py-3 text-[11px] tracking-[0.15em] uppercase border transition-all ${
+                                        addingToList.has(i)
+                                          ? "border-[#D4D0C8] text-[#1A1A1A]/30 animate-pulse"
+                                          : openDropdown === i
+                                          ? "border-[#1A1A1A] text-[#1A1A1A]"
+                                          : "border-[#D4D0C8] text-[#1A1A1A]/55 hover:border-[#1A1A1A] hover:text-[#1A1A1A]"
+                                      }`}
+                                    >
+                                      <BookmarkPlus size={10} />
+                                      {addingToList.has(i) ? t("discover.adding") : t("discover.save")}
+                                      {!addingToList.has(i) && <ChevronDown size={8} className={`transition-transform ${openDropdown === i ? "rotate-180" : ""}`} />}
+                                    </button>
+                                    {openDropdown === i && (
+                                      <div className="absolute top-full left-0 mt-1 bg-white border border-[#D4D0C8] shadow-md z-20 min-w-[180px]" data-save-dropdown>
+                                        <button
+                                          onClick={() => { addToBucketList(rec, i, "planned"); setOpenDropdown(null); }}
+                                          className="w-full text-left px-4 py-3 text-[10px] tracking-[0.12em] uppercase text-[#1A1A1A]/60 hover:bg-[#F3F0EB] hover:text-[#1A1A1A] transition-colors flex items-center gap-2"
+                                        >
+                                          <BookmarkPlus size={9} />
+                                          {t("discover.addToPlan")}
+                                        </button>
+                                        <button
+                                          onClick={() => { addToBucketList(rec, i, "wishlist"); setOpenDropdown(null); }}
+                                          className="w-full text-left px-4 py-3 text-[10px] tracking-[0.12em] uppercase text-[#1A1A1A]/60 hover:bg-[#F3F0EB] hover:text-[#1A1A1A] transition-colors flex items-center gap-2 border-t border-[#D4D0C8]/50"
+                                        >
+                                          <BookmarkPlus size={9} />
+                                          {t("discover.addToWishlist")}
+                                        </button>
+                                      </div>
+                                    )}
+                                  </div>
                                 )}
                               </div>
                             )}
@@ -532,27 +562,48 @@ export default function TripContextForm({
                             <div className="hidden md:block shrink-0 self-center">
                               {addedToList.has(i) ? (
                                 <a
-                                  href="/bucket-list?tab=planned"
+                                  href={`/bucket-list?tab=${addedToList.get(i)}`}
                                   className="inline-flex items-center gap-1.5 px-3 py-2 text-[9px] tracking-[0.15em] uppercase border border-[#EBCFBE] bg-[#EBCFBE] text-[#1A1A1A]/70 hover:bg-[#EBCFBE]/80 transition-all"
                                 >
                                   <ArrowRight size={10} />
-                                  {t("discover.planned")}
+                                  {addedToList.get(i) === "planned" ? t("discover.planned") : t("discover.wishlisted")}
                                 </a>
                               ) : (
-                                <button
-                                  onClick={() => addToBucketList(rec, i)}
-                                  disabled={addingToList.has(i)}
-                                  className={`inline-flex items-center gap-1.5 px-3 py-2 text-[9px] tracking-[0.15em] uppercase border transition-all ${
-                                    addingToList.has(i)
-                                      ? "border-[#D4D0C8] text-[#1A1A1A]/30 animate-pulse"
-                                      : "border-[#D4D0C8] text-[#1A1A1A]/55 hover:border-[#1A1A1A] hover:text-[#1A1A1A]"
-                                  }`}
-                                >
-                                  <BookmarkPlus size={10} />
-                                  {addingToList.has(i)
-                                    ? t("discover.adding")
-                                    : t("discover.addToPlan")}
-                                </button>
+                                <div className="relative" data-save-dropdown>
+                                  <button
+                                    onClick={() => setOpenDropdown(openDropdown === i ? null : i)}
+                                    disabled={addingToList.has(i)}
+                                    className={`inline-flex items-center gap-1.5 px-3 py-2 text-[9px] tracking-[0.15em] uppercase border transition-all ${
+                                      addingToList.has(i)
+                                        ? "border-[#D4D0C8] text-[#1A1A1A]/30 animate-pulse"
+                                        : openDropdown === i
+                                        ? "border-[#1A1A1A] text-[#1A1A1A]"
+                                        : "border-[#D4D0C8] text-[#1A1A1A]/55 hover:border-[#1A1A1A] hover:text-[#1A1A1A]"
+                                    }`}
+                                  >
+                                    <BookmarkPlus size={10} />
+                                    {addingToList.has(i) ? t("discover.adding") : t("discover.save")}
+                                    {!addingToList.has(i) && <ChevronDown size={7} className={`transition-transform ${openDropdown === i ? "rotate-180" : ""}`} />}
+                                  </button>
+                                  {openDropdown === i && (
+                                    <div className="absolute top-full right-0 mt-1 bg-white border border-[#D4D0C8] shadow-md z-20 min-w-[160px]" data-save-dropdown>
+                                      <button
+                                        onClick={() => { addToBucketList(rec, i, "planned"); setOpenDropdown(null); }}
+                                        className="w-full text-left px-3 py-2.5 text-[9px] tracking-[0.12em] uppercase text-[#1A1A1A]/60 hover:bg-[#F3F0EB] hover:text-[#1A1A1A] transition-colors flex items-center gap-2"
+                                      >
+                                        <BookmarkPlus size={8} />
+                                        {t("discover.addToPlan")}
+                                      </button>
+                                      <button
+                                        onClick={() => { addToBucketList(rec, i, "wishlist"); setOpenDropdown(null); }}
+                                        className="w-full text-left px-3 py-2.5 text-[9px] tracking-[0.12em] uppercase text-[#1A1A1A]/60 hover:bg-[#F3F0EB] hover:text-[#1A1A1A] transition-colors flex items-center gap-2 border-t border-[#D4D0C8]/50"
+                                      >
+                                        <BookmarkPlus size={8} />
+                                        {t("discover.addToWishlist")}
+                                      </button>
+                                    </div>
+                                  )}
+                                </div>
                               )}
                             </div>
                           )}
