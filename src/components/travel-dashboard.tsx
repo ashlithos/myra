@@ -28,6 +28,7 @@ export default function TravelDashboard({
   const [addingFriend, setAddingFriend] = useState(false);
   const [newName, setNewName] = useState("");
   const [newEmoji, setNewEmoji] = useState("🌍");
+  const [emojiPickerOpen, setEmojiPickerOpen] = useState(false);
   const [adding, setAdding] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -48,6 +49,7 @@ export default function TravelDashboard({
       setBuddies((prev) => [...prev, buddy]);
       setNewName("");
       setNewEmoji("🌍");
+      setEmojiPickerOpen(false);
       setAddingFriend(false);
     }
     setAdding(false);
@@ -144,26 +146,6 @@ export default function TravelDashboard({
         {/* Add friend */}
         {addingFriend ? (
           <div className="border border-[#D4D0C8] bg-white p-5 flex flex-col gap-3">
-            <div className="grid grid-cols-6 gap-1">
-              {EMOJI_OPTIONS.map((e) => (
-                <button
-                  key={e}
-                  onClick={() => setNewEmoji(e)}
-                  className={`text-xl p-2 rounded transition-colors min-w-[36px] min-h-[36px] flex items-center justify-center ${
-                    newEmoji === e
-                      ? "bg-[#1A1A1A]/10 ring-1 ring-[#1A1A1A]/20"
-                      : "hover:bg-[#F3F0EB] active:bg-[#E8E4DC]"
-                  }`}
-                >
-                  {e}
-                </button>
-              ))}
-            </div>
-            <div className="flex justify-center">
-              <div className="w-16 h-16 rounded-full bg-[#F3F0EB] flex items-center justify-center text-4xl">
-                {newEmoji}
-              </div>
-            </div>
             <input
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
@@ -172,6 +154,35 @@ export default function TravelDashboard({
               autoFocus
               className="border border-[#D4D0C8] px-3 py-2 text-sm focus:outline-none focus:border-[#1A1A1A] bg-transparent"
             />
+            <div className="flex flex-col items-center gap-2">
+              <button
+                onClick={() => setEmojiPickerOpen(!emojiPickerOpen)}
+                className="w-16 h-16 rounded-full bg-[#F3F0EB] flex items-center justify-center text-4xl hover:bg-[#E8E4DC] active:bg-[#E0DCD3] transition-colors"
+                aria-label="Choose emoji"
+              >
+                {newEmoji}
+              </button>
+              <span className="text-[10px] tracking-[0.15em] uppercase text-[#1A1A1A]/30">
+                {emojiPickerOpen ? "Close" : "Choose icon"}
+              </span>
+            </div>
+            {emojiPickerOpen && (
+              <div className="grid grid-cols-6 gap-1">
+                {EMOJI_OPTIONS.map((e) => (
+                  <button
+                    key={e}
+                    onClick={() => { setNewEmoji(e); setEmojiPickerOpen(false); }}
+                    className={`text-xl p-2 rounded transition-colors min-w-[36px] min-h-[36px] flex items-center justify-center ${
+                      newEmoji === e
+                        ? "bg-[#1A1A1A]/10 ring-1 ring-[#1A1A1A]/20"
+                        : "hover:bg-[#F3F0EB] active:bg-[#E8E4DC]"
+                    }`}
+                  >
+                    {e}
+                  </button>
+                ))}
+              </div>
+            )}
             <div className="flex gap-2">
               <button
                 onClick={addBuddy}
@@ -185,6 +196,7 @@ export default function TravelDashboard({
                   setAddingFriend(false);
                   setNewName("");
                   setNewEmoji("🌍");
+                  setEmojiPickerOpen(false);
                 }}
                 className="px-3 py-2 text-xs border border-[#D4D0C8] text-[#1A1A1A]/50 hover:border-[#1A1A1A]/40 transition-colors"
               >
