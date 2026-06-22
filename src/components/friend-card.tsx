@@ -33,8 +33,11 @@ export default function FriendCard({
 }) {
   const [pickerOpen, setPickerOpen] = useState(false);
   const [input, setInput] = useState("");
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [activeSuggestion, setActiveSuggestion] = useState(-1);
   const pickerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const suggestTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const hasActive = activeName !== null && places.some((p) => p.name === activeName);
 
@@ -48,12 +51,67 @@ export default function FriendCard({
     return () => document.removeEventListener("mousedown", close);
   }, []);
 
+  function handleInputChange(value: string) {
+    setInput(value);
+    setActiveSuggestion(-1);
+    if (suggestTimer.current) clearTimeout(suggestTimer.current);
+    if (value.trim().length >= 2) {
+      suggestTimer.current = setTimeout(async () => {
+        try {
+          const res = await fetch(`/api/places/autocomplete?q=${encodeURIComponent(value.trim())}`);
+          const data = await res.json();
+          setSuggestions(data);
+        } catch {
+          setSuggestions([]);
+        }
+      }, 300);
+    } else {
+      setSuggestions([]);
+    }
+  }
+
+  function selectSuggestion(name: string) {
+    setInput("");
+    setSuggestions([]);
+    setActiveSuggestion(-1);
+    onAddPlace(name);
+    inputRef.current?.focus();
+  }
+
   function handleAdd() {
     const trimmed = input.trim();
     if (!trimmed) return;
-    onAddPlace(trimmed);
     setInput("");
+    setSuggestions([]);
+    setActiveSuggestion(-1);
+    onAddPlace(trimmed);
     inputRef.current?.focus();
+  }
+
+  function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (suggestions.length > 0) {
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        setActiveSuggestion((prev) => Math.min(prev + 1, suggestions.length - 1));
+        return;
+      }
+      if (e.key === "ArrowUp") {
+        e.preventDefault();
+        setActiveSuggestion((prev) => Math.max(prev - 1, -1));
+        return;
+      }
+      if (e.key === "Enter" && activeSuggestion >= 0) {
+        e.preventDefault();
+        selectSuggestion(suggestions[activeSuggestion]);
+        return;
+      }
+      if (e.key === "Escape") {
+        setSuggestions([]);
+        setActiveSuggestion(-1);
+        return;
+      }
+    }
+    if (e.key === "Enter") handleAdd();
   }
 
   return (
@@ -148,25 +206,46 @@ export default function FriendCard({
         )}
       </div>
 
-      {/* Inline add input */}
+      {/* Inline add input with autocomplete */}
       <div className="px-5 pb-5">
-        <div className="flex gap-2">
-          <input
-            ref={inputRef}
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleAdd()}
-            placeholder="Add a place…"
-            className="flex-1 border border-[#D4D0C8] px-3 py-3 text-sm focus:outline-none focus:border-[#1A1A1A]/50 bg-transparent placeholder:text-[#1A1A1A]/25 min-w-0"
-          />
-          <button
-            onClick={handleAdd}
-            disabled={!input.trim()}
-            aria-label="Add place"
-            className="min-w-[44px] min-h-[44px] border border-[#D4D0C8] text-sm text-[#1A1A1A]/50 hover:border-[#1A1A1A]/40 hover:text-[#1A1A1A] active:bg-[#F3F0EB] transition-colors disabled:opacity-30 flex items-center justify-center"
-          >
-            +
-          </button>
+        <div className="relative">
+          <div className="flex gap-2">
+            <input
+              ref={inputRef}
+              value={input}
+              onChange={(e) => handleInputChange(e.target.value)}
+              onKeyDown={handleKeyDown}
+              onBlur={() => setTimeout(() => setSuggestions([]), 150)}
+              placeholder="Add a place…"
+              autoComplete="off"
+              className="flex-1 border border-[#D4D0C8] px-3 py-3 text-sm focus:outline-none focus:border-[#1A1A1A]/50 bg-transparent placeholder:text-[#1A1A1A]/25 min-w-0"
+            />
+            <button
+              onClick={handleAdd}
+              disabled={!input.trim()}
+              aria-label="Add place"
+              className="min-w-[44px] min-h-[44px] border border-[#D4D0C8] text-sm text-[#1A1A1A]/50 hover:border-[#1A1A1A]/40 hover:text-[#1A1A1A] active:bg-[#F3F0EB] transition-colors disabled:opacity-30 flex items-center justify-center"
+            >
+              +
+            </button>
+          </div>
+          {suggestions.length > 0 && (
+            <div className="absolute bottom-full left-0 right-0 mb-1 bg-white border border-[#D4D0C8] shadow-md z-20">
+              {suggestions.map((s, idx) => (
+                <button
+                  key={s}
+                  onMouseDown={(e) => { e.preventDefault(); selectSuggestion(s); }}
+                  className={`w-full text-left px-3 py-2.5 text-sm transition-colors ${
+                    idx === activeSuggestion
+                      ? "bg-[#F3F0EB] text-[#1A1A1A]"
+                      : "text-[#1A1A1A]/70 hover:bg-[#F3F0EB] hover:text-[#1A1A1A]"
+                  }`}
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
