@@ -12,6 +12,7 @@ export default function Nav() {
   const links = [
     { href: "/trips/new", label: t("nav.discover") },
     { href: "/bucket-list", label: t("nav.bucketList") },
+    { href: "/travel", label: "MATCHING" },
   ];
 
   return (
@@ -26,7 +27,7 @@ export default function Nav() {
             <Link
               key={link.href}
               href={link.href}
-              className={`text-[10px] md:text-xs tracking-[0.12em] md:tracking-[0.2em] whitespace-nowrap transition-colors py-2.5 md:py-1 active:text-[#1A1A1A] ${
+              className={`text-xs md:text-[10px] tracking-[0.12em] md:tracking-[0.2em] whitespace-nowrap transition-colors py-2.5 md:py-1 active:text-[#1A1A1A] ${
                 pathname === link.href ||
                 (link.href !== "/" && pathname.startsWith(link.href))
                   ? "text-[#1A1A1A]"
@@ -38,7 +39,7 @@ export default function Nav() {
           ))}
           <button
             onClick={() => setLang(lang === "en" ? "zh" : "en")}
-            className="text-[10px] md:text-xs tracking-wide text-[#1A1A1A]/55 hover:text-[#1A1A1A] active:text-[#1A1A1A] transition-colors border-l border-[#D4D0C8] pl-3 md:pl-6 py-2.5 md:py-1 whitespace-nowrap"
+            className="text-xs md:text-[10px] tracking-wide text-[#1A1A1A]/55 hover:text-[#1A1A1A] active:text-[#1A1A1A] transition-colors border-l border-[#D4D0C8] pl-3 md:pl-6 py-2.5 md:py-1 whitespace-nowrap"
             aria-label={t("nav.switchLang")}
           >
             {lang === "en" ? "中文" : "EN"}

@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Travel Matching — Layout Explorations</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, sans-serif; background: #F3F0EB; color: #1A1A1A; }
+
+  .exploration {
+    min-height: 100vh;
+    padding: 48px 40px;
+    border-bottom: 3px solid #1A1A1A;
+  }
+  .exploration:last-child { border-bottom: none; }
+
+  .label {
+    font-size: 10px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: #1A1A1A;
+    opacity: .4;
+    margin-bottom: 6px;
+  }
+  .title { font-size: 28px; font-family: Georgia, serif; margin-bottom: 4px; }
+  .subtitle { font-size: 13px; color: #1A1A1A; opacity: .5; margin-bottom: 40px; }
+
+  /* ── Exploration 1: Card Grid ──────────────────────── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+  .friend-card {
+    background: #fff;
+    border: 1px solid #D4D0C8;
+    padding: 24px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .friend-card .avatar {
+    font-size: 48px;
+    line-height: 1;
+    cursor: pointer;
+    user-select: none;
+    width: 72px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #F3F0EB;
+    border-radius: 50%;
+  }
+  .friend-card .name {
+    font-size: 15px;
+    font-family: Georgia, serif;
+  }
+  .friend-card .places {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+  }
+  .friend-card .places li {
+    font-size: 12px;
+    color: #1A1A1A;
+    opacity: .65;
+    border-top: 1px solid #D4D0C8;
+    padding-top: 6px;
+  }
+  .friend-card .add-place {
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #1A1A1A;
+    opacity: .35;
+    cursor: pointer;
+    border-top: 1px solid #D4D0C8;
+    padding-top: 10px;
+    margin-top: 4px;
+  }
+  .friend-card .add-place:hover { opacity: .7; }
+
+  .add-friend-card {
+    border: 1px dashed #D4D0C8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 24px;
+    cursor: pointer;
+    min-height: 200px;
+    color: #1A1A1A;
+    opacity: .4;
+    transition: opacity .15s;
+  }
+  .add-friend-card:hover { opacity: .7; }
+  .add-friend-card .plus { font-size: 28px; line-height: 1; }
+  .add-friend-card span { font-size: 11px; letter-spacing: .15em; text-transform: uppercase; }
+
+  .share-row-1 {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-top: 1px solid #D4D0C8;
+    padding-top: 20px;
+  }
+  .share-row-1 .share-label { font-size: 10px; letter-spacing: .15em; text-transform: uppercase; opacity: .4; }
+  .share-row-1 .share-url { font-size: 11px; font-family: monospace; opacity: .45; }
+  .share-row-1 .copy-btn {
+    margin-left: auto;
+    font-size: 10px;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    border: 1px solid #D4D0C8;
+    padding: 6px 14px;
+    cursor: pointer;
+    background: none;
+  }
+  .share-row-1 .copy-btn:hover { border-color: #1A1A1A; }
+
+  /* emoji picker popover */
+  .emoji-popover {
+    position: relative;
+    display: inline-block;
+  }
+  .emoji-grid {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    background: #fff;
+    border: 1px solid #D4D0C8;
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+    z-index: 10;
+    width: 180px;
+    box-shadow: 0 4px 16px rgba(0,0,0,.08);
+  }
+  .emoji-grid span {
+    font-size: 22px;
+    cursor: pointer;
+    text-align: center;
+    padding: 4px;
+    border-radius: 4px;
+    transition: background .1s;
+  }
+  .emoji-grid span:hover { background: #F3F0EB; }
+
+  /* ── Exploration 2: Full-Width Columns ─────────────── */
+  .columns-layout {
+    overflow-x: auto;
+    margin-bottom: 40px;
+  }
+  .columns-inner {
+    display: grid;
+    grid-template-columns: repeat(3, 240px) 80px;
+    gap: 0;
+    min-width: 600px;
+  }
+  .col-header {
+    padding: 0 20px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 2px solid #1A1A1A;
+  }
+  .col-header .emo { font-size: 32px; }
+  .col-header .col-name { font-family: Georgia, serif; font-size: 16px; }
+
+  .col-add-friend {
+    padding: 0 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 2px solid #1A1A1A;
+  }
+  .col-add-friend button {
+    font-size: 20px;
+    border: 1px dashed #D4D0C8;
+    width: 40px;
+    height: 40px;
+    background: none;
+    cursor: pointer;
+    color: #1A1A1A;
+    opacity: .4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .col-body {
+    padding: 12px 20px;
+    border-right: 1px solid #D4D0C8;
+  }
+  .col-body:last-child { border-right: none; }
+  .col-place {
+    font-size: 13px;
+    color: #1A1A1A;
+    opacity: .7;
+    padding: 8px 0;
+    border-bottom: 1px solid #D4D0C8;
+  }
+  .col-add {
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    opacity: .3;
+    padding: 10px 0 4px;
+    cursor: pointer;
+  }
+  .col-add:hover { opacity: .6; }
+
+  .share-row-2 {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-top: 1px solid #D4D0C8;
+    padding-top: 20px;
+    margin-top: 4px;
+  }
+  .share-row-2 .lbl { font-size: 10px; letter-spacing: .15em; text-transform: uppercase; opacity: .4; }
+  .share-row-2 .url { font-size: 11px; font-family: monospace; opacity: .4; }
+  .share-row-2 .btn {
+    margin-left: auto;
+    font-size: 10px;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    border: 1px solid #D4D0C8;
+    padding: 6px 14px;
+    cursor: pointer;
+    background: none;
+  }
+
+  /* ── Exploration 3: Accordion ──────────────────────── */
+  .accordion { display: flex; flex-direction: column; gap: 0; margin-bottom: 40px; }
+  .acc-row {
+    border-top: 1px solid #D4D0C8;
+  }
+  .acc-row:last-child { border-bottom: 1px solid #D4D0C8; }
+  .acc-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 0;
+    cursor: pointer;
+    user-select: none;
+  }
+  .acc-header .emo { font-size: 28px; }
+  .acc-header .acc-name { font-family: Georgia, serif; font-size: 16px; flex: 1; }
+  .acc-header .acc-count { font-size: 11px; opacity: .35; }
+  .acc-header .chevron { font-size: 14px; opacity: .3; transition: transform .2s; }
+  .acc-header.open .chevron { transform: rotate(90deg); opacity: .6; }
+
+  .acc-body {
+    display: none;
+    padding: 0 0 20px 42px;
+  }
+  .acc-body.open { display: block; }
+  .acc-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .acc-tag {
+    font-size: 12px;
+    border: 1px solid #D4D0C8;
+    padding: 5px 12px;
+    background: #fff;
+  }
+  .acc-input-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+  }
+  .acc-input-row input {
+    flex: 1;
+    border: 1px solid #D4D0C8;
+    padding: 8px 12px;
+    font-size: 13px;
+    background: transparent;
+    outline: none;
+    max-width: 280px;
+  }
+  .acc-input-row input:focus { border-color: #1A1A1A; }
+  .acc-input-row button {
+    font-size: 10px;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    border: 1px solid #1A1A1A;
+    padding: 8px 16px;
+    background: none;
+    cursor: pointer;
+  }
+  .acc-input-row button:hover { background: #1A1A1A; color: #fff; }
+
+  .add-friend-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 0 0;
+    cursor: pointer;
+    opacity: .4;
+  }
+  .add-friend-row:hover { opacity: .7; }
+  .add-friend-row .circle {
+    width: 36px; height: 36px;
+    border: 1px dashed #1A1A1A;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    border-radius: 50%;
+  }
+  .add-friend-row span { font-size: 11px; letter-spacing: .15em; text-transform: uppercase; }
+
+  .share-row-3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 32px;
+    padding-top: 20px;
+    border-top: 1px solid #D4D0C8;
+  }
+  .share-row-3 .lbl { font-size: 10px; letter-spacing: .15em; text-transform: uppercase; opacity: .4; }
+  .share-row-3 .url { font-size: 11px; font-family: monospace; opacity: .4; }
+  .share-row-3 .btn {
+    margin-left: auto;
+    font-size: 10px;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    border: 1px solid #D4D0C8;
+    padding: 6px 14px;
+    cursor: pointer;
+    background: none;
+  }
+
+  /* nav tabs */
+  .exp-nav {
+    position: sticky;
+    top: 0;
+    background: #1A1A1A;
+    display: flex;
+    z-index: 100;
+  }
+  .exp-nav a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 10px;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    padding: 14px 24px;
+    opacity: .5;
+    transition: opacity .15s;
+    border-right: 1px solid rgba(255,255,255,.1);
+  }
+  .exp-nav a:hover { opacity: 1; }
+  .exp-nav .note {
+    margin-left: auto;
+    font-size: 10px;
+    letter-spacing: .1em;
+    color: #fff;
+    opacity: .3;
+    padding: 14px 24px;
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+
+<nav class="exp-nav">
+  <a href="#exp1">1 · Card Grid</a>
+  <a href="#exp2">2 · Columns</a>
+  <a href="#exp3">3 · Accordion</a>
+  <span class="note">click emoji to open picker · interactive prototype</span>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════
+     EXPLORATION 1 — Card Grid
+════════════════════════════════════════════════════════ -->
+<section class="exploration" id="exp1">
+  <p class="label">Exploration 1</p>
+  <h1 class="title">Card Grid</h1>
+  <p class="subtitle">Each friend is a card. Emoji takes visual weight. Add places inline under each person.</p>
+
+  <div class="card-grid">
+
+    <!-- Friend 1 -->
+    <div class="friend-card">
+      <div class="emoji-popover">
+        <div class="avatar" onclick="togglePicker(this)" title="Change emoji">🌸</div>
+        <div class="emoji-grid">
+          <span onclick="setEmoji(this,'🌸')">🌸</span><span onclick="setEmoji(this,'🏔️')">🏔️</span>
+          <span onclick="setEmoji(this,'🌊')">🌊</span><span onclick="setEmoji(this,'🌴')">🌴</span>
+          <span onclick="setEmoji(this,'🦋')">🦋</span><span onclick="setEmoji(this,'🌺')">🌺</span>
+          <span onclick="setEmoji(this,'🍜')">🍜</span><span onclick="setEmoji(this,'🎭')">🎭</span>
+          <span onclick="setEmoji(this,'🌙')">🌙</span><span onclick="setEmoji(this,'⚡')">⚡</span>
+          <span onclick="setEmoji(this,'🎨')">🎨</span><span onclick="setEmoji(this,'🧳')">🧳</span>
+          <span onclick="setEmoji(this,'🌿')">🌿</span><span onclick="setEmoji(this,'🔮')">🔮</span>
+          <span onclick="setEmoji(this,'✨')">✨</span>
+        </div>
+      </div>
+      <div class="name">Sarah</div>
+      <ul class="places">
+        <li>Japan</li>
+        <li>Morocco</li>
+        <li>Portugal</li>
+      </ul>
+      <div class="add-place">+ add place</div>
+    </div>
+
+    <!-- Friend 2 -->
+    <div class="friend-card">
+      <div class="emoji-popover">
+        <div class="avatar" onclick="togglePicker(this)" title="Change emoji">🏔️</div>
+        <div class="emoji-grid">
+          <span onclick="setEmoji(this,'🌸')">🌸</span><span onclick="setEmoji(this,'🏔️')">🏔️</span>
+          <span onclick="setEmoji(this,'🌊')">🌊</span><span onclick="setEmoji(this,'🌴')">🌴</span>
+          <span onclick="setEmoji(this,'🦋')">🦋</span><span onclick="setEmoji(this,'🌺')">🌺</span>
+          <span onclick="setEmoji(this,'🍜')">🍜</span><span onclick="setEmoji(this,'🎭')">🎭</span>
+          <span onclick="setEmoji(this,'🌙')">🌙</span><span onclick="setEmoji(this,'⚡')">⚡</span>
+          <span onclick="setEmoji(this,'🎨')">🎨</span><span onclick="setEmoji(this,'🧳')">🧳</span>
+          <span onclick="setEmoji(this,'🌿')">🌿</span><span onclick="setEmoji(this,'🔮')">🔮</span>
+          <span onclick="setEmoji(this,'✨')">✨</span>
+        </div>
+      </div>
+      <div class="name">Marcus</div>
+      <ul class="places">
+        <li>Nepal</li>
+        <li>Iceland</li>
+      </ul>
+      <div class="add-place">+ add place</div>
+    </div>
+
+    <!-- Friend 3 -->
+    <div class="friend-card">
+      <div class="emoji-popover">
+        <div class="avatar" onclick="togglePicker(this)" title="Change emoji">🌊</div>
+        <div class="emoji-grid">
+          <span onclick="setEmoji(this,'🌸')">🌸</span><span onclick="setEmoji(this,'🏔️')">🏔️</span>
+          <span onclick="setEmoji(this,'🌊')">🌊</span><span onclick="setEmoji(this,'🌴')">🌴</span>
+          <span onclick="setEmoji(this,'🦋')">🦋</span><span onclick="setEmoji(this,'🌺')">🌺</span>
+          <span onclick="setEmoji(this,'🍜')">🍜</span><span onclick="setEmoji(this,'🎭')">🎭</span>
+          <span onclick="setEmoji(this,'🌙')">🌙</span><span onclick="setEmoji(this,'⚡')">⚡</span>
+          <span onclick="setEmoji(this,'🎨')">🎨</span><span onclick="setEmoji(this,'🧳')">🧳</span>
+          <span onclick="setEmoji(this,'🌿')">🌿</span><span onclick="setEmoji(this,'🔮')">🔮</span>
+          <span onclick="setEmoji(this,'✨')">✨</span>
+        </div>
+      </div>
+      <div class="name">Jen</div>
+      <ul class="places">
+        <li>Greece</li>
+        <li>Thailand</li>
+        <li>Croatia</li>
+        <li>Sri Lanka</li>
+      </ul>
+      <div class="add-place">+ add place</div>
+    </div>
+
+    <!-- Add friend -->
+    <div class="add-friend-card">
+      <div class="plus">+</div>
+      <span>Add friend</span>
+    </div>
+
+  </div>
+
+  <!-- Share (secondary) -->
+  <div class="share-row-1">
+    <span class="share-label">Friend link</span>
+    <span class="share-url">myra.app/rank/ashley</span>
+    <button class="copy-btn">Copy ↗</button>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     EXPLORATION 2 — Full-Width Columns
+════════════════════════════════════════════════════════ -->
+<section class="exploration" id="exp2">
+  <p class="label">Exploration 2</p>
+  <h1 class="title">Columns</h1>
+  <p class="subtitle">Friends as column headers. Best for scanning across who wants to go where. Scrolls horizontally with more friends.</p>
+
+  <div class="columns-layout">
+    <div class="columns-inner">
+
+      <!-- Headers -->
+      <div class="col-header">
+        <span class="emo">🌸</span>
+        <span class="col-name">Sarah</span>
+      </div>
+      <div class="col-header">
+        <span class="emo">🏔️</span>
+        <span class="col-name">Marcus</span>
+      </div>
+      <div class="col-header">
+        <span class="emo">🌊</span>
+        <span class="col-name">Jen</span>
+      </div>
+      <div class="col-add-friend">
+        <button title="Add friend">+</button>
+      </div>
+
+      <!-- Bodies -->
+      <div class="col-body">
+        <div class="col-place">Japan</div>
+        <div class="col-place">Morocco</div>
+        <div class="col-place">Portugal</div>
+        <div class="col-add">+ add</div>
+      </div>
+      <div class="col-body">
+        <div class="col-place">Nepal</div>
+        <div class="col-place">Iceland</div>
+        <div class="col-add">+ add</div>
+      </div>
+      <div class="col-body">
+        <div class="col-place">Greece</div>
+        <div class="col-place">Thailand</div>
+        <div class="col-place">Croatia</div>
+        <div class="col-place">Sri Lanka</div>
+        <div class="col-add">+ add</div>
+      </div>
+      <div class="col-body"></div>
+
+    </div>
+  </div>
+
+  <!-- Share (secondary) -->
+  <div class="share-row-2">
+    <span class="lbl">Friend link</span>
+    <span class="url">myra.app/rank/ashley</span>
+    <button class="btn">Copy ↗</button>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     EXPLORATION 3 — Accordion
+════════════════════════════════════════════════════════ -->
+<section class="exploration" id="exp3">
+  <p class="label">Exploration 3</p>
+  <h1 class="title">Accordion</h1>
+  <p class="subtitle">One friend open at a time. Mobile-friendly. Emoji + name feel like a contact row you tap into.</p>
+
+  <div class="accordion" style="max-width: 560px;">
+
+    <div class="acc-row">
+      <div class="acc-header open" onclick="toggleAcc(this)">
+        <span class="emo">🌸</span>
+        <span class="acc-name">Sarah</span>
+        <span class="acc-count">3 places</span>
+        <span class="chevron">›</span>
+      </div>
+      <div class="acc-body open">
+        <div class="acc-tags">
+          <div class="acc-tag">Japan</div>
+          <div class="acc-tag">Morocco</div>
+          <div class="acc-tag">Portugal</div>
+        </div>
+        <div class="acc-input-row">
+          <input placeholder="Add a place…" />
+          <button>Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="acc-row">
+      <div class="acc-header" onclick="toggleAcc(this)">
+        <span class="emo">🏔️</span>
+        <span class="acc-name">Marcus</span>
+        <span class="acc-count">2 places</span>
+        <span class="chevron">›</span>
+      </div>
+      <div class="acc-body">
+        <div class="acc-tags">
+          <div class="acc-tag">Nepal</div>
+          <div class="acc-tag">Iceland</div>
+        </div>
+        <div class="acc-input-row">
+          <input placeholder="Add a place…" />
+          <button>Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="acc-row">
+      <div class="acc-header" onclick="toggleAcc(this)">
+        <span class="emo">🌊</span>
+        <span class="acc-name">Jen</span>
+        <span class="acc-count">4 places</span>
+        <span class="chevron">›</span>
+      </div>
+      <div class="acc-body">
+        <div class="acc-tags">
+          <div class="acc-tag">Greece</div>
+          <div class="acc-tag">Thailand</div>
+          <div class="acc-tag">Croatia</div>
+          <div class="acc-tag">Sri Lanka</div>
+        </div>
+        <div class="acc-input-row">
+          <input placeholder="Add a place…" />
+          <button>Add</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Add friend -->
+  <div class="add-friend-row" style="max-width: 560px;">
+    <div class="circle">+</div>
+    <span>Add friend</span>
+  </div>
+
+  <!-- Share (secondary) -->
+  <div class="share-row-3" style="max-width: 560px;">
+    <span class="lbl">Friend link</span>
+    <span class="url">myra.app/rank/ashley</span>
+    <button class="btn">Copy ↗</button>
+  </div>
+</section>
+
+
+<script>
+  // Emoji picker toggle
+  function togglePicker(avatarEl) {
+    const popover = avatarEl.closest('.emoji-popover');
+    const grid = popover.querySelector('.emoji-grid');
+    const isOpen = grid.style.display === 'grid';
+    // close all
+    document.querySelectorAll('.emoji-grid').forEach(g => g.style.display = 'none');
+    if (!isOpen) grid.style.display = 'grid';
+  }
+
+  function setEmoji(spanEl, emoji) {
+    const popover = spanEl.closest('.emoji-popover');
+    popover.querySelector('.avatar').textContent = emoji;
+    popover.querySelector('.emoji-grid').style.display = 'none';
+  }
+
+  // Close pickers on outside click
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.emoji-popover')) {
+      document.querySelectorAll('.emoji-grid').forEach(g => g.style.display = 'none');
+    }
+  });
+
+  // Accordion toggle
+  function toggleAcc(headerEl) {
+    const row = headerEl.closest('.acc-row');
+    const body = row.querySelector('.acc-body');
+    const isOpen = headerEl.classList.contains('open');
+    // close all
+    document.querySelectorAll('.acc-header').forEach(h => h.classList.remove('open'));
+    document.querySelectorAll('.acc-body').forEach(b => b.classList.remove('open'));
+    if (!isOpen) {
+      headerEl.classList.add('open');
+      body.classList.add('open');
+    }
+  }
+</script>
+
+</body>
+</html>

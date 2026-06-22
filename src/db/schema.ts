@@ -54,3 +54,39 @@ export const tripExperiences = sqliteTable("trip_experiences", {
     .notNull()
     .references(() => experiences.id, { onDelete: "cascade" }),
 });
+
+export const buddies = sqliteTable("buddies", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: text("user_id").notNull(),
+  name: text("name").notNull(),
+  emoji: text("emoji").notNull().default("🌍"),
+  createdAt: text("created_at")
+    .notNull()
+    .$defaultFn(() => new Date().toISOString()),
+});
+
+export const friendPlaces = sqliteTable("friend_places", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  buddyId: integer("buddy_id")
+    .notNull()
+    .references(() => buddies.id, { onDelete: "cascade" }),
+  name: text("name").notNull(),
+  createdAt: text("created_at")
+    .notNull()
+    .$defaultFn(() => new Date().toISOString()),
+});
+
+// tier: "take-me-there" | "interested" | "open"
+export const affinities = sqliteTable("affinities", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  buddyId: integer("buddy_id")
+    .notNull()
+    .references(() => buddies.id, { onDelete: "cascade" }),
+  experienceId: integer("experience_id")
+    .notNull()
+    .references(() => experiences.id, { onDelete: "cascade" }),
+  tier: text("tier").notNull(),
+  updatedAt: text("updated_at")
+    .notNull()
+    .$defaultFn(() => new Date().toISOString()),
+});

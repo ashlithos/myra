@@ -15,7 +15,7 @@ export default async function EditExperiencePage({
 }) {
   let session;
   try { session = await auth(); } catch {}
-  const isDev = process.env.NODE_ENV === "development";
+  const isDev = process.env.NODE_ENV === "development" || process.env.VERCEL_ENV === "preview";
 
   if (!session?.user?.id && !isDev) {
     return <AuthGate>{null}</AuthGate>;

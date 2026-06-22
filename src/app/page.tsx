@@ -32,7 +32,7 @@ export default async function Home() {
       .select({ id: experiences.id, name: experiences.name })
       .from(experiences)
       .where(eq(experiences.userId, userId));
-    const expIds = userExps.map((e) => e.id);
+    const expIds = userExps.map((e: { id: number; name: string }) => e.id);
     if (expIds.length > 0) {
       const photos = await db
         .select({
@@ -42,8 +42,8 @@ export default async function Home() {
         })
         .from(experiencePhotos)
         .where(inArray(experiencePhotos.experienceId, expIds));
-      const nameMap = Object.fromEntries(userExps.map((e) => [e.id, e.name]));
-      galleryItems = photos.map((p) => ({
+      const nameMap = Object.fromEntries(userExps.map((e: { id: number; name: string }) => [e.id, e.name]));
+      galleryItems = photos.map((p: { experienceId: number; url: string; thumbUrl: string }) => ({
         name: nameMap[p.experienceId] || "",
         url: p.url,
         thumbUrl: p.thumbUrl,
