@@ -218,6 +218,10 @@ export default function FriendCard({
               onBlur={() => setTimeout(() => setSuggestions([]), 150)}
               placeholder="Add a place…"
               autoComplete="off"
+              aria-label="Add a place"
+              aria-autocomplete="list"
+              aria-controls={suggestions.length > 0 ? `suggestions-${buddy.id}` : undefined}
+              aria-activedescendant={activeSuggestion >= 0 ? `suggestion-${buddy.id}-${activeSuggestion}` : undefined}
               className="flex-1 border border-[#D4D0C8] px-3 py-3 text-sm focus:outline-none focus:border-[#1A1A1A]/50 bg-transparent placeholder:text-[#1A1A1A]/25 min-w-0"
             />
             <button
@@ -230,10 +234,18 @@ export default function FriendCard({
             </button>
           </div>
           {suggestions.length > 0 && (
-            <div className="absolute bottom-full left-0 right-0 mb-1 bg-white border border-[#D4D0C8] shadow-md z-20">
+            <div
+              id={`suggestions-${buddy.id}`}
+              role="listbox"
+              aria-label="Place suggestions"
+              className="absolute bottom-full left-0 right-0 mb-1 bg-white border border-[#D4D0C8] shadow-md z-20"
+            >
               {suggestions.map((s, idx) => (
                 <button
                   key={s}
+                  id={`suggestion-${buddy.id}-${idx}`}
+                  role="option"
+                  aria-selected={idx === activeSuggestion}
                   onMouseDown={(e) => { e.preventDefault(); selectSuggestion(s); }}
                   className={`w-full text-left px-3 py-2.5 text-sm transition-colors ${
                     idx === activeSuggestion

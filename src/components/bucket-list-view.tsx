@@ -144,15 +144,19 @@ export default function BucketListView({
             onClick={() => setSortOpen(!sortOpen)}
             className="flex items-center gap-1 px-3 py-3 md:px-3 md:py-2 border border-[#D4D0C8] text-[11px] md:text-[10px] tracking-[0.1em] md:tracking-[0.15em] uppercase text-[#1A1A1A]/50 hover:text-[#1A1A1A] transition-colors"
             aria-label={t("sort.label")}
+            aria-haspopup="listbox"
+            aria-expanded={sortOpen}
           >
             {sortOptions.find((o) => o.value === sort)?.label}
             <ChevronDown size={12} className={`transition-transform ${sortOpen ? "rotate-180" : ""}`} />
           </button>
           {sortOpen && (
-            <div className="absolute right-0 md:left-0 top-full mt-1 bg-white border border-[#D4D0C8] shadow-[0_2px_8px_rgba(0,0,0,0.08)] z-50 min-w-[120px]">
+            <div role="listbox" aria-label={t("sort.label")} className="absolute right-0 md:left-0 top-full mt-1 bg-white border border-[#D4D0C8] shadow-[0_2px_8px_rgba(0,0,0,0.08)] z-50 min-w-[120px]">
               {sortOptions.map((opt) => (
                 <button
                   key={opt.value}
+                  role="option"
+                  aria-selected={sort === opt.value}
                   onClick={() => { setSort(opt.value); setSortOpen(false); }}
                   className={`w-full text-left px-3 py-3 md:py-2 text-[11px] md:text-[10px] tracking-[0.1em] uppercase transition-colors ${
                     sort === opt.value
@@ -246,6 +250,8 @@ export default function BucketListView({
       {/* Snackbar */}
       {snackbar && (
         <div
+          role="status"
+          aria-live="polite"
           className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-[#1A1A1A] text-white px-6 py-3 text-sm tracking-wide shadow-lg animate-[slideUp_0.3s_cubic-bezier(0.25,1,0.5,1)]"
           style={{ animation: "slideUp 0.3s cubic-bezier(0.25, 1, 0.5, 1)" }}
         >

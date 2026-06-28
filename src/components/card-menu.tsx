@@ -46,12 +46,16 @@ export default function CardMenu({ experienceId }: { experienceId: number }) {
         }}
         className="px-1.5 pt-0.5 pb-1.5 text-[#1A1A1A]/20 hover:text-[#1A1A1A]/60 transition-colors opacity-0 group-hover:opacity-100"
         aria-label={t("menu.more")}
+        aria-haspopup="menu"
+        aria-expanded={open}
       >
         <MoreVertical size={14} />
       </button>
 
       {open && (
         <div
+          role="menu"
+          aria-label={t("menu.more")}
           className="absolute right-0 top-full mt-1 bg-white border border-[#D4D0C8] shadow-[0_2px_8px_rgba(0,0,0,0.08)] z-20 min-w-[120px]"
           onClick={(e) => {
             e.preventDefault();
@@ -60,6 +64,7 @@ export default function CardMenu({ experienceId }: { experienceId: number }) {
         >
           <button
             type="button"
+            role="menuitem"
             onClick={handleDelete}
             className={`w-full text-left px-4 py-2.5 text-[10px] tracking-[0.15em] uppercase transition-colors ${
               confirming
