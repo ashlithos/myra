@@ -34,7 +34,8 @@ export default async function BucketListPage() {
       const photos = await db
         .select()
         .from(experiencePhotos)
-        .where(inArray(experiencePhotos.experienceId, expIds));
+        .where(inArray(experiencePhotos.experienceId, expIds))
+        .orderBy(desc(experiencePhotos.id));
       for (const photo of photos) {
         if (!photoMap[photo.experienceId]) {
           photoMap[photo.experienceId] = {

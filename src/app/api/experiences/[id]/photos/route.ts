@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { experiencePhotos } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
@@ -11,7 +11,8 @@ export async function GET(
   const photos = await db
     .select()
     .from(experiencePhotos)
-    .where(eq(experiencePhotos.experienceId, parseInt(id)));
+    .where(eq(experiencePhotos.experienceId, parseInt(id)))
+    .orderBy(desc(experiencePhotos.id));
 
   return NextResponse.json(photos);
 }

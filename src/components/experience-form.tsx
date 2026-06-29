@@ -59,6 +59,8 @@ export default function ExperienceForm({
   const [photos, setPhotos] = useState<ExperiencePhoto[]>([]);
   const [pendingPhotos, setPendingPhotos] = useState<PendingPhoto[]>([]);
   const [showPhotoPicker, setShowPhotoPicker] = useState(false);
+  // Persisted photo ids that were replaced and should be deleted on save
+  const [photosToDelete, setPhotosToDelete] = useState<number[]>([]);
 
   // Snackbar
   const [snackbar, setSnackbar] = useState("");
@@ -157,6 +159,13 @@ export default function ExperienceForm({
       const saved = await res.json();
       const expId = isEdit ? experience.id : saved.id;
 
+      // Delete photos that were replaced/removed during this edit
+      for (const photoId of photosToDelete) {
+        await fetch(`/api/experiences/${expId}/photos?photoId=${photoId}`, {
+          method: "DELETE",
+        });
+      }
+
       // Save pending photos
       for (const photo of pendingPhotos) {
         await fetch(`/api/experiences/${expId}/photos`, {
@@ -184,7 +193,9 @@ export default function ExperienceForm({
   }
 
   function addPhoto(photo: PendingPhoto) {
-    // Replace any existing photos with the new one
+    // Replace any existing photos with the new one — mark persisted ones for
+    // deletion on save so the swap actually sticks in the database.
+    setPhotosToDelete((prev) => [...prev, ...photos.map((p) => p.id)]);
     setPhotos([]);
     setPendingPhotos([photo]);
     setShowPhotoPicker(false);
