@@ -64,9 +64,9 @@ export default function RankPage() {
         </div>
 
         {step === "loading" && (
-          <div className="animate-pulse space-y-3">
+          <div className="space-y-3">
             {[0, 1, 2, 3].map((i) => (
-              <div key={i} className="h-14 bg-[#D4D0C8]/30 border border-[#D4D0C8]/40 rounded" />
+              <div key={i} className="h-14 shimmer border border-[#D4D0C8]/40 rounded" />
             ))}
           </div>
         )}

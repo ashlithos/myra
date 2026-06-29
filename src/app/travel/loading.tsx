@@ -3,8 +3,8 @@ export default function TravelLoading() {
     <div className="max-w-6xl mx-auto px-6 py-10">
       {/* Header */}
       <div className="mb-8">
-        <div className="h-2.5 w-28 bg-[#D4D0C8]/40 rounded animate-pulse mb-2" />
-        <div className="h-8 w-64 bg-[#D4D0C8]/30 rounded animate-pulse" />
+        <div className="h-2.5 w-28 shimmer rounded mb-2" />
+        <div className="h-8 w-64 shimmer rounded" />
       </div>
 
       {/* Card grid */}
@@ -17,27 +17,27 @@ export default function TravelLoading() {
             </div>
             {/* Avatar */}
             <div className="flex flex-col items-center px-6 pb-5 gap-3">
-              <div className="w-20 h-20 rounded-full bg-[#D4D0C8]/30 animate-pulse" />
-              <div className="h-4 w-20 bg-[#D4D0C8]/30 rounded animate-pulse" />
+              <div className="w-20 h-20 rounded-full shimmer" />
+              <div className="h-4 w-20 shimmer rounded" />
             </div>
             {/* Place pills */}
             <div className="px-5 pb-4 flex gap-2 flex-wrap">
               {n === 1 && (
                 <>
-                  <div className="h-7 w-16 bg-[#D4D0C8]/25 rounded animate-pulse" />
-                  <div className="h-7 w-20 bg-[#D4D0C8]/25 rounded animate-pulse" />
+                  <div className="h-7 w-16 shimmer rounded" />
+                  <div className="h-7 w-20 shimmer rounded" />
                 </>
               )}
               {n === 2 && (
-                <div className="h-7 w-14 bg-[#D4D0C8]/25 rounded animate-pulse" />
+                <div className="h-7 w-14 shimmer rounded" />
               )}
               {n === 3 && (
-                <div className="h-3 w-32 bg-[#D4D0C8]/20 rounded animate-pulse mt-1" />
+                <div className="h-3 w-32 shimmer rounded mt-1" />
               )}
             </div>
             {/* Input */}
             <div className="px-5 pb-5">
-              <div className="h-11 bg-[#D4D0C8]/20 rounded animate-pulse" />
+              <div className="h-11 shimmer rounded" />
             </div>
           </div>
         ))}
@@ -52,10 +52,10 @@ export default function TravelLoading() {
       {/* Footer */}
       <div className="border-t border-[#D4D0C8] pt-5 flex items-center gap-4">
         <div className="space-y-1.5">
-          <div className="h-2 w-16 bg-[#D4D0C8]/30 rounded animate-pulse" />
-          <div className="h-2.5 w-48 bg-[#D4D0C8]/20 rounded animate-pulse" />
+          <div className="h-2 w-16 shimmer rounded" />
+          <div className="h-2.5 w-48 shimmer rounded" />
         </div>
-        <div className="ml-auto h-8 w-20 border border-[#D4D0C8] animate-pulse" />
+        <div className="ml-auto h-8 w-20 shimmer" />
       </div>
     </div>
   );
