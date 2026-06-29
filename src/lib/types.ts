@@ -17,6 +17,7 @@ export interface Experience {
   country: string;
   idealSeasons: string;
   idealPartnerTypes: string;
+  plannedMonths: string;
   estimatedDays: number | null;
   bestMonths: string | null;
   estimatedBudget: string | null;

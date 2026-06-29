@@ -41,6 +41,7 @@ export async function PUT(
       country: body.country ?? "",
       idealSeasons: body.idealSeasons ?? "",
       idealPartnerTypes: body.idealPartnerTypes ?? "",
+      plannedMonths: body.plannedMonths ?? "",
       estimatedDays: body.estimatedDays ?? null,
       bestMonths: body.bestMonths ?? null,
       estimatedBudget: body.estimatedBudget ?? null,
