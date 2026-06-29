@@ -46,13 +46,13 @@ export default function PhotoPicker({
   return (
     <div className="border border-[#D4D0C8] bg-white p-6 mt-4">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-[10px] tracking-[0.2em] uppercase text-[#1A1A1A]/50">
+        <h3 className="text-[10px] tracking-[0.2em] uppercase text-[#1A1A1A]/70">
           {t("photos.title")}
         </h3>
         <button
           type="button"
           onClick={onClose}
-          className="text-[10px] tracking-[0.15em] uppercase text-[#1A1A1A]/50 hover:text-[#1A1A1A] transition-colors"
+          className="inline-flex items-center justify-center min-h-[44px] px-3 text-[10px] tracking-[0.15em] uppercase text-[#1A1A1A]/70 hover:text-[#1A1A1A] transition-colors"
         >
           {t("photos.close")}
         </button>
@@ -65,23 +65,24 @@ export default function PhotoPicker({
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), searchPhotos(query, 1))}
           placeholder={t("photos.searchPlaceholder")}
-          className="flex-1 bg-transparent border-b border-[#D4D0C8] py-2 text-sm focus:border-[#1A1A1A] transition-colors placeholder:text-[#1A1A1A]/25"
+          aria-label="Search photos"
+          className="flex-1 bg-transparent border-b border-[#D4D0C8] min-h-[44px] py-2 text-sm focus:border-[#1A1A1A] transition-colors placeholder:text-[#1A1A1A]/45"
         />
         <button
           type="button"
           onClick={() => searchPhotos(query, 1)}
-          className="border border-[#D4D0C8] px-4 py-3 md:py-2 text-[10px] tracking-[0.15em] uppercase text-[#1A1A1A]/50 hover:border-[#1A1A1A]/30 transition-colors"
+          className="inline-flex items-center justify-center min-h-[44px] md:min-h-[36px] border border-[#D4D0C8] px-4 py-3 md:py-2 text-[10px] tracking-[0.15em] uppercase text-[#1A1A1A]/70 hover:border-[#1A1A1A]/30 transition-colors"
         >
           {t("photos.search")}
         </button>
       </div>
 
       {loading ? (
-        <p className="text-sm text-[#1A1A1A]/55 italic py-8 text-center">
+        <p className="text-sm text-[#1A1A1A]/70 italic py-8 text-center">
           {t("photos.searching")}
         </p>
       ) : results.length === 0 ? (
-        <p className="text-sm text-[#1A1A1A]/55 italic py-8 text-center">
+        <p className="text-sm text-[#1A1A1A]/70 italic py-8 text-center">
           {t("photos.noResults")}
         </p>
       ) : (
@@ -102,7 +103,7 @@ export default function PhotoPicker({
                   sizes="200px"
                 />
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-end">
-                  <span className="text-[8px] text-white/0 group-hover:text-white/80 px-2 py-1 transition-colors truncate w-full">
+                  <span className="text-[8px] text-white/0 group-hover:text-white/85 px-2 py-1 transition-colors truncate w-full">
                     {photo.photographerName}
                   </span>
                 </div>
@@ -114,7 +115,7 @@ export default function PhotoPicker({
               type="button"
               onClick={() => searchPhotos(query, page + 1, true)}
               disabled={loadingMore}
-              className="w-full mt-3 py-3 md:py-2 text-[10px] tracking-[0.15em] uppercase text-[#1A1A1A]/50 hover:text-[#1A1A1A]/60 transition-colors border border-[#D4D0C8] hover:border-[#1A1A1A]/30"
+              className="inline-flex items-center justify-center w-full mt-3 min-h-[44px] md:min-h-[36px] py-3 md:py-2 text-[10px] tracking-[0.15em] uppercase text-[#1A1A1A]/70 hover:text-[#1A1A1A]/60 transition-colors border border-[#D4D0C8] hover:border-[#1A1A1A]/30"
             >
               {loadingMore ? t("photos.searching") : t("photos.loadMore")}
             </button>
@@ -122,7 +123,7 @@ export default function PhotoPicker({
         </>
       )}
 
-      <p className="text-[8px] text-[#1A1A1A]/30 mt-3">
+      <p className="text-[8px] text-[#1A1A1A]/60 mt-3">
         {t("photos.attribution")}
       </p>
     </div>

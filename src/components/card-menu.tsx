@@ -35,7 +35,7 @@ export default function CardMenu({ experienceId }: { experienceId: number }) {
   }
 
   return (
-    <div ref={menuRef} className="relative hidden md:block">
+    <div ref={menuRef} className="relative">
       <button
         type="button"
         onClick={(e) => {
@@ -44,7 +44,7 @@ export default function CardMenu({ experienceId }: { experienceId: number }) {
           setOpen(!open);
           setConfirming(false);
         }}
-        className="px-1.5 pt-0.5 pb-1.5 text-[#1A1A1A]/20 hover:text-[#1A1A1A]/60 transition-colors opacity-0 group-hover:opacity-100"
+        className="min-w-[44px] min-h-[44px] flex items-center justify-center text-[#1A1A1A]/40 hover:text-[#1A1A1A]/70 transition-all opacity-100 md:opacity-0 md:group-hover:opacity-100 md:focus-visible:opacity-100"
         aria-label={t("menu.more")}
         aria-haspopup="menu"
         aria-expanded={open}

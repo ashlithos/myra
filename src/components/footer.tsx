@@ -9,12 +9,12 @@ export default function Footer() {
   return (
     <footer className="border-t border-[#D4D0C8]/50 mt-20">
       <div className="max-w-5xl mx-auto px-6 py-6 flex items-center justify-between">
-        <Link href="/" className="font-serif text-sm tracking-tight text-[#1A1A1A]/50 hover:text-[#1A1A1A]/60 transition-colors">
+        <Link href="/" className="inline-flex items-center min-h-[44px] font-serif text-sm tracking-tight text-[#1A1A1A]/70 hover:text-[#1A1A1A]/70 transition-colors">
           Myra
         </Link>
         <Link
           href="/about"
-          className="text-[10px] tracking-[0.15em] uppercase text-[#1A1A1A]/50 hover:text-[#1A1A1A]/60 transition-colors"
+          className="inline-flex items-center min-h-[44px] text-[10px] tracking-[0.15em] uppercase text-[#1A1A1A]/70 hover:text-[#1A1A1A]/70 transition-colors"
         >
           {t("footer.about")}
         </Link>

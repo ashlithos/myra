@@ -129,7 +129,7 @@ export default function FriendCard({
         <button
           onClick={onRemove}
           aria-label="Remove friend"
-          className="min-w-[40px] min-h-[40px] flex items-center justify-center text-[10px] text-[#1A1A1A]/25 hover:text-[#1A1A1A]/55 transition-colors -mr-1"
+          className="min-w-[44px] min-h-[44px] flex items-center justify-center text-[10px] text-[#1A1A1A]/45 hover:text-[#1A1A1A]/70 transition-colors -mr-1"
         >
           ✕
         </button>
@@ -165,7 +165,7 @@ export default function FriendCard({
       {/* Places */}
       <div className="px-5 pb-4 flex-1">
         {places.length === 0 ? (
-          <p className="text-xs text-[#1A1A1A]/25 text-center py-1">
+          <p className="text-xs text-[#1A1A1A]/60 text-center py-1">
             No places yet — add one below
           </p>
         ) : (
@@ -184,17 +184,17 @@ export default function FriendCard({
                   <button
                     onClick={() => onFilterChange(isMatch ? null : place.name)}
                     title={isMatch ? "Clear filter" : `Show all friends who want to visit ${place.name}`}
-                    className="px-2.5 py-2 leading-none"
+                    className="px-2.5 py-2 leading-none min-h-[44px] inline-flex items-center"
                   >
                     {place.name}
                   </button>
                   <button
                     onClick={() => onRemovePlace(place.id, place.name)}
                     aria-label={`Remove ${place.name}`}
-                    className={`pr-2 py-2 leading-none transition-opacity ${
+                    className={`pr-2 py-2 leading-none min-h-[44px] min-w-[44px] inline-flex items-center justify-center transition-opacity ${
                       isMatch
-                        ? "opacity-60 hover:opacity-100"
-                        : "opacity-30 sm:opacity-0 sm:group-hover:opacity-50 hover:opacity-100"
+                        ? "opacity-60 hover:opacity-100 focus-visible:opacity-100"
+                        : "opacity-60 group-hover:opacity-100 focus-visible:opacity-100"
                     }`}
                   >
                     ×
@@ -222,13 +222,13 @@ export default function FriendCard({
               aria-autocomplete="list"
               aria-controls={suggestions.length > 0 ? `suggestions-${buddy.id}` : undefined}
               aria-activedescendant={activeSuggestion >= 0 ? `suggestion-${buddy.id}-${activeSuggestion}` : undefined}
-              className="flex-1 border border-[#D4D0C8] px-3 py-3 text-sm focus:outline-none focus:border-[#1A1A1A]/50 bg-transparent placeholder:text-[#1A1A1A]/25 min-w-0"
+              className="flex-1 border border-[#D4D0C8] min-h-[44px] px-3 py-3 text-sm focus:outline-none focus:border-[#1A1A1A]/50 bg-transparent placeholder:text-[#1A1A1A]/45 min-w-0"
             />
             <button
               onClick={handleAdd}
               disabled={!input.trim()}
               aria-label="Add place"
-              className="min-w-[44px] min-h-[44px] border border-[#D4D0C8] text-sm text-[#1A1A1A]/50 hover:border-[#1A1A1A]/40 hover:text-[#1A1A1A] active:bg-[#F3F0EB] transition-colors disabled:opacity-30 flex items-center justify-center"
+              className="min-w-[44px] min-h-[44px] border border-[#D4D0C8] text-sm text-[#1A1A1A]/70 hover:border-[#1A1A1A]/40 hover:text-[#1A1A1A] active:bg-[#F3F0EB] transition-colors disabled:opacity-30 flex items-center justify-center"
             >
               +
             </button>

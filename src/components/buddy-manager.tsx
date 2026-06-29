@@ -41,12 +41,12 @@ export default function BuddyManager({
 
   return (
     <div>
-      <h2 className="text-[10px] tracking-[0.2em] uppercase text-[#1A1A1A]/50 mb-4">
+      <h2 className="text-[10px] tracking-[0.2em] uppercase text-[#1A1A1A]/70 mb-4">
         Travel Buddies
       </h2>
       <div className="space-y-2 mb-4">
         {buddies.length === 0 && (
-          <p className="text-sm text-[#1A1A1A]/40">No buddies yet — add one below.</p>
+          <p className="text-sm text-[#1A1A1A]/60">No buddies yet — add one below.</p>
         )}
         {buddies.map((b) => (
           <div
@@ -56,7 +56,7 @@ export default function BuddyManager({
             <span className="text-sm">{b.name}</span>
             <button
               onClick={() => remove(b.id)}
-              className="text-xs text-[#1A1A1A]/30 hover:text-[#1A1A1A]/70 transition-colors"
+              className="min-h-[44px] inline-flex items-center px-3 text-xs text-[#1A1A1A]/60 hover:text-[#1A1A1A] transition-colors"
             >
               Remove
             </button>
@@ -69,12 +69,12 @@ export default function BuddyManager({
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && add()}
           placeholder="Friend's name"
-          className="flex-1 border border-[#D4D0C8] px-3 py-2 text-sm focus:outline-none focus:border-[#1A1A1A] bg-transparent"
+          className="flex-1 border border-[#D4D0C8] min-h-[44px] px-3 py-2 text-sm focus:outline-none focus:border-[#1A1A1A] bg-transparent"
         />
         <button
           onClick={add}
           disabled={adding || !input.trim()}
-          className="px-4 py-2 text-xs tracking-[0.15em] uppercase border border-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white transition-colors disabled:opacity-40"
+          className="min-h-[44px] inline-flex items-center justify-center px-4 py-2 text-xs tracking-[0.15em] uppercase border border-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white transition-colors disabled:opacity-40"
         >
           Add
         </button>

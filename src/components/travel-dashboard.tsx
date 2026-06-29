@@ -99,7 +99,7 @@ export default function TravelDashboard({
     <div className="max-w-6xl mx-auto px-6 py-10">
       {/* Header */}
       <div className="mb-8">
-        <p className="text-[10px] tracking-[0.2em] uppercase text-[#1A1A1A]/40 mb-1">
+        <p className="text-[10px] tracking-[0.2em] uppercase text-[#1A1A1A]/60 mb-1">
           Travel Matching
         </p>
         <h1 className="font-serif text-3xl">Who wants to go where</h1>
@@ -108,13 +108,13 @@ export default function TravelDashboard({
       {/* Active filter banner */}
       {activeName && (
         <div className="mb-5 flex items-center gap-3 text-sm">
-          <span className="text-[#1A1A1A]/50">
+          <span className="text-[#1A1A1A]/70">
             Friends who want to visit{" "}
             <strong className="text-[#1A1A1A]">{activeName}</strong>
           </span>
           <button
             onClick={() => setActiveName(null)}
-            className="text-xs text-[#1A1A1A]/40 hover:text-[#1A1A1A] underline underline-offset-2 transition-colors"
+            className="min-h-[44px] inline-flex items-center px-3 text-xs text-[#1A1A1A]/60 hover:text-[#1A1A1A] underline underline-offset-2 transition-colors"
           >
             Clear
           </button>
@@ -152,7 +152,7 @@ export default function TravelDashboard({
               onKeyDown={(e) => e.key === "Enter" && addBuddy()}
               placeholder="Friend's name"
               autoFocus
-              className="border border-[#D4D0C8] px-3 py-2 text-sm focus:outline-none focus:border-[#1A1A1A] bg-transparent"
+              className="border border-[#D4D0C8] min-h-[44px] px-3 py-2 text-sm focus:outline-none focus:border-[#1A1A1A] bg-transparent"
             />
             <div className="flex flex-col items-center gap-2">
               <button
@@ -162,7 +162,7 @@ export default function TravelDashboard({
               >
                 {newEmoji}
               </button>
-              <span className="text-[10px] tracking-[0.15em] uppercase text-[#1A1A1A]/30">
+              <span className="text-[10px] tracking-[0.15em] uppercase text-[#1A1A1A]/60">
                 {emojiPickerOpen ? "Close" : "Choose icon"}
               </span>
             </div>
@@ -187,7 +187,7 @@ export default function TravelDashboard({
               <button
                 onClick={addBuddy}
                 disabled={adding || !newName.trim()}
-                className="flex-1 py-2 text-xs tracking-[0.15em] uppercase border border-[#1A1A1A] bg-[#1A1A1A] text-white hover:bg-[#1A1A1A]/80 transition-colors disabled:opacity-40"
+                className="flex-1 min-h-[44px] inline-flex items-center justify-center py-2 text-xs tracking-[0.15em] uppercase border border-[#1A1A1A] bg-[#1A1A1A] text-white hover:bg-[#1A1A1A]/80 transition-colors disabled:opacity-40"
               >
                 {adding ? "Adding…" : "Add"}
               </button>
@@ -198,7 +198,7 @@ export default function TravelDashboard({
                   setNewEmoji("🌍");
                   setEmojiPickerOpen(false);
                 }}
-                className="px-3 py-2 text-xs border border-[#D4D0C8] text-[#1A1A1A]/50 hover:border-[#1A1A1A]/40 transition-colors"
+                className="min-h-[44px] inline-flex items-center justify-center px-3 py-2 text-xs border border-[#D4D0C8] text-[#1A1A1A]/70 hover:border-[#1A1A1A]/40 transition-colors"
               >
                 Cancel
               </button>
@@ -209,8 +209,8 @@ export default function TravelDashboard({
             onClick={() => setAddingFriend(true)}
             className="border border-dashed border-[#D4D0C8] flex flex-col items-center justify-center gap-2 p-8 hover:border-[#1A1A1A]/30 hover:bg-[#F3F0EB]/50 transition-colors min-h-[220px]"
           >
-            <span className="text-4xl text-[#1A1A1A]/15">+</span>
-            <span className="text-[10px] tracking-[0.2em] uppercase text-[#1A1A1A]/30">
+            <span className="text-4xl text-[#1A1A1A]/45">+</span>
+            <span className="text-[10px] tracking-[0.2em] uppercase text-[#1A1A1A]/60">
               Add friend
             </span>
           </button>
@@ -220,14 +220,14 @@ export default function TravelDashboard({
       {/* Share link — secondary */}
       <div className="border-t border-[#D4D0C8] pt-5 flex items-center gap-4">
         <div>
-          <p className="text-[10px] tracking-[0.15em] uppercase text-[#1A1A1A]/35 mb-0.5">
+          <p className="text-[10px] tracking-[0.15em] uppercase text-[#1A1A1A]/60 mb-0.5">
             Friend link
           </p>
-          <p className="text-xs font-mono text-[#1A1A1A]/35">{rankUrl}</p>
+          <p className="text-xs font-mono text-[#1A1A1A]/60">{rankUrl}</p>
         </div>
         <button
           onClick={copyLink}
-          className="ml-auto text-xs tracking-[0.15em] uppercase border border-[#D4D0C8] px-4 py-2 hover:border-[#1A1A1A]/40 transition-colors"
+          className="ml-auto min-h-[44px] inline-flex items-center justify-center text-xs tracking-[0.15em] uppercase border border-[#D4D0C8] px-4 py-2 hover:border-[#1A1A1A]/40 transition-colors"
         >
           {copied ? "Copied ✓" : "Copy ↗"}
         </button>

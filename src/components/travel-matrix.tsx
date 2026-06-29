@@ -50,7 +50,7 @@ export default function TravelMatrix({
 
   if (buddies.length === 0) {
     return (
-      <p className="text-sm text-[#1A1A1A]/40 py-8">
+      <p className="text-sm text-[#1A1A1A]/60 py-8">
         Add buddies on the left to see the matrix.
       </p>
     );
@@ -59,7 +59,7 @@ export default function TravelMatrix({
   return (
     <div>
       <div className="flex items-center gap-3 mb-5">
-        <h2 className="text-[10px] tracking-[0.2em] uppercase text-[#1A1A1A]/50">
+        <h2 className="text-[10px] tracking-[0.2em] uppercase text-[#1A1A1A]/70">
           Overlap Map
         </h2>
         <div className="flex gap-1 ml-auto">
@@ -67,10 +67,10 @@ export default function TravelMatrix({
             <button
               key={f}
               onClick={() => setFilter(f)}
-              className={`text-[10px] tracking-[0.1em] uppercase px-2.5 py-1 border transition-colors ${
+              className={`min-h-[44px] md:min-h-[36px] inline-flex items-center justify-center text-[10px] tracking-[0.1em] uppercase px-2.5 py-1 border transition-colors ${
                 filter === f
                   ? "border-[#1A1A1A] bg-[#1A1A1A] text-white"
-                  : "border-[#D4D0C8] text-[#1A1A1A]/50 hover:border-[#1A1A1A]/40"
+                  : "border-[#D4D0C8] text-[#1A1A1A]/70 hover:border-[#1A1A1A]/40"
               }`}
             >
               {f === "all" ? "All" : TIER_LABEL[f]}
@@ -83,18 +83,18 @@ export default function TravelMatrix({
         <table className="w-full text-sm border-collapse">
           <thead>
             <tr>
-              <th className="text-left py-2 pr-4 text-[10px] tracking-[0.15em] uppercase text-[#1A1A1A]/40 font-normal w-48">
+              <th className="text-left py-2 pr-4 text-[10px] tracking-[0.15em] uppercase text-[#1A1A1A]/60 font-normal w-48">
                 Destination
               </th>
               {buddies.map((b) => (
                 <th
                   key={b.id}
-                  className="text-[10px] tracking-[0.1em] uppercase text-[#1A1A1A]/40 font-normal px-2 pb-2 min-w-[120px]"
+                  className="text-[10px] tracking-[0.1em] uppercase text-[#1A1A1A]/60 font-normal px-2 pb-2 min-w-[120px]"
                 >
                   {b.name}
                 </th>
               ))}
-              <th className="text-[10px] tracking-[0.1em] uppercase text-[#1A1A1A]/40 font-normal px-3 pb-2 text-right">
+              <th className="text-[10px] tracking-[0.1em] uppercase text-[#1A1A1A]/60 font-normal px-3 pb-2 text-right">
                 Overlap
               </th>
             </tr>
@@ -104,7 +104,7 @@ export default function TravelMatrix({
               <tr>
                 <td
                   colSpan={buddies.length + 2}
-                  className="py-8 text-center text-sm text-[#1A1A1A]/40"
+                  className="py-8 text-center text-sm text-[#1A1A1A]/60"
                 >
                   No destinations match this filter yet.
                 </td>
@@ -117,7 +117,7 @@ export default function TravelMatrix({
                   <td className="py-3 pr-4">
                     <div className="font-serif">{exp.name}</div>
                     {exp.country && (
-                      <div className="text-xs text-[#1A1A1A]/40">{exp.country}</div>
+                      <div className="text-xs text-[#1A1A1A]/60">{exp.country}</div>
                     )}
                   </td>
                   {buddies.map((b) => {

@@ -40,7 +40,7 @@ function HeartRating({
           <div className="flex-1 min-w-0">
             <div className="font-serif text-base">{exp.name}</div>
             {exp.country && (
-              <div className="text-xs text-[#1A1A1A]/40 mt-0.5">{exp.country}</div>
+              <div className="text-xs text-[#1A1A1A]/60 mt-0.5">{exp.country}</div>
             )}
           </div>
           <div className="flex gap-2 shrink-0">
@@ -51,7 +51,7 @@ function HeartRating({
                 className={`text-xs px-3 py-1.5 border transition-all ${
                   ratings[exp.id] === tier
                     ? "border-[#1A1A1A] bg-[#1A1A1A] text-white"
-                    : "border-[#D4D0C8] text-[#1A1A1A]/50 hover:border-[#1A1A1A]/40 hover:text-[#1A1A1A]"
+                    : "border-[#D4D0C8] text-[#1A1A1A]/70 hover:border-[#1A1A1A]/40 hover:text-[#1A1A1A]"
                 }`}
               >
                 {TIER_LABEL[tier]}
@@ -114,13 +114,13 @@ function DragRank({
 
   return (
     <div className="space-y-0.5">
-      <p className="text-xs text-[#1A1A1A]/40 mb-4">
+      <p className="text-xs text-[#1A1A1A]/60 mb-4">
         Drag rows into your preference order. Top third = &ldquo;Take me there&rdquo;, middle = &ldquo;Interested&rdquo;, bottom = &ldquo;I&apos;m open&rdquo;.
       </p>
       {order.map((exp, i) => (
         <div key={exp.id}>
           {bandLabel(i) && (
-            <div className="text-[10px] tracking-[0.15em] uppercase text-[#1A1A1A]/30 pt-4 pb-1">
+            <div className="text-[10px] tracking-[0.15em] uppercase text-[#1A1A1A]/60 pt-4 pb-1">
               {bandLabel(i)}
             </div>
           )}
@@ -130,12 +130,12 @@ function DragRank({
             onDragOver={(e) => onDragOver(e, i)}
             className="flex items-center gap-3 border border-[#D4D0C8] bg-white px-3 py-3 cursor-grab active:cursor-grabbing select-none hover:border-[#1A1A1A]/30 transition-colors"
           >
-            <span className="text-[#1A1A1A]/20 text-sm">⠿</span>
-            <span className="text-xs font-mono text-[#1A1A1A]/30 w-5">{i + 1}</span>
+            <span className="text-[#1A1A1A]/45 text-sm">⠿</span>
+            <span className="text-xs font-mono text-[#1A1A1A]/60 w-5">{i + 1}</span>
             <div className="flex-1 min-w-0">
               <div className="font-serif text-base">{exp.name}</div>
               {exp.country && (
-                <div className="text-xs text-[#1A1A1A]/40">{exp.country}</div>
+                <div className="text-xs text-[#1A1A1A]/60">{exp.country}</div>
               )}
             </div>
           </div>
@@ -199,7 +199,7 @@ function ThisOrThat({
   }
 
   if (experiences.length < 2) {
-    return <p className="text-sm text-[#1A1A1A]/40 py-8">Need at least 2 destinations for this mode.</p>;
+    return <p className="text-sm text-[#1A1A1A]/60 py-8">Need at least 2 destinations for this mode.</p>;
   }
 
   if (done) {
@@ -208,23 +208,23 @@ function ThisOrThat({
       experiences.filter((e) => tiers[e.id] === t);
     return (
       <div>
-        <p className="text-sm text-[#1A1A1A]/60 mb-6">All done — here&apos;s what we inferred from your picks:</p>
+        <p className="text-sm text-[#1A1A1A]/70 mb-6">All done — here&apos;s what we inferred from your picks:</p>
         {TIERS.map((tier) => (
           <div key={tier} className="mb-4">
-            <div className="text-[10px] tracking-[0.15em] uppercase text-[#1A1A1A]/40 mb-2">
+            <div className="text-[10px] tracking-[0.15em] uppercase text-[#1A1A1A]/60 mb-2">
               {TIER_LABEL[tier]}
             </div>
             {byTier(tier).map((exp) => (
               <div key={exp.id} className="border-t border-[#D4D0C8] py-3 font-serif">
                 {exp.name}
-                {exp.country && <span className="text-sm text-[#1A1A1A]/40 ml-2">{exp.country}</span>}
+                {exp.country && <span className="text-sm text-[#1A1A1A]/60 ml-2">{exp.country}</span>}
               </div>
             ))}
           </div>
         ))}
         <button
           onClick={() => { setStep(0); setWins({}); setDone(false); }}
-          className="mt-4 text-xs tracking-[0.15em] uppercase text-[#1A1A1A]/40 hover:text-[#1A1A1A] transition-colors underline underline-offset-2"
+          className="mt-4 inline-flex items-center min-h-[44px] text-xs tracking-[0.15em] uppercase text-[#1A1A1A]/60 hover:text-[#1A1A1A] transition-colors underline underline-offset-2"
         >
           Redo
         </button>
@@ -244,11 +244,11 @@ function ThisOrThat({
             style={{ width: `${progress}%` }}
           />
         </div>
-        <span className="text-xs text-[#1A1A1A]/40 shrink-0">
+        <span className="text-xs text-[#1A1A1A]/60 shrink-0">
           {step + 1} / {pairs.length}
         </span>
       </div>
-      <p className="text-sm text-[#1A1A1A]/50 mb-6 text-center">Which would you rather visit?</p>
+      <p className="text-sm text-[#1A1A1A]/70 mb-6 text-center">Which would you rather visit?</p>
       <div className="grid grid-cols-2 gap-3">
         {[left, right].map((exp) => (
           <button
@@ -260,7 +260,7 @@ function ThisOrThat({
               {exp.name}
             </div>
             {exp.country && (
-              <div className="text-xs text-[#1A1A1A]/40 mt-1">{exp.country}</div>
+              <div className="text-xs text-[#1A1A1A]/60 mt-1">{exp.country}</div>
             )}
           </button>
         ))}
@@ -321,7 +321,7 @@ export default function RankPrototype({
             className={`flex-1 py-2 text-xs tracking-[0.1em] uppercase transition-colors border-r border-[#D4D0C8] last:border-r-0 ${
               mode === tab.id
                 ? "bg-[#1A1A1A] text-white"
-                : "text-[#1A1A1A]/50 hover:text-[#1A1A1A] hover:bg-[#F3F0EB]"
+                : "text-[#1A1A1A]/70 hover:text-[#1A1A1A] hover:bg-[#F3F0EB]"
             }`}
           >
             {tab.label}
@@ -356,12 +356,12 @@ export default function RankPrototype({
           {saving ? "Saving…" : "Save my picks"}
         </button>
         {ratedCount > 0 && (
-          <span className="text-xs text-[#1A1A1A]/40">
+          <span className="text-xs text-[#1A1A1A]/60">
             {ratedCount} of {experiences.length} rated
           </span>
         )}
         {saved && (
-          <span className="text-xs text-[#1A1A1A]/60">Saved ✓</span>
+          <span className="text-xs text-[#1A1A1A]/70">Saved ✓</span>
         )}
       </div>
     </div>

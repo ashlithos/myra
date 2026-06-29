@@ -18,8 +18,8 @@ body {
 
 /* Global focus-visible indicator */
 *:focus-visible {
-  outline: 1.5px solid rgba(26, 26, 26, 0.15);
-  outline-offset: 3px;
+  outline: 2px solid rgba(26, 26, 26, 0.55);
+  outline-offset: 2px;
   border-radius: 2px;
 }
 

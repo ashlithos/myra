@@ -18,6 +18,10 @@ export default function UserMenu() {
         setOpen(false);
       }
     }
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") setOpen(false);
+    }
+    document.addEventListener("keydown", handleKeyDown);
     // Delay adding listener to avoid it catching the same click/tap that opened the menu
     const timer = setTimeout(() => {
       document.addEventListener("mousedown", handleClickOutside);
@@ -25,6 +29,7 @@ export default function UserMenu() {
     }, 150);
     return () => {
       clearTimeout(timer);
+      document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("touchstart", handleClickOutside);
     };
@@ -38,7 +43,7 @@ export default function UserMenu() {
     return (
       <button
         onClick={() => signIn("google")}
-        className="text-[10px] md:text-xs tracking-[0.15em] text-[#1A1A1A]/55 hover:text-[#1A1A1A] transition-colors whitespace-nowrap py-2 md:py-0"
+        className="inline-flex items-center min-h-[44px] md:min-h-[36px] px-3 text-[10px] md:text-xs tracking-[0.15em] text-[#1A1A1A]/70 hover:text-[#1A1A1A] transition-colors whitespace-nowrap py-2 md:py-0"
       >
         {t("user.signIn")}
       </button>
@@ -49,7 +54,10 @@ export default function UserMenu() {
     <div ref={menuRef} className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-2 group"
+        aria-label="Account menu"
+        aria-haspopup="menu"
+        aria-expanded={open}
+        className="flex items-center justify-center min-w-[44px] min-h-[44px] gap-2 group"
       >
         {session.user.image ? (
           <Image
@@ -67,14 +75,15 @@ export default function UserMenu() {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-2 bg-white border border-[#D4D0C8] shadow-[0_2px_8px_rgba(0,0,0,0.08)] z-50 min-w-[160px]">
+        <div role="menu" className="absolute right-0 top-full mt-2 bg-white border border-[#D4D0C8] shadow-[0_2px_8px_rgba(0,0,0,0.08)] z-50 min-w-[160px]">
           <div className="px-4 py-3 border-b border-[#D4D0C8]/50">
             <p className="text-xs font-medium text-[#1A1A1A] truncate">{session.user.name}</p>
-            <p className="text-[10px] text-[#1A1A1A]/55 truncate mt-0.5">{session.user.email}</p>
+            <p className="text-[10px] text-[#1A1A1A]/70 truncate mt-0.5">{session.user.email}</p>
           </div>
           <button
+            role="menuitem"
             onClick={() => { setOpen(false); signOut(); }}
-            className="w-full text-left px-4 py-3 md:py-2.5 text-[10px] tracking-[0.15em] uppercase text-[#1A1A1A]/50 hover:text-[#1A1A1A] hover:bg-[#F7F5F0] transition-colors"
+            className="flex items-center w-full text-left min-h-[44px] md:min-h-[36px] px-4 py-3 md:py-2.5 text-[10px] tracking-[0.15em] uppercase text-[#1A1A1A]/70 hover:text-[#1A1A1A] hover:bg-[#F7F5F0] transition-colors"
           >
             {t("user.signOut")}
           </button>

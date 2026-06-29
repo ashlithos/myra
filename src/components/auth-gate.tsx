@@ -19,10 +19,10 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
     return (
       <div className="flex flex-col items-center justify-center py-32 text-center px-6">
         <p className="font-serif text-2xl md:text-3xl mb-3">{t("auth.heading")}</p>
-        <p className="text-sm text-[#1A1A1A]/50 mb-2 max-w-sm leading-relaxed">
+        <p className="text-sm text-[#1A1A1A]/70 mb-2 max-w-sm leading-relaxed">
           {t("auth.desc")}
         </p>
-        <p className="text-xs text-[#1A1A1A]/50 mb-8 max-w-xs">
+        <p className="text-xs text-[#1A1A1A]/70 mb-8 max-w-xs">
           {t("auth.privacy")}
         </p>
         <button

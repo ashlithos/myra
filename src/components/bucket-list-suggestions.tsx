@@ -46,9 +46,9 @@ const METRIC_ICON = {
 };
 
 const METRIC_COLOR = {
-  trending: "text-[#1A1A1A]/55",
+  trending: "text-[#1A1A1A]/70",
   loved: "text-[#EBCFBE]",
-  popular: "text-[#1A1A1A]/25",
+  popular: "text-[#1A1A1A]/60",
 };
 
 const BATCH_SIZE = 5;
@@ -149,7 +149,7 @@ export default function BucketListSuggestions({
     <div className="mt-16 border-t border-[#D4D0C8]/50 pt-10">
       <div className="flex items-center gap-2 mb-5">
         <Sparkles size={13} className="text-[#1A1A1A]/25" />
-        <h2 className="text-[10px] tracking-[0.25em] uppercase text-[#1A1A1A]/55">
+        <h2 className="text-[10px] tracking-[0.25em] uppercase text-[#1A1A1A]/70">
           {t("bucket.inspiration")}
         </h2>
       </div>
@@ -169,7 +169,7 @@ export default function BucketListSuggestions({
               </span>
               <span className="flex items-center gap-1 shrink-0">
                 <Icon size={8} className={METRIC_COLOR[s.metricType]} />
-                <span className="text-[8px] tracking-[0.05em] text-[#1A1A1A]/25">
+                <span className="text-[8px] tracking-[0.05em] text-[#1A1A1A]/60">
                   {s.metric}
                 </span>
               </span>
@@ -181,7 +181,7 @@ export default function BucketListSuggestions({
       <button
         onClick={handleShuffle}
         disabled={phase !== "visible"}
-        className="mt-4 inline-flex items-center gap-1.5 text-[10px] tracking-[0.15em] uppercase text-[#1A1A1A]/50 hover:text-[#1A1A1A]/60 transition-colors disabled:opacity-50"
+        className="mt-4 inline-flex items-center min-h-[44px] gap-1.5 text-[10px] tracking-[0.15em] uppercase text-[#1A1A1A]/70 hover:text-[#1A1A1A]/70 transition-colors disabled:opacity-50"
       >
         <Shuffle
           size={11}

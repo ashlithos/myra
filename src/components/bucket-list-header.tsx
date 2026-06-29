@@ -10,7 +10,7 @@ export default function BucketListHeader() {
   return (
     <div className="flex items-center justify-between mb-10">
       <div>
-        <p className="text-[10px] tracking-[0.3em] uppercase text-[#1A1A1A]/55 mb-2">
+        <p className="text-[10px] tracking-[0.3em] uppercase text-[#1A1A1A]/70 mb-2">
           {t("bucket.archive")}
         </p>
         <h1 className="font-serif text-3xl">{t("bucket.title")}</h1>
