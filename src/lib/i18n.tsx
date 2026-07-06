@@ -151,6 +151,23 @@ const translations = {
   "form.update": { en: "UPDATE", zh: "更新" },
   "form.delete": { en: "DELETE", zh: "删除" },
 
+  // Locality (local vs travel)
+  "form.locality": { en: "■ Local or travel", zh: "■ 本地或远行" },
+  "locality.local": { en: "Local", zh: "本地" },
+  "locality.travel": { en: "Travel", zh: "远行" },
+  "locality.setPrompt": { en: "Set locality", zh: "设置类型" },
+
+  // Calendar view
+  "calendar.view": { en: "Calendar view", zh: "日历视图" },
+  "calendar.title": { en: "Your year", zh: "你的一年" },
+  "calendar.all": { en: "All", zh: "全部" },
+  "calendar.thisMonth": { en: "This month", zh: "本月" },
+  "calendar.count": { en: "experiences", zh: "个体验" },
+  "calendar.emptyLine": { en: "A blank month is an open invitation.", zh: "空白的月份是一个邀请。" },
+  "calendar.addFor": { en: "Add an experience for", zh: "添加体验：" },
+  "calendar.tapCollapse": { en: "tap again to collapse", zh: "再次点击收起" },
+  "calendar.nothingPlanned": { en: "Nothing planned yet", zh: "还没有计划" },
+
   // New experience page
   "newExp.back": { en: "BACK TO LIST", zh: "返回列表" },
   "newExp.label": { en: "NEW ENTRY", zh: "新条目" },

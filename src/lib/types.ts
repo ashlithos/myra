@@ -1,5 +1,7 @@
 export type Status = "wishlist" | "planned" | "visited";
 export type Season = "spring" | "summer" | "autumn" | "winter";
+export type Locality = "local" | "travel";
+export const LOCALITIES: Locality[] = ["local", "travel"];
 export type PartnerType = "solo" | "romantic" | "friends" | "family" | "kids";
 
 export const SEASONS: Season[] = ["spring", "summer", "autumn", "winter"];
@@ -18,6 +20,7 @@ export interface Experience {
   idealSeasons: string;
   idealPartnerTypes: string;
   plannedMonths: string;
+  locality: string;
   estimatedDays: number | null;
   bestMonths: string | null;
   estimatedBudget: string | null;

@@ -4,11 +4,11 @@ import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { SEASONS, PARTNER_TYPES, STATUSES, DO_BY_AGES } from "@/lib/types";
+import { SEASONS, PARTNER_TYPES, STATUSES, DO_BY_AGES, LOCALITIES } from "@/lib/types";
 import { parseCommaSeparated, toCommaSeparated } from "@/lib/utils";
 import type { Experience, ExperiencePhoto } from "@/lib/types";
 import PhotoPicker from "./photo-picker";
-import { X, ImagePlus, CalendarDays } from "lucide-react";
+import { X, ImagePlus, CalendarDays, Home, Plane } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { MONTHS, MONTH_LABELS, MONTH_ABBR, classifyMonths, monthsToSeasons } from "@/lib/best-time";
 
@@ -37,11 +37,17 @@ export default function ExperienceForm({
   );
   const [doByAge, setDoByAge] = useState(experience?.doByAge || "");
   const [status, setStatus] = useState(experience?.status || "wishlist");
+  const [locality, setLocality] = useState(experience?.locality || "");
   const [saving, setSaving] = useState(false);
 
-  // Best time to go — initialize from saved data if available
+  // Best time to go — initialize from saved data if available.
+  // New experiences opened from the Calendar's empty-month state get that month pre-filled.
   const [plannedMonths, setPlannedMonths] = useState<string[]>(
-    experience ? parseCommaSeparated(experience.plannedMonths) : []
+    experience
+      ? parseCommaSeparated(experience.plannedMonths)
+      : MONTHS.includes(searchParams.get("month") || "")
+      ? [searchParams.get("month")!]
+      : []
   );
   const [timing, setTiming] = useState<{ bestMonths?: string; tip?: string } | null>(
     experience?.bestMonths ? { bestMonths: experience.bestMonths } : null
@@ -128,6 +134,7 @@ export default function ExperienceForm({
       idealSeasons: toCommaSeparated(selectedSeasons),
       idealPartnerTypes: toCommaSeparated(selectedPartnerTypes),
       plannedMonths: toCommaSeparated(plannedMonths),
+      locality,
       estimatedDays: experience?.estimatedDays ?? null,
       bestMonths: timing?.bestMonths ?? experience?.bestMonths ?? null,
       estimatedBudget: experience?.estimatedBudget ?? null,
@@ -368,6 +375,35 @@ export default function ExperienceForm({
                 </button>
               ))}
             </div>
+        </div>
+
+        {/* Local or travel */}
+        <div>
+          <label className={labelClass}>{t("form.locality")}</label>
+          <div className="flex gap-1 mt-2" role="group" aria-label="Local or travel">
+            {LOCALITIES.map((loc) => {
+              const active = locality === loc;
+              const Icon = loc === "local" ? Home : Plane;
+              return (
+                <button
+                  key={loc}
+                  type="button"
+                  aria-pressed={active}
+                  onClick={() => setLocality(active ? "" : loc)}
+                  className={`inline-flex items-center justify-center gap-1.5 min-h-[44px] md:min-h-[36px] px-4 py-3 md:py-2 text-xs md:text-[10px] tracking-[0.15em] uppercase border transition-colors ${
+                    active
+                      ? loc === "local"
+                        ? "bg-[#7D907C]/20 text-[#4F6350] border-[#7D907C]/40"
+                        : "bg-[#EBCFBE] text-[#1A1A1A] border-[#EBCFBE]"
+                      : "border-[#D4D0C8] text-[#1A1A1A]/70 hover:border-[#1A1A1A]/30"
+                  }`}
+                >
+                  <Icon size={13} />
+                  {t(`locality.${loc}` as any)}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {/* Best time to go */}

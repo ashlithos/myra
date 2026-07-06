@@ -10,6 +10,7 @@ export const experiences = sqliteTable("experiences", {
   idealSeasons: text("ideal_seasons").notNull().default(""), // comma-separated: "spring,summer"
   idealPartnerTypes: text("ideal_partner_types").notNull().default(""), // comma-separated: "solo,romantic"
   plannedMonths: text("planned_months").notNull().default(""), // comma-separated: "April,May"
+  locality: text("locality").notNull().default(""), // "" (unset) | "local" | "travel"
   estimatedDays: integer("estimated_days"),
   bestMonths: text("best_months"),
   estimatedBudget: text("estimated_budget"),

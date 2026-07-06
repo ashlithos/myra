@@ -27,6 +27,12 @@ export async function register() {
       } catch {
         // Column already exists — safe to ignore
       }
+      // Add locality column to experiences (for the Calendar view's Local/Travel filter)
+      try {
+        await client.execute(`ALTER TABLE experiences ADD COLUMN locality text NOT NULL DEFAULT ''`);
+      } catch {
+        // Column already exists — safe to ignore
+      }
       await client.execute(`
         CREATE TABLE IF NOT EXISTS friend_places (
           id integer PRIMARY KEY AUTOINCREMENT NOT NULL,

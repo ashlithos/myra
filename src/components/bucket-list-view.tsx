@@ -3,8 +3,9 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import ExperienceCard from "./experience-card";
 import type { Experience } from "@/lib/types";
-import { LayoutGrid, List, MapPin, ChevronDown, Map } from "lucide-react";
+import { LayoutGrid, List, MapPin, ChevronDown, Map, CalendarDays } from "lucide-react";
 import MapView from "./map-view";
+import CalendarView from "./calendar-view";
 import Image from "next/image";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
@@ -12,7 +13,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import CardMenu from "./card-menu";
 
 type Tab = "wishlist" | "planned" | "visited";
-type ViewMode = "card" | "list" | "map";
+type ViewMode = "card" | "list" | "map" | "calendar";
 type SortMode = "newest" | "az";
 
 export default function BucketListView({
@@ -94,7 +95,8 @@ export default function BucketListView({
     <div>
       {/* Controls row */}
       <div className="flex flex-wrap items-center justify-between gap-3 mb-8">
-        {/* Segmented toggle */}
+        {/* Segmented toggle — status tabs (hidden in calendar mode) */}
+        {view !== "calendar" && (
         <div className="flex border border-[#D4D0C8] w-fit" role="tablist" aria-label="Filter by status">
           <button
             role="tab"
@@ -136,9 +138,11 @@ export default function BucketListView({
             <span className="ml-1.5 md:ml-2 text-[9px] opacity-50">{count.visited}</span>
           </button>
         </div>
+        )}
 
-        <div className="flex items-center gap-2">
-        {/* Sort dropdown */}
+        <div className="flex items-center gap-2 ml-auto">
+        {/* Sort dropdown (hidden in calendar mode) */}
+        {view !== "calendar" && (
         <div ref={sortRef} className="relative">
           <button
             onClick={() => setSortOpen(!sortOpen)}
@@ -170,6 +174,7 @@ export default function BucketListView({
             </div>
           )}
         </div>
+        )}
 
         {/* View toggle */}
         <div className="flex border border-[#D4D0C8]" role="group" aria-label="View mode">
@@ -209,12 +214,27 @@ export default function BucketListView({
           >
             <Map size={16} />
           </button>
+          <button
+            onClick={() => setView("calendar")}
+            className={`p-3 md:p-2.5 min-w-[44px] min-h-[44px] md:min-w-[40px] md:min-h-[40px] flex items-center justify-center transition-colors ${
+              view === "calendar"
+                ? "bg-[#1A1A1A] text-white"
+                : "text-[#1A1A1A]/70 hover:text-[#1A1A1A]"
+            }`}
+            aria-label={t("calendar.view")}
+            aria-pressed={view === "calendar"}
+          >
+            <CalendarDays size={16} />
+          </button>
         </div>
         </div>
       </div>
 
-      {/* Map view — shows all experiences */}
-      {view === "map" ? (
+      {/* Calendar view — all statuses except visited, tagged by month */}
+      {view === "calendar" ? (
+        <CalendarView experiences={experiences} />
+      ) : /* Map view — shows all experiences */
+      view === "map" ? (
         <MapView experiences={experiences} />
       ) : /* Empty state */
       items.length === 0 ? (
