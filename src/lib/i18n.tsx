@@ -151,6 +151,17 @@ const translations = {
   "form.update": { en: "UPDATE", zh: "更新" },
   "form.delete": { en: "DELETE", zh: "删除" },
 
+  // Location
+  "form.locationLabel": { en: "Location", zh: "地点" },
+  "form.locationPlaceholder": { en: "e.g. Monterey, CA · Kyoto, Japan", zh: "例如 蒙特雷，加州 · 京都，日本" },
+
+  // Infer locations (AI backfill)
+  "bucket.inferBanner": { en: "experiences have no location yet.", zh: "个体验还没有地点。" },
+  "bucket.inferLocations": { en: "Infer with AI", zh: "用 AI 推断" },
+  "bucket.inferring": { en: "Inferring locations…", zh: "正在推断地点…" },
+  "bucket.inferDone": { en: "Updated {n} experiences", zh: "已更新 {n} 个体验" },
+  "bucket.inferFailed": { en: "Couldn't infer locations. Try again.", zh: "无法推断地点，请重试。" },
+
   // Locality (local vs travel)
   "form.locality": { en: "■ Local or travel", zh: "■ 本地或远行" },
   "locality.local": { en: "Local", zh: "本地" },

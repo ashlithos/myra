@@ -3,9 +3,10 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import ExperienceCard from "./experience-card";
 import type { Experience } from "@/lib/types";
-import { LayoutGrid, List, MapPin, ChevronDown, Map, CalendarDays } from "lucide-react";
+import { LayoutGrid, List, MapPin, ChevronDown, Map, CalendarDays, Home, Plane } from "lucide-react";
 import MapView from "./map-view";
 import CalendarView from "./calendar-view";
+import CardMeta from "./card-meta";
 import Image from "next/image";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
@@ -32,6 +33,8 @@ export default function BucketListView({
   const [sortOpen, setSortOpen] = useState(false);
   const sortRef = useRef<HTMLDivElement>(null);
   const [snackbar, setSnackbar] = useState("");
+  const [localityFilter, setLocalityFilter] = useState<"all" | "local" | "travel">("all");
+  const [inferring, setInferring] = useState(false);
   const { t } = useI18n();
 
   // Show snackbar on delete
@@ -68,11 +71,38 @@ export default function BucketListView({
     return () => document.removeEventListener("mousedown", handleClick);
   }, [sortOpen]);
 
+  // Auto-dismiss any snackbar (e.g. after an infer-locations run).
+  useEffect(() => {
+    if (!snackbar) return;
+    const timer = setTimeout(() => setSnackbar(""), 3500);
+    return () => clearTimeout(timer);
+  }, [snackbar]);
+
   const wishlist = experiences.filter((e) => e.status === "wishlist");
   const planned = experiences.filter((e) => e.status === "planned");
   const visited = experiences.filter((e) => e.status === "visited");
 
-  const filtered = tab === "wishlist" ? wishlist : tab === "planned" ? planned : visited;
+  const base = tab === "wishlist" ? wishlist : tab === "planned" ? planned : visited;
+  const filtered = localityFilter === "all" ? base : base.filter((e) => e.locality === localityFilter);
+
+  // Count experiences still missing a location or a local/travel classification.
+  const unlocated = experiences.filter(
+    (e) => !e.city || e.city.trim() === "" || !e.locality || e.locality.trim() === ""
+  ).length;
+
+  async function handleInfer() {
+    setInferring(true);
+    try {
+      const res = await fetch("/api/ai/backfill-locations", { method: "POST" });
+      if (!res.ok) throw new Error("failed");
+      const data = await res.json();
+      setSnackbar(t("bucket.inferDone").replace("{n}", String(data.updated ?? 0)));
+      router.refresh();
+    } catch {
+      setSnackbar(t("bucket.inferFailed"));
+    }
+    setInferring(false);
+  }
 
   const items = useMemo(() => {
     const sorted = [...filtered];
@@ -138,6 +168,32 @@ export default function BucketListView({
             <span className="ml-1.5 md:ml-2 text-[9px] opacity-50">{count.visited}</span>
           </button>
         </div>
+        )}
+
+        {/* Local / Travel filter (card & list views) */}
+        {(view === "card" || view === "list") && (
+          <div className="flex border border-[#D4D0C8] w-fit" role="group" aria-label="Filter by local or travel">
+            {([
+              { v: "all", label: t("calendar.all"), Icon: null },
+              { v: "local", label: t("locality.local"), Icon: Home },
+              { v: "travel", label: t("locality.travel"), Icon: Plane },
+            ] as const).map(({ v, label, Icon }) => (
+              <button
+                key={v}
+                type="button"
+                aria-pressed={localityFilter === v}
+                onClick={() => setLocalityFilter(v)}
+                className={`inline-flex items-center gap-1.5 px-3 py-3 md:px-4 md:py-2.5 min-h-[44px] md:min-h-0 text-[11px] md:text-[10px] tracking-[0.1em] md:tracking-[0.15em] uppercase transition-colors ${
+                  localityFilter === v
+                    ? "bg-[#1A1A1A] text-white"
+                    : "text-[#1A1A1A]/70 hover:text-[#1A1A1A]"
+                }`}
+              >
+                {Icon && <Icon size={12} strokeWidth={1.8} />}
+                {label}
+              </button>
+            ))}
+          </div>
         )}
 
         <div className="flex items-center gap-2 ml-auto">
@@ -229,6 +285,25 @@ export default function BucketListView({
         </div>
         </div>
       </div>
+
+      {/* Infer-locations banner — only when some experiences lack a location/locality */}
+      {unlocated > 0 && (view === "card" || view === "list") && (
+        <div className="flex items-center justify-between gap-3 border border-[#D4D0C8] bg-white px-4 py-3 mb-6">
+          <span className="text-[13px] text-[#1A1A1A]/70">
+            <span className="font-medium text-[#1A1A1A]">{unlocated}</span> {t("bucket.inferBanner")}
+          </span>
+          <button
+            onClick={handleInfer}
+            disabled={inferring}
+            className="inline-flex items-center gap-1.5 shrink-0 min-h-[44px] md:min-h-[36px] px-4 border border-[#1A1A1A] text-[11px] md:text-[10px] tracking-[0.12em] uppercase text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-[#1A1A1A]"
+          >
+            {inferring && (
+              <span className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" />
+            )}
+            {inferring ? t("bucket.inferring") : t("bucket.inferLocations")}
+          </button>
+        </div>
+      )}
 
       {/* Calendar view — all statuses except visited, tagged by month */}
       {view === "calendar" ? (
@@ -363,9 +438,9 @@ function PolaroidCard({
               <h3 className="font-serif text-sm leading-snug group-hover:text-[#1A1A1A]/70 transition-colors line-clamp-2">
                 {experience.name}
               </h3>
-              <p className="text-[10px] text-[#1A1A1A]/60 mt-0.5 h-4">
-                {experience.country || "\u00A0"}
-              </p>
+              <div className="text-[10px] text-[#1A1A1A]/60 mt-0.5 h-4 flex items-center gap-1.5 overflow-hidden">
+                <CardMeta experience={experience} />
+              </div>
 
               {/* Spacer to push content up */}
               <div className="mt-auto" />

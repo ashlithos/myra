@@ -29,6 +29,8 @@ export default function ExperienceForm({
   const [name, setName] = useState(experience?.name || searchParams.get("name") || "");
   const [description, setDescription] = useState(experience?.description || "");
   const [country, setCountry] = useState(experience?.country || searchParams.get("country") || "");
+  // Explicit location (place string, e.g. "Monterey, CA" or "Kyoto, Japan"). Stored in `city`.
+  const [location, setLocation] = useState(experience?.city || experience?.country || "");
   const [selectedSeasons, setSelectedSeasons] = useState<string[]>(
     experience ? parseCommaSeparated(experience.idealSeasons) : []
   );
@@ -129,7 +131,7 @@ export default function ExperienceForm({
     const payload = {
       name,
       description: description.trim() || null,
-      city: null,
+      city: location.trim() || null,
       country: country || "",
       idealSeasons: toCommaSeparated(selectedSeasons),
       idealPartnerTypes: toCommaSeparated(selectedPartnerTypes),
@@ -351,6 +353,22 @@ export default function ExperienceForm({
             placeholder={t("form.descPlaceholder")}
             rows={2}
             className="w-full bg-transparent border-none py-2 text-sm placeholder:text-[#1A1A1A]/45 leading-relaxed resize-none"
+          />
+          <div className="h-px bg-[#1A1A1A]/10" />
+        </div>
+
+        {/* Location */}
+        <div>
+          <label htmlFor="experience-location" className="text-[11px] md:text-[9px] tracking-[0.1em] uppercase text-[#1A1A1A]/70 mb-2 block">
+            {t("form.locationLabel")}
+          </label>
+          <input
+            id="experience-location"
+            type="text"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            placeholder={t("form.locationPlaceholder")}
+            className="w-full bg-transparent border-none min-h-[44px] py-2 text-sm placeholder:text-[#1A1A1A]/45"
           />
           <div className="h-px bg-[#1A1A1A]/10" />
         </div>
