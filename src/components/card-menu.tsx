@@ -66,7 +66,7 @@ export default function CardMenu({ experienceId }: { experienceId: number }) {
             type="button"
             role="menuitem"
             onClick={handleDelete}
-            className={`w-full text-left px-4 py-2.5 text-[10px] tracking-[0.15em] uppercase transition-colors ${
+            className={`w-full text-left px-4 py-2.5 min-h-[44px] flex items-center text-[10px] tracking-[0.15em] uppercase transition-colors ${
               confirming
                 ? "text-red-500 bg-red-50"
                 : "text-[#1A1A1A]/50 hover:text-red-500 hover:bg-[#F7F5F0]"

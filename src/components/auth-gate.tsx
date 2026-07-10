@@ -27,7 +27,7 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
         </p>
         <button
           onClick={() => signIn("google")}
-          className="text-xs tracking-[0.15em] border border-[#1A1A1A] px-6 py-3 hover:bg-[#1A1A1A] hover:text-[#F7F5F0] transition-colors"
+          className="inline-flex items-center justify-center min-h-[44px] text-xs tracking-[0.15em] border border-[#1A1A1A] px-6 py-3 hover:bg-[#1A1A1A] hover:text-[#F7F5F0] transition-colors"
         >
           {t("auth.signInGoogle")}
         </button>

@@ -43,7 +43,7 @@ export default function UserMenu() {
     return (
       <button
         onClick={() => signIn("google")}
-        className="inline-flex items-center min-h-[44px] md:min-h-[36px] px-3 text-[10px] md:text-xs tracking-[0.15em] text-[#1A1A1A]/70 hover:text-[#1A1A1A] transition-colors whitespace-nowrap py-2 md:py-0"
+        className="inline-flex items-center min-h-[44px] md:min-h-[44px] px-3 text-[10px] md:text-xs tracking-[0.15em] text-[#1A1A1A]/70 hover:text-[#1A1A1A] transition-colors whitespace-nowrap py-2 md:py-0"
       >
         {t("user.signIn")}
       </button>
@@ -83,7 +83,7 @@ export default function UserMenu() {
           <button
             role="menuitem"
             onClick={() => { setOpen(false); signOut(); }}
-            className="flex items-center w-full text-left min-h-[44px] md:min-h-[36px] px-4 py-3 md:py-2.5 text-[10px] tracking-[0.15em] uppercase text-[#1A1A1A]/70 hover:text-[#1A1A1A] hover:bg-[#F7F5F0] transition-colors"
+            className="flex items-center w-full text-left min-h-[44px] md:min-h-[44px] px-4 py-3 md:py-2.5 text-[10px] tracking-[0.15em] uppercase text-[#1A1A1A]/70 hover:text-[#1A1A1A] hover:bg-[#F7F5F0] transition-colors"
           >
             {t("user.signOut")}
           </button>

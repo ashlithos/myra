@@ -132,7 +132,7 @@ export default function BucketListView({
             role="tab"
             aria-selected={tab === "wishlist"}
             onClick={() => setTab("wishlist")}
-            className={`px-3 py-3 md:px-6 md:py-2.5 min-h-[44px] md:min-h-0 inline-flex items-center justify-center text-[11px] md:text-[10px] tracking-[0.1em] md:tracking-[0.2em] uppercase transition-colors ${
+            className={`px-3 py-3 md:px-6 md:py-2.5 min-h-[44px] md:min-h-[44px] inline-flex items-center justify-center text-[11px] md:text-[10px] tracking-[0.1em] md:tracking-[0.2em] uppercase transition-colors ${
               tab === "wishlist"
                 ? "bg-[#1A1A1A] text-white"
                 : "text-[#1A1A1A]/70 hover:text-[#1A1A1A]"
@@ -145,7 +145,7 @@ export default function BucketListView({
             role="tab"
             aria-selected={tab === "planned"}
             onClick={() => setTab("planned")}
-            className={`px-3 py-3 md:px-6 md:py-2.5 min-h-[44px] md:min-h-0 inline-flex items-center justify-center text-[11px] md:text-[10px] tracking-[0.1em] md:tracking-[0.2em] uppercase transition-colors ${
+            className={`px-3 py-3 md:px-6 md:py-2.5 min-h-[44px] md:min-h-[44px] inline-flex items-center justify-center text-[11px] md:text-[10px] tracking-[0.1em] md:tracking-[0.2em] uppercase transition-colors ${
               tab === "planned"
                 ? "bg-[#1A1A1A] text-white"
                 : "text-[#1A1A1A]/70 hover:text-[#1A1A1A]"
@@ -158,7 +158,7 @@ export default function BucketListView({
             role="tab"
             aria-selected={tab === "visited"}
             onClick={() => setTab("visited")}
-            className={`px-3 py-3 md:px-6 md:py-2.5 min-h-[44px] md:min-h-0 inline-flex items-center justify-center text-[11px] md:text-[10px] tracking-[0.1em] md:tracking-[0.2em] uppercase transition-colors ${
+            className={`px-3 py-3 md:px-6 md:py-2.5 min-h-[44px] md:min-h-[44px] inline-flex items-center justify-center text-[11px] md:text-[10px] tracking-[0.1em] md:tracking-[0.2em] uppercase transition-colors ${
               tab === "visited"
                 ? "bg-[#1A1A1A] text-white"
                 : "text-[#1A1A1A]/70 hover:text-[#1A1A1A]"
@@ -183,7 +183,7 @@ export default function BucketListView({
                 type="button"
                 aria-pressed={localityFilter === v}
                 onClick={() => setLocalityFilter(v)}
-                className={`inline-flex items-center gap-1.5 px-3 py-3 md:px-4 md:py-2.5 min-h-[44px] md:min-h-0 text-[11px] md:text-[10px] tracking-[0.1em] md:tracking-[0.15em] uppercase transition-colors ${
+                className={`inline-flex items-center gap-1.5 px-3 py-3 md:px-4 md:py-2.5 min-h-[44px] md:min-h-[44px] text-[11px] md:text-[10px] tracking-[0.1em] md:tracking-[0.15em] uppercase transition-colors ${
                   localityFilter === v
                     ? "bg-[#1A1A1A] text-white"
                     : "text-[#1A1A1A]/70 hover:text-[#1A1A1A]"
@@ -202,7 +202,7 @@ export default function BucketListView({
         <div ref={sortRef} className="relative">
           <button
             onClick={() => setSortOpen(!sortOpen)}
-            className="flex items-center gap-1 px-3 py-3 md:px-3 md:py-2 min-h-[44px] md:min-h-[36px] border border-[#D4D0C8] text-[11px] md:text-[10px] tracking-[0.1em] md:tracking-[0.15em] uppercase text-[#1A1A1A]/70 hover:text-[#1A1A1A] transition-colors"
+            className="flex items-center gap-1 px-3 py-3 md:px-3 md:py-2 min-h-[44px] md:min-h-[44px] border border-[#D4D0C8] text-[11px] md:text-[10px] tracking-[0.1em] md:tracking-[0.15em] uppercase text-[#1A1A1A]/70 hover:text-[#1A1A1A] transition-colors"
             aria-label={t("sort.label")}
             aria-haspopup="listbox"
             aria-expanded={sortOpen}
@@ -218,7 +218,7 @@ export default function BucketListView({
                   role="option"
                   aria-selected={sort === opt.value}
                   onClick={() => { setSort(opt.value); setSortOpen(false); }}
-                  className={`w-full text-left px-3 py-3 md:py-2.5 min-h-[44px] md:min-h-0 flex items-center text-[11px] md:text-[10px] tracking-[0.1em] uppercase transition-colors ${
+                  className={`w-full text-left px-3 py-3 md:py-2.5 min-h-[44px] md:min-h-[44px] flex items-center text-[11px] md:text-[10px] tracking-[0.1em] uppercase transition-colors ${
                     sort === opt.value
                       ? "bg-[#F7F5F0] text-[#1A1A1A]"
                       : "text-[#1A1A1A]/70 hover:text-[#1A1A1A] hover:bg-[#F7F5F0]"
@@ -236,7 +236,7 @@ export default function BucketListView({
         <div className="flex border border-[#D4D0C8]" role="group" aria-label="View mode">
           <button
             onClick={() => setView("card")}
-            className={`p-3 md:p-2.5 min-w-[44px] min-h-[44px] md:min-w-[40px] md:min-h-[40px] flex items-center justify-center transition-colors ${
+            className={`p-3 md:p-2.5 min-w-[44px] min-h-[44px] md:min-w-[44px] md:min-h-[44px] flex items-center justify-center transition-colors ${
               view === "card"
                 ? "bg-[#1A1A1A] text-white"
                 : "text-[#1A1A1A]/70 hover:text-[#1A1A1A]"
@@ -248,7 +248,7 @@ export default function BucketListView({
           </button>
           <button
             onClick={() => setView("list")}
-            className={`p-3 md:p-2.5 min-w-[44px] min-h-[44px] md:min-w-[40px] md:min-h-[40px] flex items-center justify-center transition-colors ${
+            className={`p-3 md:p-2.5 min-w-[44px] min-h-[44px] md:min-w-[44px] md:min-h-[44px] flex items-center justify-center transition-colors ${
               view === "list"
                 ? "bg-[#1A1A1A] text-white"
                 : "text-[#1A1A1A]/70 hover:text-[#1A1A1A]"
@@ -260,7 +260,7 @@ export default function BucketListView({
           </button>
           <button
             onClick={() => setView("map")}
-            className={`p-3 md:p-2.5 min-w-[44px] min-h-[44px] md:min-w-[40px] md:min-h-[40px] flex items-center justify-center transition-colors ${
+            className={`p-3 md:p-2.5 min-w-[44px] min-h-[44px] md:min-w-[44px] md:min-h-[44px] flex items-center justify-center transition-colors ${
               view === "map"
                 ? "bg-[#1A1A1A] text-white"
                 : "text-[#1A1A1A]/70 hover:text-[#1A1A1A]"
@@ -272,7 +272,7 @@ export default function BucketListView({
           </button>
           <button
             onClick={() => setView("calendar")}
-            className={`p-3 md:p-2.5 min-w-[44px] min-h-[44px] md:min-w-[40px] md:min-h-[40px] flex items-center justify-center transition-colors ${
+            className={`p-3 md:p-2.5 min-w-[44px] min-h-[44px] md:min-w-[44px] md:min-h-[44px] flex items-center justify-center transition-colors ${
               view === "calendar"
                 ? "bg-[#1A1A1A] text-white"
                 : "text-[#1A1A1A]/70 hover:text-[#1A1A1A]"
@@ -295,7 +295,7 @@ export default function BucketListView({
           <button
             onClick={handleInfer}
             disabled={inferring}
-            className="inline-flex items-center gap-1.5 shrink-0 min-h-[44px] md:min-h-[36px] px-4 border border-[#1A1A1A] text-[11px] md:text-[10px] tracking-[0.12em] uppercase text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-[#1A1A1A]"
+            className="inline-flex items-center gap-1.5 shrink-0 min-h-[44px] md:min-h-[44px] px-4 border border-[#1A1A1A] text-[11px] md:text-[10px] tracking-[0.12em] uppercase text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-[#1A1A1A]"
           >
             {inferring && (
               <span className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" />

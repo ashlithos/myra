@@ -172,7 +172,7 @@ export default function TravelDashboard({
                   <button
                     key={e}
                     onClick={() => { setNewEmoji(e); setEmojiPickerOpen(false); }}
-                    className={`text-xl p-2 rounded transition-colors min-w-[36px] min-h-[36px] flex items-center justify-center ${
+                    className={`text-xl p-2 rounded transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center ${
                       newEmoji === e
                         ? "bg-[#1A1A1A]/10 ring-1 ring-[#1A1A1A]/20"
                         : "hover:bg-[#F3F0EB] active:bg-[#E8E4DC]"

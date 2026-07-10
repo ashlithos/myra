@@ -161,7 +161,7 @@ export default function BucketListSuggestions({
             <button
               key={`${shuffleKey}-${s.name}`}
               onClick={() => handleClick(s)}
-              className="group inline-flex items-center gap-2 border border-[#D4D0C8] px-3.5 py-2.5 md:px-3 md:py-2 hover:border-[#1A1A1A]/25 hover:bg-white active:bg-white"
+              className="group inline-flex items-center gap-2 border border-[#D4D0C8] px-3.5 py-2.5 md:px-3 md:py-2 min-h-[44px] hover:border-[#1A1A1A]/25 hover:bg-white active:bg-white"
               style={chipStyle(i)}
             >
               <span className="text-xs text-[#1A1A1A]/70 group-hover:text-[#1A1A1A] transition-colors">
