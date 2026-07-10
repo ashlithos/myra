@@ -71,7 +71,7 @@ export default function PhotoPicker({
         <button
           type="button"
           onClick={() => searchPhotos(query, 1)}
-          className="inline-flex items-center justify-center min-h-[44px] md:min-h-[36px] border border-[#D4D0C8] px-4 py-3 md:py-2 text-[10px] tracking-[0.15em] uppercase text-[#1A1A1A]/70 hover:border-[#1A1A1A]/30 transition-colors"
+          className="inline-flex items-center justify-center min-h-[44px] md:min-h-[44px] border border-[#D4D0C8] px-4 py-3 md:py-2 text-[10px] tracking-[0.15em] uppercase text-[#1A1A1A]/70 hover:border-[#1A1A1A]/30 transition-colors"
         >
           {t("photos.search")}
         </button>
@@ -115,7 +115,7 @@ export default function PhotoPicker({
               type="button"
               onClick={() => searchPhotos(query, page + 1, true)}
               disabled={loadingMore}
-              className="inline-flex items-center justify-center w-full mt-3 min-h-[44px] md:min-h-[36px] py-3 md:py-2 text-[10px] tracking-[0.15em] uppercase text-[#1A1A1A]/70 hover:text-[#1A1A1A]/60 transition-colors border border-[#D4D0C8] hover:border-[#1A1A1A]/30"
+              className="inline-flex items-center justify-center w-full mt-3 min-h-[44px] md:min-h-[44px] py-3 md:py-2 text-[10px] tracking-[0.15em] uppercase text-[#1A1A1A]/70 hover:text-[#1A1A1A]/60 transition-colors border border-[#D4D0C8] hover:border-[#1A1A1A]/30"
             >
               {loadingMore ? t("photos.searching") : t("photos.loadMore")}
             </button>

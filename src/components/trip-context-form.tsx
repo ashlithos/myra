@@ -316,7 +316,7 @@ export default function TripContextForm({
                     type="button"
                     aria-pressed={companion === p}
                     onClick={() => setCompanion(companion === p ? "" : p)}
-                    className={`min-h-[44px] md:min-h-[36px] inline-flex items-center justify-center px-3.5 py-2.5 md:px-2.5 md:py-1 text-[11px] md:text-[9px] tracking-[0.1em] uppercase transition-colors ${
+                    className={`min-h-[44px] md:min-h-[44px] inline-flex items-center justify-center px-3.5 py-2.5 md:px-2.5 md:py-1 text-[11px] md:text-[9px] tracking-[0.1em] uppercase transition-colors ${
                       companion === p
                         ? "bg-[#EBCFBE] text-[#1A1A1A]"
                         : "bg-[#D4D0C8]/20 text-[#1A1A1A]/60 hover:text-[#1A1A1A] hover:bg-[#D4D0C8]/40 active:bg-[#D4D0C8]/40"
@@ -336,7 +336,7 @@ export default function TripContextForm({
                     type="button"
                     aria-pressed={ageRange === a}
                     onClick={() => setAgeRange(ageRange === a ? "" : a)}
-                    className={`min-h-[44px] md:min-h-[36px] inline-flex items-center justify-center px-3.5 py-2.5 md:px-2.5 md:py-1 text-[11px] md:text-[9px] tracking-[0.1em] uppercase transition-colors ${
+                    className={`min-h-[44px] md:min-h-[44px] inline-flex items-center justify-center px-3.5 py-2.5 md:px-2.5 md:py-1 text-[11px] md:text-[9px] tracking-[0.1em] uppercase transition-colors ${
                       ageRange === a
                         ? "bg-[#1A1A1A] text-white"
                         : "bg-[#D4D0C8]/20 text-[#1A1A1A]/60 hover:text-[#1A1A1A] hover:bg-[#D4D0C8]/40 active:bg-[#D4D0C8]/40"
@@ -565,7 +565,7 @@ export default function TripContextForm({
                               {addedToList.has(i) ? (
                                 <a
                                   href={`/bucket-list?tab=${addedToList.get(i)}`}
-                                  className="min-h-[44px] md:min-h-[36px] inline-flex items-center gap-1.5 px-3 py-2 text-[9px] tracking-[0.15em] uppercase border border-[#EBCFBE] bg-[#EBCFBE] text-[#1A1A1A]/70 hover:bg-[#EBCFBE]/80 transition-all"
+                                  className="min-h-[44px] md:min-h-[44px] inline-flex items-center gap-1.5 px-3 py-2 text-[9px] tracking-[0.15em] uppercase border border-[#EBCFBE] bg-[#EBCFBE] text-[#1A1A1A]/70 hover:bg-[#EBCFBE]/80 transition-all"
                                 >
                                   <ArrowRight size={10} />
                                   {addedToList.get(i) === "planned" ? t("discover.planned") : t("discover.wishlisted")}
@@ -577,7 +577,7 @@ export default function TripContextForm({
                                     disabled={addingToList.has(i)}
                                     aria-haspopup="menu"
                                     aria-expanded={openDropdown === i}
-                                    className={`min-h-[44px] md:min-h-[36px] inline-flex items-center gap-1.5 px-3 py-2 text-[9px] tracking-[0.15em] uppercase border transition-all ${
+                                    className={`min-h-[44px] md:min-h-[44px] inline-flex items-center gap-1.5 px-3 py-2 text-[9px] tracking-[0.15em] uppercase border transition-all ${
                                       addingToList.has(i)
                                         ? "border-[#D4D0C8] text-[#1A1A1A]/30 animate-pulse"
                                         : openDropdown === i
@@ -593,14 +593,14 @@ export default function TripContextForm({
                                     <div className="absolute top-full right-0 mt-1 bg-white border border-[#D4D0C8] shadow-md z-20 min-w-[160px]" data-save-dropdown>
                                       <button
                                         onClick={() => { addToBucketList(rec, i, "planned"); setOpenDropdown(null); }}
-                                        className="w-full text-left min-h-[44px] md:min-h-[36px] px-3 py-2.5 text-[9px] tracking-[0.12em] uppercase text-[#1A1A1A]/60 hover:bg-[#F3F0EB] hover:text-[#1A1A1A] transition-colors flex items-center gap-2"
+                                        className="w-full text-left min-h-[44px] md:min-h-[44px] px-3 py-2.5 text-[9px] tracking-[0.12em] uppercase text-[#1A1A1A]/60 hover:bg-[#F3F0EB] hover:text-[#1A1A1A] transition-colors flex items-center gap-2"
                                       >
                                         <BookmarkPlus size={8} />
                                         {t("discover.addToPlan")}
                                       </button>
                                       <button
                                         onClick={() => { addToBucketList(rec, i, "wishlist"); setOpenDropdown(null); }}
-                                        className="w-full text-left min-h-[44px] md:min-h-[36px] px-3 py-2.5 text-[9px] tracking-[0.12em] uppercase text-[#1A1A1A]/60 hover:bg-[#F3F0EB] hover:text-[#1A1A1A] transition-colors flex items-center gap-2 border-t border-[#D4D0C8]/50"
+                                        className="w-full text-left min-h-[44px] md:min-h-[44px] px-3 py-2.5 text-[9px] tracking-[0.12em] uppercase text-[#1A1A1A]/60 hover:bg-[#F3F0EB] hover:text-[#1A1A1A] transition-colors flex items-center gap-2 border-t border-[#D4D0C8]/50"
                                       >
                                         <BookmarkPlus size={8} />
                                         {t("discover.addToWishlist")}
@@ -623,7 +623,7 @@ export default function TripContextForm({
                 <button
                   onClick={handleDiscover}
                   disabled={loading}
-                  className="min-h-[44px] md:min-h-[36px] inline-flex items-center justify-center border border-[#D4D0C8] px-5 py-3 md:py-2.5 text-xs md:text-[10px] tracking-[0.2em] uppercase text-[#1A1A1A]/70 hover:border-[#1A1A1A]/30 hover:text-[#1A1A1A] transition-colors"
+                  className="min-h-[44px] md:min-h-[44px] inline-flex items-center justify-center border border-[#D4D0C8] px-5 py-3 md:py-2.5 text-xs md:text-[10px] tracking-[0.2em] uppercase text-[#1A1A1A]/70 hover:border-[#1A1A1A]/30 hover:text-[#1A1A1A] transition-colors"
                 >
                   {t("discover.discoverMore")}
                 </button>

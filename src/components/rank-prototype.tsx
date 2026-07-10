@@ -48,7 +48,7 @@ function HeartRating({
               <button
                 key={tier}
                 onClick={() => pick(exp.id, tier)}
-                className={`text-xs px-3 py-1.5 border transition-all ${
+                className={`text-xs px-3 py-1.5 min-h-[44px] inline-flex items-center border transition-all ${
                   ratings[exp.id] === tier
                     ? "border-[#1A1A1A] bg-[#1A1A1A] text-white"
                     : "border-[#D4D0C8] text-[#1A1A1A]/70 hover:border-[#1A1A1A]/40 hover:text-[#1A1A1A]"
@@ -318,7 +318,7 @@ export default function RankPrototype({
           <button
             key={tab.id}
             onClick={() => setMode(tab.id)}
-            className={`flex-1 py-2 text-xs tracking-[0.1em] uppercase transition-colors border-r border-[#D4D0C8] last:border-r-0 ${
+            className={`flex-1 py-2 min-h-[44px] inline-flex items-center justify-center text-xs tracking-[0.1em] uppercase transition-colors border-r border-[#D4D0C8] last:border-r-0 ${
               mode === tab.id
                 ? "bg-[#1A1A1A] text-white"
                 : "text-[#1A1A1A]/70 hover:text-[#1A1A1A] hover:bg-[#F3F0EB]"
@@ -351,7 +351,7 @@ export default function RankPrototype({
         <button
           onClick={submit}
           disabled={saving || ratedCount === 0}
-          className="px-6 py-2.5 border border-[#1A1A1A] bg-[#1A1A1A] text-white text-xs tracking-[0.15em] uppercase hover:bg-[#1A1A1A]/80 transition-colors disabled:opacity-40"
+          className="px-6 py-2.5 min-h-[44px] inline-flex items-center justify-center border border-[#1A1A1A] bg-[#1A1A1A] text-white text-xs tracking-[0.15em] uppercase hover:bg-[#1A1A1A]/80 transition-colors disabled:opacity-40"
         >
           {saving ? "Saving…" : "Save my picks"}
         </button>

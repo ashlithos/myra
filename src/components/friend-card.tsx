@@ -151,7 +151,7 @@ export default function FriendCard({
               <button
                 key={e}
                 onClick={() => { onEmojiChange(e); setPickerOpen(false); }}
-                className="text-xl p-2 hover:bg-[#F3F0EB] active:bg-[#E8E4DC] rounded transition-colors min-w-[36px] min-h-[36px] flex items-center justify-center"
+                className="text-xl p-2 hover:bg-[#F3F0EB] active:bg-[#E8E4DC] rounded transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
               >
                 {e}
               </button>
@@ -247,7 +247,7 @@ export default function FriendCard({
                   role="option"
                   aria-selected={idx === activeSuggestion}
                   onMouseDown={(e) => { e.preventDefault(); selectSuggestion(s); }}
-                  className={`w-full text-left px-3 py-2.5 text-sm transition-colors ${
+                  className={`w-full text-left px-3 py-2.5 min-h-[44px] flex items-center text-sm transition-colors ${
                     idx === activeSuggestion
                       ? "bg-[#F3F0EB] text-[#1A1A1A]"
                       : "text-[#1A1A1A]/70 hover:bg-[#F3F0EB] hover:text-[#1A1A1A]"

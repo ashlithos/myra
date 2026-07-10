@@ -67,7 +67,7 @@ export default function TravelMatrix({
             <button
               key={f}
               onClick={() => setFilter(f)}
-              className={`min-h-[44px] md:min-h-[36px] inline-flex items-center justify-center text-[10px] tracking-[0.1em] uppercase px-2.5 py-1 border transition-colors ${
+              className={`min-h-[44px] md:min-h-[44px] inline-flex items-center justify-center text-[10px] tracking-[0.1em] uppercase px-2.5 py-1 border transition-colors ${
                 filter === f
                   ? "border-[#1A1A1A] bg-[#1A1A1A] text-white"
                   : "border-[#D4D0C8] text-[#1A1A1A]/70 hover:border-[#1A1A1A]/40"

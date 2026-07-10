@@ -102,7 +102,7 @@ export default function RankPage() {
             <div className="mb-8">
               <button
                 onClick={() => setStep("pick-name")}
-                className="text-xs text-[#1A1A1A]/40 hover:text-[#1A1A1A] transition-colors mb-6 flex items-center gap-1"
+                className="text-xs text-[#1A1A1A]/40 hover:text-[#1A1A1A] transition-colors mb-4 -my-1 py-2 min-h-[44px] inline-flex items-center gap-1"
               >
                 ← Not {selectedBuddy.name}?
               </button>

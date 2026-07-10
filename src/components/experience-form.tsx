@@ -383,7 +383,7 @@ export default function ExperienceForm({
                   type="button"
                   aria-pressed={status === s}
                   onClick={() => setStatus(s)}
-                  className={`inline-flex items-center justify-center min-h-[44px] md:min-h-[36px] px-4 py-3 md:py-2 text-xs md:text-[10px] tracking-[0.15em] uppercase border transition-colors ${
+                  className={`inline-flex items-center justify-center min-h-[44px] md:min-h-[44px] px-4 py-3 md:py-2 text-xs md:text-[10px] tracking-[0.15em] uppercase border transition-colors ${
                     status === s
                       ? "bg-[#EBCFBE] text-[#1A1A1A] border-[#EBCFBE]"
                       : "border-[#D4D0C8] text-[#1A1A1A]/70 hover:border-[#1A1A1A]/30"
@@ -408,7 +408,7 @@ export default function ExperienceForm({
                   type="button"
                   aria-pressed={active}
                   onClick={() => setLocality(active ? "" : loc)}
-                  className={`inline-flex items-center justify-center gap-1.5 min-h-[44px] md:min-h-[36px] px-4 py-3 md:py-2 text-xs md:text-[10px] tracking-[0.15em] uppercase border transition-colors ${
+                  className={`inline-flex items-center justify-center gap-1.5 min-h-[44px] md:min-h-[44px] px-4 py-3 md:py-2 text-xs md:text-[10px] tracking-[0.15em] uppercase border transition-colors ${
                     active
                       ? loc === "local"
                         ? "bg-[#7D907C]/20 text-[#4F6350] border-[#7D907C]/40"
@@ -546,7 +546,7 @@ export default function ExperienceForm({
           <button
             type="submit"
             disabled={saving}
-            className="inline-flex items-center justify-center min-h-[44px] md:min-h-[36px] bg-[#1A1A1A] text-white px-8 py-3.5 md:py-3 text-xs md:text-[10px] tracking-[0.2em] uppercase hover:bg-[#1A1A1A]/80 transition-colors disabled:opacity-50"
+            className="inline-flex items-center justify-center min-h-[44px] md:min-h-[44px] bg-[#1A1A1A] text-white px-8 py-3.5 md:py-3 text-xs md:text-[10px] tracking-[0.2em] uppercase hover:bg-[#1A1A1A]/80 transition-colors disabled:opacity-50"
           >
             {saving ? t("form.saving") : isEdit ? t("form.update") : t("form.addToList")}
           </button>
