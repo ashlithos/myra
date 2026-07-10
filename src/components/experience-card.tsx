@@ -4,6 +4,7 @@ import Link from "next/link";
 import { formatIndex, parseCommaSeparated } from "@/lib/utils";
 import type { Experience } from "@/lib/types";
 import CardMenu from "./card-menu";
+import CardMeta from "./card-meta";
 import { useI18n } from "@/lib/i18n";
 
 export default function ExperienceCard({
@@ -29,11 +30,9 @@ export default function ExperienceCard({
               <h3 className="font-serif text-lg group-hover:text-[#1A1A1A]/70 transition-colors">
                 {experience.name}
               </h3>
-              {experience.country && (
-                <p className="text-sm text-[#1A1A1A]/70 mt-0.5">
-                  {experience.country}
-                </p>
-              )}
+              <div className="text-[13px] text-[#1A1A1A]/70 mt-1 flex items-center gap-1.5 flex-wrap">
+                <CardMeta experience={experience} />
+              </div>
               <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2">
                 {seasons.map((s) => (
                   <span
