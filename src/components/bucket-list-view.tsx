@@ -96,7 +96,17 @@ export default function BucketListView({
       const res = await fetch("/api/ai/backfill-locations", { method: "POST" });
       if (!res.ok) throw new Error("failed");
       const data = await res.json();
-      setSnackbar(t("bucket.inferDone").replace("{n}", String(data.updated ?? 0)));
+      const updated = data.updated ?? 0;
+      const unresolved = data.unresolved ?? 0;
+      let msg: string;
+      if (updated > 0 && unresolved > 0) {
+        msg = t("bucket.inferPartial").replace("{n}", String(updated)).replace("{m}", String(unresolved));
+      } else if (updated > 0) {
+        msg = t("bucket.inferDone").replace("{n}", String(updated));
+      } else {
+        msg = t("bucket.inferNone").replace("{n}", String(unresolved || data.candidates || 0));
+      }
+      setSnackbar(msg);
       router.refresh();
     } catch {
       setSnackbar(t("bucket.inferFailed"));

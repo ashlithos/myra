@@ -92,5 +92,11 @@ export async function POST() {
     updated++;
   }
 
-  return NextResponse.json({ updated, candidates: candidates.length });
+  // `unresolved` = candidates the AI couldn't fill (place-less entries with no
+  // determinable location) — surfaced so the UI can tell the user to add those manually.
+  return NextResponse.json({
+    updated,
+    candidates: candidates.length,
+    unresolved: candidates.length - updated,
+  });
 }
