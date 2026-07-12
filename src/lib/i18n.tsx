@@ -163,6 +163,8 @@ const translations = {
   "bucket.inferLocations": { en: "Infer with AI", zh: "用 AI 推断" },
   "bucket.inferring": { en: "Inferring locations…", zh: "正在推断地点…" },
   "bucket.inferDone": { en: "Updated {n} experiences", zh: "已更新 {n} 个体验" },
+  "bucket.inferPartial": { en: "Updated {n} · {m} need a location added manually", zh: "已更新 {n} 个 · {m} 个需手动添加地点" },
+  "bucket.inferNone": { en: "Couldn't place {n} — open them to add a location", zh: "无法推断 {n} 个 — 请打开并手动添加地点" },
   "bucket.inferFailed": { en: "Couldn't infer locations. Try again.", zh: "无法推断地点，请重试。" },
 
   // Locality (local vs travel)
