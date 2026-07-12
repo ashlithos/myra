@@ -69,6 +69,9 @@ export default function ExperienceForm({
   const [locActive, setLocActive] = useState(-1);
   const locTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Delete confirmation (detail page)
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
+
   // Snackbar
   const [snackbar, setSnackbar] = useState("");
 
@@ -636,15 +639,39 @@ export default function ExperienceForm({
             {saving ? t("form.saving") : isEdit ? t("form.update") : t("form.addToList")}
           </button>
 
-          {isEdit && (
+          {isEdit && !confirmingDelete && (
             <button
               type="button"
-              onClick={handleDelete}
+              onClick={() => setConfirmingDelete(true)}
               disabled={saving}
               className="inline-flex items-center justify-center min-h-[44px] px-3 text-xs md:text-[10px] tracking-[0.15em] uppercase text-[#1A1A1A]/70 hover:text-red-500 transition-colors py-2"
             >
               {t("form.delete")}
             </button>
+          )}
+
+          {isEdit && confirmingDelete && (
+            <div className="inline-flex items-center gap-2 flex-wrap">
+              <span className="text-xs md:text-[10px] tracking-[0.1em] uppercase text-[#1A1A1A]/60">
+                {t("form.deletePrompt")}
+              </span>
+              <button
+                type="button"
+                onClick={handleDelete}
+                disabled={saving}
+                className="inline-flex items-center justify-center min-h-[44px] px-4 text-xs md:text-[10px] tracking-[0.15em] uppercase text-red-600 border border-red-300 hover:bg-red-50 transition-colors disabled:opacity-50"
+              >
+                {saving ? t("form.saving") : t("form.deleteConfirm")}
+              </button>
+              <button
+                type="button"
+                onClick={() => setConfirmingDelete(false)}
+                disabled={saving}
+                className="inline-flex items-center justify-center min-h-[44px] px-3 text-xs md:text-[10px] tracking-[0.15em] uppercase text-[#1A1A1A]/60 hover:text-[#1A1A1A] transition-colors"
+              >
+                {t("form.cancel")}
+              </button>
+            </div>
           )}
         </div>
       </form>

@@ -150,6 +150,9 @@ const translations = {
   },
   "form.update": { en: "UPDATE", zh: "更新" },
   "form.delete": { en: "DELETE", zh: "删除" },
+  "form.deletePrompt": { en: "Delete this experience?", zh: "删除这个体验？" },
+  "form.deleteConfirm": { en: "Yes, delete", zh: "确认删除" },
+  "form.cancel": { en: "Cancel", zh: "取消" },
 
   // Location
   "form.locationLabel": { en: "Location", zh: "地点" },
