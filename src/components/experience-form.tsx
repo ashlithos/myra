@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -64,6 +64,11 @@ export default function ExperienceForm({
   // Persisted photo ids that were replaced and should be deleted on save
   const [photosToDelete, setPhotosToDelete] = useState<number[]>([]);
 
+  // Location autocomplete
+  const [locSuggestions, setLocSuggestions] = useState<string[]>([]);
+  const [locActive, setLocActive] = useState(-1);
+  const locTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   // Snackbar
   const [snackbar, setSnackbar] = useState("");
 
@@ -89,6 +94,50 @@ export default function ExperienceForm({
     return arr.includes(item)
       ? arr.filter((i) => i !== item)
       : [...arr, item];
+  }
+
+  // Location typeahead — debounced place search (Photon via /api/places/autocomplete)
+  function handleLocationChange(value: string) {
+    setLocation(value);
+    setLocActive(-1);
+    if (locTimer.current) clearTimeout(locTimer.current);
+    if (value.trim().length >= 2) {
+      locTimer.current = setTimeout(async () => {
+        try {
+          const res = await fetch(`/api/places/autocomplete?q=${encodeURIComponent(value.trim())}`);
+          setLocSuggestions(await res.json());
+        } catch {
+          setLocSuggestions([]);
+        }
+      }, 300);
+    } else {
+      setLocSuggestions([]);
+    }
+  }
+
+  function selectLocation(name: string) {
+    setLocation(name);
+    setLocSuggestions([]);
+    setLocActive(-1);
+  }
+
+  function handleLocationKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (locSuggestions.length === 0) return;
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setLocActive((prev) => Math.min(prev + 1, locSuggestions.length - 1));
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setLocActive((prev) => Math.max(prev - 1, -1));
+    } else if (e.key === "Enter") {
+      // Don't submit the form while the suggestion list is open.
+      e.preventDefault();
+      if (locActive >= 0) selectLocation(locSuggestions[locActive]);
+      else setLocSuggestions([]);
+    } else if (e.key === "Escape") {
+      setLocSuggestions([]);
+      setLocActive(-1);
+    }
   }
 
   async function handleBestTime() {
@@ -357,19 +406,55 @@ export default function ExperienceForm({
           <div className="h-px bg-[#1A1A1A]/10" />
         </div>
 
-        {/* Location */}
+        {/* Location — with place typeahead */}
         <div>
           <label htmlFor="experience-location" className="text-[11px] md:text-[9px] tracking-[0.1em] uppercase text-[#1A1A1A]/70 mb-2 block">
             {t("form.locationLabel")}
           </label>
-          <input
-            id="experience-location"
-            type="text"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            placeholder={t("form.locationPlaceholder")}
-            className="w-full bg-transparent border-none min-h-[44px] py-2 text-sm placeholder:text-[#1A1A1A]/45"
-          />
+          <div className="relative">
+            <input
+              id="experience-location"
+              type="text"
+              value={location}
+              onChange={(e) => handleLocationChange(e.target.value)}
+              onKeyDown={handleLocationKeyDown}
+              onBlur={() => setTimeout(() => setLocSuggestions([]), 150)}
+              placeholder={t("form.locationPlaceholder")}
+              autoComplete="off"
+              role="combobox"
+              aria-expanded={locSuggestions.length > 0}
+              aria-controls="location-suggestions"
+              aria-autocomplete="list"
+              aria-activedescendant={locActive >= 0 ? `location-suggestion-${locActive}` : undefined}
+              className="w-full bg-transparent border-none min-h-[44px] py-2 text-sm placeholder:text-[#1A1A1A]/45"
+            />
+            {locSuggestions.length > 0 && (
+              <div
+                id="location-suggestions"
+                role="listbox"
+                aria-label={t("form.locationLabel")}
+                className="absolute top-full left-0 right-0 mt-1 bg-white border border-[#D4D0C8] shadow-md z-20"
+              >
+                {locSuggestions.map((s, idx) => (
+                  <button
+                    key={s}
+                    type="button"
+                    id={`location-suggestion-${idx}`}
+                    role="option"
+                    aria-selected={idx === locActive}
+                    onMouseDown={(e) => { e.preventDefault(); selectLocation(s); }}
+                    className={`w-full text-left px-3 py-2.5 min-h-[44px] flex items-center text-sm transition-colors ${
+                      idx === locActive
+                        ? "bg-[#F3F0EB] text-[#1A1A1A]"
+                        : "text-[#1A1A1A]/70 hover:bg-[#F3F0EB] hover:text-[#1A1A1A]"
+                    }`}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
           <div className="h-px bg-[#1A1A1A]/10" />
         </div>
 
