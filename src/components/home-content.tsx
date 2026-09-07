@@ -45,12 +45,10 @@ function AnimatedCount({ value }: { value: number }) {
 
 export default function HomeContent({
   wishlistCount,
-  plannedCount,
   visitedCount,
   galleryItems,
 }: {
   wishlistCount: number;
-  plannedCount: number;
   visitedCount: number;
   galleryItems?: GalleryItem[];
 }) {
@@ -175,15 +173,6 @@ export default function HomeContent({
           </p>
           <p className="text-[10px] tracking-[0.2em] uppercase text-[#1A1A1A]/70 mt-1">
             {t("home.wishlist")}
-          </p>
-        </Link>
-        <div className="w-px bg-[#D4D0C8]" />
-        <Link href="/bucket-list?tab=planned" className="group transition-transform hover:-translate-y-0.5">
-          <p className="font-serif text-2xl tabular-nums group-hover:text-[#EBCFBE] transition-colors">
-            <AnimatedCount value={plannedCount} />
-          </p>
-          <p className="text-[10px] tracking-[0.2em] uppercase text-[#1A1A1A]/70 mt-1">
-            {t("home.planned")}
           </p>
         </Link>
         <div className="w-px bg-[#D4D0C8]" />

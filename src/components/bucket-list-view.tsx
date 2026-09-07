@@ -13,7 +13,7 @@ import { useI18n } from "@/lib/i18n";
 import { useSearchParams, useRouter } from "next/navigation";
 import CardMenu from "./card-menu";
 
-type Tab = "wishlist" | "planned" | "visited";
+type Tab = "wishlist" | "visited";
 type ViewMode = "card" | "list" | "map" | "calendar";
 type SortMode = "newest" | "az";
 
@@ -55,7 +55,7 @@ export default function BucketListView({
   // Sync tab with URL params
   useEffect(() => {
     const urlTab = searchParams.get("tab") as Tab;
-    if (urlTab && ["wishlist", "planned", "visited"].includes(urlTab)) {
+    if (urlTab && ["wishlist", "visited"].includes(urlTab)) {
       setTab(urlTab);
     }
   }, [searchParams]);
@@ -79,10 +79,9 @@ export default function BucketListView({
   }, [snackbar]);
 
   const wishlist = experiences.filter((e) => e.status === "wishlist");
-  const planned = experiences.filter((e) => e.status === "planned");
   const visited = experiences.filter((e) => e.status === "visited");
 
-  const base = tab === "wishlist" ? wishlist : tab === "planned" ? planned : visited;
+  const base = tab === "wishlist" ? wishlist : visited;
   const filtered = localityFilter === "all" ? base : base.filter((e) => e.locality === localityFilter);
 
   // Count experiences still missing a location or a local/travel classification.
@@ -124,7 +123,7 @@ export default function BucketListView({
     return sorted;
   }, [filtered, sort]);
 
-  const count = { wishlist: wishlist.length, planned: planned.length, visited: visited.length };
+  const count = { wishlist: wishlist.length, visited: visited.length };
 
   const sortOptions: { value: SortMode; label: string }[] = [
     { value: "newest", label: t("sort.newest") },
@@ -150,19 +149,6 @@ export default function BucketListView({
           >
             {t("bucket.wishlist")}
             <span className="ml-1.5 md:ml-2 text-[9px] opacity-50">{count.wishlist}</span>
-          </button>
-          <button
-            role="tab"
-            aria-selected={tab === "planned"}
-            onClick={() => setTab("planned")}
-            className={`px-3 py-3 md:px-6 md:py-2.5 min-h-[44px] md:min-h-[44px] inline-flex items-center justify-center text-[11px] md:text-[10px] tracking-[0.1em] md:tracking-[0.2em] uppercase transition-colors ${
-              tab === "planned"
-                ? "bg-[#1A1A1A] text-white"
-                : "text-[#1A1A1A]/70 hover:text-[#1A1A1A]"
-            }`}
-          >
-            {t("bucket.planned")}
-            <span className="ml-1.5 md:ml-2 text-[9px] opacity-50">{count.planned}</span>
           </button>
           <button
             role="tab"
@@ -325,14 +311,10 @@ export default function BucketListView({
       items.length === 0 ? (
         <div className="text-center py-10 md:py-16 border-t border-[#D4D0C8]">
           <p className="font-serif text-lg mb-1">
-            {tab === "wishlist" ? t("bucket.emptyWishlist") : tab === "planned" ? t("bucket.emptyPlanned") : t("bucket.emptyVisited")}
+            {tab === "wishlist" ? t("bucket.emptyWishlist") : t("bucket.emptyVisited")}
           </p>
           <p className="text-sm text-[#1A1A1A]/70">
-            {tab === "wishlist"
-              ? t("bucket.emptyWishlistDesc")
-              : tab === "planned"
-              ? t("bucket.emptyPlannedDesc")
-              : t("bucket.emptyVisitedDesc")}
+            {tab === "wishlist" ? t("bucket.emptyWishlistDesc") : t("bucket.emptyVisitedDesc")}
           </p>
         </div>
       ) : view === "list" ? (
@@ -433,11 +415,6 @@ function PolaroidCard({
             {experience.status === "visited" && (
               <div className="absolute top-2 right-2 bg-[#1A1A1A]/70 text-white text-[9px] md:text-[8px] tracking-[0.15em] uppercase px-2 py-1 md:py-0.5 backdrop-blur-sm pointer-events-none">
                 {t("bucket.visited")}
-              </div>
-            )}
-            {experience.status === "planned" && (
-              <div className="absolute top-2 right-2 bg-[#EBCFBE] text-[#1A1A1A]/70 text-[9px] md:text-[8px] tracking-[0.15em] uppercase px-2 py-1 md:py-0.5 backdrop-blur-sm pointer-events-none">
-                {t("bucket.planned")}
               </div>
             )}
           </div>

@@ -5,7 +5,6 @@ import { useI18n } from "@/lib/i18n";
 
 const statusConfig = {
   wishlist: { color: "bg-[#EBCFBE]", labelKey: "status.wishlist" as const },
-  planned: { color: "bg-[#EBCFBE]", labelKey: "status.planned" as const },
   visited: { color: "bg-[#1A1A1A]", labelKey: "status.visited" as const },
 };
 

@@ -92,7 +92,6 @@ export default function MapView({ experiences }: { experiences: Experience[] }) 
 
   const legend = useMemo(() => [
     { status: "wishlist", label: t("bucket.wishlist") },
-    { status: "planned", label: t("bucket.planned") },
     { status: "visited", label: t("bucket.visited") },
   ], [t]);
 
