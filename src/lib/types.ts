@@ -1,4 +1,4 @@
-export type Status = "wishlist" | "planned" | "visited";
+export type Status = "wishlist" | "visited";
 export type Season = "spring" | "summer" | "autumn" | "winter";
 export type Locality = "local" | "travel";
 export const LOCALITIES: Locality[] = ["local", "travel"];
@@ -6,7 +6,7 @@ export type PartnerType = "solo" | "romantic" | "friends" | "family" | "kids";
 
 export const SEASONS: Season[] = ["spring", "summer", "autumn", "winter"];
 export const PARTNER_TYPES: PartnerType[] = ["solo", "romantic", "friends", "family", "kids"];
-export const STATUSES: Status[] = ["wishlist", "planned", "visited"];
+export const STATUSES: Status[] = ["wishlist", "visited"];
 
 export type DoByAge = "30" | "40" | "50" | "60+";
 export const DO_BY_AGES: DoByAge[] = ["30", "40", "50", "60+"];

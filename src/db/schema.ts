@@ -15,7 +15,7 @@ export const experiences = sqliteTable("experiences", {
   bestMonths: text("best_months"),
   estimatedBudget: text("estimated_budget"),
   doByAge: text("do_by_age"), // "30" | "40" | "50" | "60+"
-  status: text("status").notNull().default("wishlist"), // wishlist | planned | visited
+  status: text("status").notNull().default("wishlist"), // wishlist | visited
   createdAt: text("created_at")
     .notNull()
     .$defaultFn(() => new Date().toISOString()),

@@ -54,7 +54,6 @@ export default async function Home() {
   return (
     <HomeContent
       wishlistCount={countMap["wishlist"] || 0}
-      plannedCount={countMap["planned"] || 0}
       visitedCount={countMap["visited"] || 0}
       galleryItems={galleryItems}
     />

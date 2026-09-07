@@ -33,6 +33,13 @@ export async function register() {
       } catch {
         // Column already exists — safe to ignore
       }
+      // "Planned" status was deprecated (only Wishlist + Completed remain).
+      // Migrate any existing planned experiences into the wishlist so nothing disappears.
+      try {
+        await client.execute(`UPDATE experiences SET status = 'wishlist' WHERE status = 'planned'`);
+      } catch {
+        // Nothing to migrate — safe to ignore
+      }
       await client.execute(`
         CREATE TABLE IF NOT EXISTS friend_places (
           id integer PRIMARY KEY AUTOINCREMENT NOT NULL,
