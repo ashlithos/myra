@@ -3,8 +3,9 @@
 import { useState, useEffect, useRef } from "react";
 import { PARTNER_TYPES } from "@/lib/types";
 import type { Experience } from "@/lib/types";
-import { Search, ArrowRight, BookmarkPlus, ExternalLink } from "lucide-react";
+import { Search, ArrowRight, BookmarkPlus, ExternalLink, Check, Circle, LoaderCircle } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useI18n } from "@/lib/i18n";
 
@@ -60,6 +61,7 @@ export default function TripContextForm({
   const thinkingInterval = useRef<ReturnType<typeof setInterval> | null>(null);
   const [photos, setPhotos] = useState<Record<number, PhotoResult>>({});
   const [showFilters, setShowFilters] = useState(false);
+  const [expanded, setExpanded] = useState<Set<number>>(new Set());
   const [previousNames, setPreviousNames] = useState<string[]>([]);
 
   const PROMPT_SUGGESTIONS = [
@@ -239,7 +241,7 @@ export default function TripContextForm({
         {/* Secondary: Quick params — collapse on mobile when results showing */}
         <div className={`grid grid-cols-2 gap-4 mb-4 ${hasResults ? "hidden md:grid" : ""}`}>
           <div>
-            <label htmlFor="discover-month" className="text-[11px] md:text-[9px] tracking-[0.1em] uppercase text-[#1A1A1A]/70 mb-1 md:mb-0.5 block">{t("discover.month")}</label>
+            <label htmlFor="discover-month" className="text-[13px] md:text-[11px] tracking-[0.1em] uppercase text-[#1A1A1A]/70 mb-1 md:mb-0.5 block">{t("discover.month")}</label>
             <select
               id="discover-month"
               value={month}
@@ -253,7 +255,7 @@ export default function TripContextForm({
             </select>
           </div>
           <div>
-            <label htmlFor="discover-days" className="text-[11px] md:text-[9px] tracking-[0.1em] uppercase text-[#1A1A1A]/70 mb-1 md:mb-0.5 block">{t("discover.days")}</label>
+            <label htmlFor="discover-days" className="text-[13px] md:text-[11px] tracking-[0.1em] uppercase text-[#1A1A1A]/70 mb-1 md:mb-0.5 block">{t("discover.days")}</label>
             <select
               id="discover-days"
               value={days}
@@ -286,7 +288,7 @@ export default function TripContextForm({
           <div className="overflow-hidden">
           <div className="space-y-4 mb-4 pl-3 border-l border-[#D4D0C8]/50">
             <div>
-              <label htmlFor="discover-budget" className="text-[11px] md:text-[9px] tracking-[0.1em] uppercase text-[#1A1A1A]/70 mb-1 md:mb-0.5 block">{t("discover.budget")}</label>
+              <label htmlFor="discover-budget" className="text-[13px] md:text-[11px] tracking-[0.1em] uppercase text-[#1A1A1A]/70 mb-1 md:mb-0.5 block">{t("discover.budget")}</label>
               <input
                 id="discover-budget"
                 type="text"
@@ -297,7 +299,7 @@ export default function TripContextForm({
               />
             </div>
             <div>
-              <label className="text-[11px] md:text-[9px] tracking-[0.1em] uppercase text-[#1A1A1A]/70 mb-2 md:mb-1.5 block">{t("discover.travelingWith")}</label>
+              <label className="text-[13px] md:text-[11px] tracking-[0.1em] uppercase text-[#1A1A1A]/70 mb-2 md:mb-1.5 block">{t("discover.travelingWith")}</label>
               <div className="flex flex-wrap gap-1.5 md:gap-1" role="group" aria-label={t("discover.travelingWith")}>
                 {PARTNER_TYPES.map((p) => (
                   <button
@@ -305,7 +307,7 @@ export default function TripContextForm({
                     type="button"
                     aria-pressed={companion === p}
                     onClick={() => setCompanion(companion === p ? "" : p)}
-                    className={`min-h-[44px] md:min-h-[44px] inline-flex items-center justify-center px-3.5 py-2.5 md:px-2.5 md:py-1 text-[11px] md:text-[9px] tracking-[0.1em] uppercase transition-colors ${
+                    className={`min-h-[44px] md:min-h-[44px] inline-flex items-center justify-center px-3.5 py-2.5 md:px-2.5 md:py-1 text-[13px] md:text-[11px] tracking-[0.1em] uppercase transition-colors ${
                       companion === p
                         ? "bg-[#EBCFBE] text-[#1A1A1A]"
                         : "bg-[#D4D0C8]/20 text-[#1A1A1A]/60 hover:text-[#1A1A1A] hover:bg-[#D4D0C8]/40 active:bg-[#D4D0C8]/40"
@@ -317,7 +319,7 @@ export default function TripContextForm({
               </div>
             </div>
             <div>
-              <label className="text-[11px] md:text-[9px] tracking-[0.1em] uppercase text-[#1A1A1A]/70 mb-2 md:mb-1.5 block">{t("discover.ageRange")}</label>
+              <label className="text-[13px] md:text-[11px] tracking-[0.1em] uppercase text-[#1A1A1A]/70 mb-2 md:mb-1.5 block">{t("discover.ageRange")}</label>
               <div className="flex flex-wrap gap-1.5 md:gap-1" role="group" aria-label={t("discover.ageRange")}>
                 {AGE_RANGES.map((a) => (
                   <button
@@ -325,7 +327,7 @@ export default function TripContextForm({
                     type="button"
                     aria-pressed={ageRange === a}
                     onClick={() => setAgeRange(ageRange === a ? "" : a)}
-                    className={`min-h-[44px] md:min-h-[44px] inline-flex items-center justify-center px-3.5 py-2.5 md:px-2.5 md:py-1 text-[11px] md:text-[9px] tracking-[0.1em] uppercase transition-colors ${
+                    className={`min-h-[44px] md:min-h-[44px] inline-flex items-center justify-center px-3.5 py-2.5 md:px-2.5 md:py-1 text-[13px] md:text-[11px] tracking-[0.1em] uppercase transition-colors ${
                       ageRange === a
                         ? "bg-[#1A1A1A] text-white"
                         : "bg-[#D4D0C8]/20 text-[#1A1A1A]/60 hover:text-[#1A1A1A] hover:bg-[#D4D0C8]/40 active:bg-[#D4D0C8]/40"
@@ -363,41 +365,58 @@ export default function TripContextForm({
           {/* Loading */}
           {loading && (
             <div className="space-y-6">
-              <div className="py-4 px-5 border-l-2 border-[#EBCFBE]">
-                <div className="space-y-2">
-                  {THINKING_STEPS.map((step, i) => (
-                    <p
-                      key={step}
-                      className={`text-xs transition-all duration-500 ${
-                        i < thinkingStep
-                          ? "text-[#1A1A1A]/30 line-through"
-                          : i === thinkingStep
-                          ? "text-[#1A1A1A]/70 font-medium"
-                          : "text-[#1A1A1A]/10"
-                      }`}
-                    >
-                      {i <= thinkingStep ? "✓" : "○"} {step}
-                    </p>
-                  ))}
+              <div className="space-y-3">
+                <h2 className="font-serif text-[26px] md:text-xl leading-tight">{t("discover.findingTrips")}</h2>
+                <div
+                  role="progressbar"
+                  aria-label={t("discover.findingTrips")}
+                  aria-valuemin={0}
+                  aria-valuemax={THINKING_STEPS.length}
+                  aria-valuenow={thinkingStep + 1}
+                  className="h-1.5 rounded-full bg-[#E3DFD6] overflow-hidden"
+                >
+                  <div
+                    className="h-full rounded-full bg-[#1A1A1A] transition-[width] duration-700 motion-reduce:transition-none"
+                    style={{ width: `${((thinkingStep + 1) / THINKING_STEPS.length) * 100}%` }}
+                  />
                 </div>
               </div>
 
-              {/* Shimmer cards */}
-              <div>
-                <div className="h-3 w-40 bg-[#D4D0C8]/40 rounded animate-pulse mb-6" />
-                {[1, 2, 3, 4].map((n) => (
-                  <div key={n} className="border-t border-[#D4D0C8] py-5">
-                    <div className="flex gap-4 items-start">
-                      <div className="w-28 h-20 bg-[#D4D0C8]/30 animate-pulse shrink-0" />
-                      <div className="flex-1 space-y-2.5">
-                        <div className="h-4 bg-[#D4D0C8]/40 rounded animate-pulse" style={{ width: `${50 + n * 10}%` }} />
-                        <div className="h-3 w-16 bg-[#D4D0C8]/25 rounded animate-pulse" />
-                        <div className="h-3 bg-[#D4D0C8]/20 rounded animate-pulse w-full" />
-                        <div className="flex gap-3">
-                          <div className="h-2.5 w-20 bg-[#D4D0C8]/15 rounded animate-pulse" />
-                          <div className="h-2.5 w-12 bg-[#D4D0C8]/15 rounded animate-pulse" />
-                          <div className="h-2.5 w-16 bg-[#D4D0C8]/15 rounded animate-pulse" />
-                        </div>
+              <ol aria-live="polite" className="space-y-3.5 md:space-y-2.5">
+                {THINKING_STEPS.map((step, i) => (
+                  <li
+                    key={step}
+                    className={`flex items-center gap-3 transition-colors duration-500 ${
+                      i < thinkingStep
+                        ? "text-base md:text-sm text-[#5C5A55]"
+                        : i === thinkingStep
+                        ? "text-[17px] md:text-[15px] font-semibold text-[#1A1A1A]"
+                        : "text-base md:text-sm text-[#6E6B65]"
+                    }`}
+                  >
+                    {i < thinkingStep ? (
+                      <Check size={20} className="shrink-0 text-[#3D6B4F]" aria-hidden />
+                    ) : i === thinkingStep ? (
+                      <LoaderCircle size={20} className="shrink-0 animate-spin motion-reduce:animate-none" aria-hidden />
+                    ) : (
+                      <Circle size={20} strokeWidth={1.5} className="shrink-0" aria-hidden />
+                    )}
+                    <span>{step}</span>
+                  </li>
+                ))}
+              </ol>
+
+              {/* Skeleton cards — mirror the result card layout */}
+              <div aria-hidden>
+                {[1, 2].map((n) => (
+                  <div key={n} className="border-t border-[#D4D0C8] py-6 md:py-5">
+                    <div className="flex flex-col md:flex-row gap-3 md:gap-4 items-start">
+                      <div className="shimmer w-full h-52 rounded-xl md:w-28 md:h-20 md:rounded-none shrink-0" />
+                      <div className="w-full flex-1 space-y-3 md:space-y-2.5">
+                        <div className="h-6 md:h-4 bg-[#E3DFD6] rounded-md" style={{ width: `${60 + n * 10}%` }} />
+                        <div className="h-4 md:h-3 w-24 md:w-16 bg-[#ECE8DF] rounded-md" />
+                        <div className="h-4 md:h-3 bg-[#ECE8DF] rounded-md w-full" />
+                        <div className="h-4 md:h-3 bg-[#ECE8DF] rounded-md w-5/6" />
                       </div>
                     </div>
                   </div>
@@ -419,7 +438,7 @@ export default function TripContextForm({
               {/* Insight */}
               {result.travelInsight && (
                 <div className="py-4 px-5 border-l border-[#D4D0C8]">
-                  <p className="font-serif text-[13px] text-[#1A1A1A]/70 italic leading-relaxed">
+                  <p className="font-serif text-lg md:text-[13px] text-[#3A3935] md:text-[#1A1A1A]/70 italic leading-normal md:leading-relaxed">
                     {result.travelInsight}
                   </p>
                 </div>
@@ -427,19 +446,19 @@ export default function TripContextForm({
 
               {/* Recommendations */}
               <div>
-                <h2 className="text-[11px] tracking-[0.2em] uppercase text-[#1A1A1A]/70 mb-4">
-                  {t("discover.recommended")}
+                <h2 className="text-[15px] font-semibold md:font-normal md:text-[11px] md:tracking-[0.2em] md:uppercase text-[#1A1A1A] md:text-[#1A1A1A]/70 mb-4">
+                  {t("discover.pickedForYou")}
                 </h2>
 
                 <div className="space-y-0">
                   {result.recommendations.map((rec, i) => (
                     <div
                       key={i}
-                      className={`py-5 md:py-5 group ${i > 0 ? "border-t border-[#D4D0C8]/50 md:border-[#D4D0C8]" : "border-t border-[#D4D0C8]"}`}
+                      className={`py-6 md:py-5 group ${i > 0 ? "border-t border-[#D4D0C8]/50 md:border-[#D4D0C8]" : "border-t border-[#D4D0C8]"}`}
                     >
                       <div className="flex flex-col md:flex-row items-start gap-3 md:gap-4">
                         {/* Thumbnail */}
-                        <div className="shrink-0 w-full h-44 md:w-28 md:h-20 relative overflow-hidden bg-[#D4D0C8]/20">
+                        <div className="shrink-0 w-full h-52 rounded-xl md:rounded-none md:w-28 md:h-20 relative overflow-hidden bg-[#D4D0C8]/20">
                           {photos[i] ? (
                             <Image
                               src={photos[i].url || photos[i].thumbUrl}
@@ -453,92 +472,146 @@ export default function TripContextForm({
                           ) : (
                             <div className="w-full h-full animate-pulse bg-[#D4D0C8]/30" />
                           )}
+                          {rec.fromBucketList && (
+                            <span className="md:hidden absolute left-3 top-3 rounded-full bg-[#F7F5F0] px-2.5 py-1.5 text-[13px] font-medium text-[#1A1A1A]">
+                              {t("discover.fromYourList")}
+                            </span>
+                          )}
                         </div>
 
                         {/* Content */}
                         <div className="flex-1 min-w-0 md:flex md:items-start md:justify-between md:gap-3">
                           <div className="min-w-0 flex-1">
                             <div className="flex items-start gap-2 flex-wrap">
-                              <a
-                                href={googleSearchUrl(rec.name, rec.country)}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="font-serif text-lg md:text-base leading-tight hover:text-[#1A1A1A]/60 transition-colors inline-flex items-start gap-1.5 group/link"
-                              >
-                                {rec.name}
-                                <ExternalLink size={10} className="shrink-0 mt-1 opacity-20 md:opacity-0 md:group-hover/link:opacity-40 transition-opacity" />
-                              </a>
+                              <h3 className="font-serif text-2xl md:text-base leading-tight md:leading-tight text-balance">
+                                <a
+                                  href={googleSearchUrl(rec.name, rec.country)}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="hidden md:inline-flex hover:text-[#1A1A1A]/60 transition-colors items-start gap-1.5 group/link"
+                                >
+                                  {rec.name}
+                                  <ExternalLink size={10} className="shrink-0 mt-1 opacity-0 group-hover/link:opacity-40 transition-opacity" />
+                                </a>
+                                <span className="md:hidden">{rec.name}</span>
+                              </h3>
                               {rec.fromBucketList && (
-                                <span className="shrink-0 mt-0.5 text-[8px] tracking-[0.15em] uppercase bg-[#EBCFBE] text-[#1A1A1A]/70 px-2 py-0.5">
+                                <span className="hidden md:inline-block shrink-0 mt-0.5 text-[11px] tracking-[0.1em] uppercase bg-[#EBCFBE] text-[#1A1A1A] px-2 py-0.5">
                                   {t("discover.inYourList")}
                                 </span>
                               )}
                             </div>
-                            <p className="text-sm md:text-xs text-[#1A1A1A]/70 mt-0.5">
+                            <p className="text-[15px] md:text-xs text-[#5C5A55] md:text-[#1A1A1A]/70 mt-1 md:mt-0.5">
                               {rec.country}
                             </p>
-                            <p className="text-[13px] md:text-xs text-[#1A1A1A]/70 mt-2 leading-relaxed line-clamp-3 md:line-clamp-2">
+                            <p className={`text-base md:text-xs text-[#3A3935] md:text-[#1A1A1A]/70 mt-3 md:mt-2 leading-normal md:leading-relaxed ${expanded.has(i) ? "" : "line-clamp-3 md:line-clamp-2"}`}>
                               {rec.description}
                             </p>
-                            <div className="flex flex-wrap gap-x-3 gap-y-1.5 mt-3 md:mt-2">
-                              <span className="text-[11px] md:text-[10px] tracking-[0.1em] text-[#1A1A1A]/70">
+                            {rec.description.length > 140 && (
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setExpanded((prev) => {
+                                    const next = new Set(prev);
+                                    if (next.has(i)) next.delete(i);
+                                    else next.add(i);
+                                    return next;
+                                  })
+                                }
+                                aria-expanded={expanded.has(i)}
+                                className="md:hidden min-h-[44px] text-[15px] font-medium underline underline-offset-4 text-[#1A1A1A]"
+                              >
+                                {expanded.has(i) ? t("discover.showLess") : t("discover.readMore")}
+                              </button>
+                            )}
+
+                            {/* Trip facts — labelled grid on mobile */}
+                            <dl className="md:hidden grid grid-cols-2 gap-x-4 gap-y-3 mt-3 py-3 border-y border-[#D4D0C8]">
+                              <div className="col-span-2">
+                                <dt className="text-[13px] text-[#5C5A55]">{t("discover.bestMonths")}</dt>
+                                <dd className="text-base font-medium">{rec.bestMonths}</dd>
+                              </div>
+                              <div>
+                                <dt className="text-[13px] text-[#5C5A55]">{t("discover.length")}</dt>
+                                <dd className="text-base font-medium">{rec.estimatedDays} {t("discover.days_label")}</dd>
+                              </div>
+                              <div>
+                                <dt className="text-[13px] text-[#5C5A55]">{t("discover.budget")}</dt>
+                                <dd className="text-base font-medium">{rec.estimatedBudget}</dd>
+                              </div>
+                            </dl>
+
+                            {/* Trip facts — compact row on desktop */}
+                            <div className="hidden md:flex flex-wrap gap-x-3 gap-y-1.5 mt-2">
+                              <span className="text-[11px] tracking-[0.05em] text-[#1A1A1A]/70">
                                 {rec.bestMonths}
                               </span>
-                              <span className="text-[11px] md:text-[10px] text-[#1A1A1A]/20">·</span>
-                              <span className="text-[11px] md:text-[10px] tracking-[0.1em] text-[#1A1A1A]/70">
+                              <span className="text-[11px] text-[#1A1A1A]/30" aria-hidden>·</span>
+                              <span className="text-[11px] tracking-[0.05em] text-[#1A1A1A]/70">
                                 {rec.estimatedDays}d
                               </span>
-                              <span className="text-[11px] md:text-[10px] text-[#1A1A1A]/20">·</span>
-                              <span className="text-[11px] md:text-[10px] tracking-[0.1em] text-[#1A1A1A]/70">
+                              <span className="text-[11px] text-[#1A1A1A]/30" aria-hidden>·</span>
+                              <span className="text-[11px] tracking-[0.05em] text-[#1A1A1A]/70">
                                 {rec.estimatedBudget}
                               </span>
                             </div>
 
-                            {/* Add to bucket list — below content on mobile, inline on desktop */}
-                            {!rec.fromBucketList && (
-                              <div className="mt-3 md:hidden">
-                                {addedToList.has(i) ? (
-                                  <a
+                            {/* Mobile actions — full-width save + search link */}
+                            <div className="mt-4 flex gap-2 md:hidden">
+                              {rec.fromBucketList ? (
+                                <Link
+                                  href="/bucket-list?tab=wishlist"
+                                  className="flex-1 h-12 inline-flex items-center justify-center gap-2 rounded-[10px] border border-[#D4D0C8] text-base font-medium text-[#1A1A1A]"
+                                >
+                                  {t("discover.onYourList")}
+                                  <ArrowRight size={16} aria-hidden />
+                                </Link>
+                              ) : addedToList.has(i) ? (
+                                  <Link
                                     href="/bucket-list?tab=wishlist"
-                                    className="min-h-[44px] inline-flex items-center gap-1.5 px-4 py-3 text-[11px] tracking-[0.15em] uppercase border border-[#EBCFBE] bg-[#EBCFBE] text-[#1A1A1A]/70 hover:bg-[#EBCFBE]/80 transition-all"
+                                    className="flex-1 h-12 inline-flex items-center justify-center gap-2 rounded-[10px] bg-[#EBCFBE] text-base font-medium text-[#1A1A1A]"
                                   >
-                                    <ArrowRight size={10} />
-                                    {t("discover.wishlisted")}
-                                  </a>
+                                    <Check size={18} aria-hidden />
+                                    {t("discover.savedViewWishlist")}
+                                  </Link>
                                 ) : (
                                   <button
                                     onClick={() => addToBucketList(rec, i)}
                                     disabled={addingToList.has(i)}
-                                    className={`min-h-[44px] inline-flex items-center gap-1.5 px-4 py-3 text-[11px] tracking-[0.15em] uppercase border transition-all ${
-                                      addingToList.has(i)
-                                        ? "border-[#D4D0C8] text-[#1A1A1A]/30 animate-pulse"
-                                        : "border-[#D4D0C8] text-[#1A1A1A]/70 hover:border-[#1A1A1A] hover:text-[#1A1A1A]"
-                                    }`}
+                                    className="flex-1 h-12 inline-flex items-center justify-center gap-2 rounded-[10px] bg-[#1A1A1A] text-base font-medium text-white disabled:opacity-60 transition-opacity"
                                   >
-                                    <BookmarkPlus size={10} />
-                                    {addingToList.has(i) ? t("discover.adding") : t("discover.save")}
+                                    <BookmarkPlus size={18} aria-hidden />
+                                    {addingToList.has(i) ? t("discover.savingToWishlist") : t("discover.saveToWishlist")}
                                   </button>
                                 )}
-                              </div>
-                            )}
+                              <a
+                                href={googleSearchUrl(rec.name, rec.country)}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label={t("discover.searchGoogle")}
+                                className="w-12 h-12 shrink-0 inline-flex items-center justify-center rounded-[10px] border border-[#D4D0C8] text-[#1A1A1A]"
+                              >
+                                <ExternalLink size={18} aria-hidden />
+                              </a>
+                            </div>
                           </div>
 
                           {/* Desktop-only action button */}
                           {!rec.fromBucketList && (
                             <div className="hidden md:block shrink-0 self-center">
                               {addedToList.has(i) ? (
-                                <a
+                                <Link
                                   href="/bucket-list?tab=wishlist"
-                                  className="min-h-[44px] md:min-h-[44px] inline-flex items-center gap-1.5 px-3 py-2 text-[9px] tracking-[0.15em] uppercase border border-[#EBCFBE] bg-[#EBCFBE] text-[#1A1A1A]/70 hover:bg-[#EBCFBE]/80 transition-all"
+                                  className="min-h-[44px] md:min-h-[44px] inline-flex items-center gap-1.5 px-3 py-2 text-[11px] tracking-[0.15em] uppercase border border-[#EBCFBE] bg-[#EBCFBE] text-[#1A1A1A]/70 hover:bg-[#EBCFBE]/80 transition-all"
                                 >
                                   <ArrowRight size={10} />
                                   {t("discover.wishlisted")}
-                                </a>
+                                </Link>
                               ) : (
                                 <button
                                   onClick={() => addToBucketList(rec, i)}
                                   disabled={addingToList.has(i)}
-                                  className={`min-h-[44px] md:min-h-[44px] inline-flex items-center gap-1.5 px-3 py-2 text-[9px] tracking-[0.15em] uppercase border transition-all ${
+                                  className={`min-h-[44px] md:min-h-[44px] inline-flex items-center gap-1.5 px-3 py-2 text-[11px] tracking-[0.15em] uppercase border transition-all ${
                                     addingToList.has(i)
                                       ? "border-[#D4D0C8] text-[#1A1A1A]/30 animate-pulse"
                                       : "border-[#D4D0C8] text-[#1A1A1A]/70 hover:border-[#1A1A1A] hover:text-[#1A1A1A]"
@@ -558,17 +631,17 @@ export default function TripContextForm({
               </div>
 
               {/* Footer actions */}
-              <div className="border-t border-[#D4D0C8]/50 md:border-[#D4D0C8] pt-5 flex gap-4">
+              <div className="border-t border-[#D4D0C8]/50 md:border-[#D4D0C8] pt-5 flex flex-col md:flex-row gap-2 md:gap-4">
                 <button
                   onClick={handleDiscover}
                   disabled={loading}
-                  className="min-h-[44px] md:min-h-[44px] inline-flex items-center justify-center border border-[#D4D0C8] px-5 py-3 md:py-2.5 text-xs md:text-[10px] tracking-[0.2em] uppercase text-[#1A1A1A]/70 hover:border-[#1A1A1A]/30 hover:text-[#1A1A1A] transition-colors"
+                  className="min-h-[48px] md:min-h-[44px] w-full md:w-auto inline-flex items-center justify-center border border-[#D4D0C8] px-5 py-3 md:py-2.5 text-sm md:text-[11px] tracking-[0.1em] md:tracking-[0.2em] uppercase text-[#1A1A1A]/70 hover:border-[#1A1A1A]/30 hover:text-[#1A1A1A] transition-colors"
                 >
                   {t("discover.discoverMore")}
                 </button>
                 <button
                   onClick={() => router.push("/bucket-list?tab=wishlist")}
-                  className="min-h-[44px] inline-flex items-center gap-2 px-3 text-xs md:text-[10px] tracking-[0.15em] uppercase text-[#1A1A1A]/70 hover:text-[#1A1A1A] transition-colors"
+                  className="min-h-[48px] md:min-h-[44px] inline-flex items-center justify-center gap-2 px-3 text-sm md:text-[11px] tracking-[0.1em] md:tracking-[0.15em] uppercase text-[#1A1A1A]/70 hover:text-[#1A1A1A] transition-colors"
                 >
                   {t("discover.viewBucketList")}
                   <ArrowRight size={10} />

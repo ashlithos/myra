@@ -295,6 +295,17 @@ const translations = {
   "discover.bestMonths": { en: "Best months", zh: "最佳月份" },
   "discover.days_label": { en: "days", zh: "天" },
   "discover.matchReason": { en: "Why this matches", zh: "推荐理由" },
+  "discover.findingTrips": { en: "Finding trips for you", zh: "正在为你寻找旅程" },
+  "discover.pickedForYou": { en: "Picked for you", zh: "为你推荐" },
+  "discover.fromYourList": { en: "From your list", zh: "来自你的心愿单" },
+  "discover.length": { en: "Length", zh: "时长" },
+  "discover.readMore": { en: "Read more", zh: "展开" },
+  "discover.showLess": { en: "Show less", zh: "收起" },
+  "discover.saveToWishlist": { en: "Save to wishlist", zh: "加入心愿单" },
+  "discover.savingToWishlist": { en: "Saving…", zh: "保存中…" },
+  "discover.savedViewWishlist": { en: "Saved · View wishlist", zh: "已保存 · 查看心愿单" },
+  "discover.onYourList": { en: "On your wishlist", zh: "已在心愿单中" },
+  "discover.searchGoogle": { en: "Search this trip on Google", zh: "在 Google 上搜索" },
 
   // Suggestions (bucket list inspirations) — these stay in English as they're experience names
   // but metrics need translation
