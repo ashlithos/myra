@@ -13,6 +13,8 @@
 
   // Beat map (seconds)
   const T = { B: 1.9, C: 3.75, D: 6.35, E: 8.6, F: 10.4, G: 11.9 };
+  // Copy for step 3 ("Best time") lands with the best-time band, ahead of the visual beat F.
+  const S3 = 10.0;
 
   const PAL = {
     cream: "#F7F5F0",
@@ -736,10 +738,10 @@
   const world = el("div", stage, { transformOrigin: "960px 540px" }, "layer");
 
   // A — opening words
-  const aWord = letters(world, "mira", { left: "960px", top: "636px", fontSize: "52px", fontStyle: "italic", fontWeight: 300, transform: "translate(-50%,0)", fontFamily: "Newsreader" });
-  const aGloss = letters(world, "to look  ·  to see", { left: "960px", top: "712px", transform: "translate(-50%,0)" }, "caps");
+  const aWord = letters(world, "So many dreams.", { left: "960px", top: "636px", fontSize: "52px", fontStyle: "italic", fontWeight: 300, transform: "translate(-50%,0)", fontFamily: "Newsreader" });
+  const aGloss = letters(world, "Scattered across screenshots, notes & tabs", { left: "960px", top: "712px", transform: "translate(-50%,0)" }, "caps");
   aGloss.root.style.color = "rgba(26,26,26,0.5)";
-  aGloss.root.style.letterSpacing = "0.32em";
+  aGloss.root.style.letterSpacing = "0.26em";
 
   // Row stage: the hero (iris → card) and the gallery share one perspective.
   const rowWrap = el("div", world, { perspective: "1700px", perspectiveOrigin: "960px 600px" }, "layer");
@@ -801,12 +803,12 @@
   const coordB = letters(world, "Spring  ·  first bloom", {}, "caps");
   coordB.root.style.color = "rgba(26,26,26,0.5)";
   coordB.root.style.fontSize = "13px";
-  const bLine = words(world, "The best journeys begin with a *vision.*", { left: "960px", top: "842px", fontSize: "46px", fontWeight: 300, transform: "translate(-50%,0)", letterSpacing: "-0.01em" });
+  const bLine = words(world, "Give every *someday* a place.", { left: "960px", top: "842px", fontSize: "46px", fontWeight: 300, transform: "translate(-50%,0)", letterSpacing: "-0.01em" });
 
   // C — headline over the gallery
-  const cEyebrow = letters(world, "A bucket list for living with intention", { left: "960px", top: "132px", transform: "translate(-50%,0)" }, "caps");
+  const cEyebrow = letters(world, "Discover  ·  Collect  ·  Find the best time", { left: "960px", top: "132px", transform: "translate(-50%,0)" }, "caps");
   cEyebrow.root.style.color = "rgba(26,26,26,0.5)";
-  const cHead = words(world, "Where Intention & *Journey* Meet", { left: "960px", top: "172px", fontSize: "92px", fontWeight: 300, transform: "translate(-50%,0)", letterSpacing: "-0.02em" });
+  const cHead = words(world, "Your bucket list, all in *one* place.", { left: "960px", top: "172px", fontSize: "92px", fontWeight: 300, transform: "translate(-50%,0)", letterSpacing: "-0.02em" });
 
   // D/E/F — the product, step by step
   const prod = el("div", world, {}, "layer");
@@ -816,13 +818,13 @@
   const numSlot = el("div", prodText, { left: "-6px", top: "300px", height: "150px", overflow: "hidden", fontSize: "150px", lineHeight: "150px", fontWeight: 200, color: "#DDAE96" }, "abs serif");
   const numCol = el("div", numSlot, {});
   ["01", "02", "03"].forEach((n) => (el("div", numCol, { height: "150px" }).textContent = n));
-  const titles = ["Discover", "Save", "Complete"].map((txt) =>
+  const titles = ["Discover", "Collect", "Best time"].map((txt) =>
     words(prodText, txt, { left: "0px", top: "468px", fontSize: "104px", fontWeight: 300, letterSpacing: "-0.025em" })
   );
   const descs = [
-    "Say the journey you're dreaming of.\nMyra finds experiences that match.",
-    "Keep the ones that speak to you.\nMyra finds the best time to go.",
-    "Live it, then mark it complete.\nEvery journey deserves remembering.",
+    "Tell Myra what you're dreaming of.\nFind experiences worth keeping.",
+    "Save every idea in one place,\nand watch your year fill up.",
+    "See when each one shines,\nthen go and live it.",
   ].map((txt) => {
     const d = el("div", prodText, { left: "4px", top: "618px", width: "560px", fontSize: "23px", lineHeight: 1.55, fontWeight: 300, color: "rgba(26,26,26,0.6)", whiteSpace: "pre-line" }, "abs");
     d.textContent = txt;
@@ -880,7 +882,7 @@
   const calHead = el("div", cal, { left: "48px", top: "46px", fontSize: "44px", fontWeight: 300, letterSpacing: "-0.01em" }, "abs serif");
   calHead.textContent = "Your year";
   const calYear = el("div", cal, { right: "48px", left: "auto", top: "66px", color: "rgba(26,26,26,0.45)", fontSize: "13px" }, "abs caps");
-  calYear.textContent = "2027  ·  12 months";
+  calYear.textContent = "16 ideas collected";
   const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   const CW = 179, CH = 108, CG = 16, CTOP = 140, CLEFT = 48;
   const cellPos = (i) => ({ x: CLEFT + (i % 4) * (CW + CG), y: CTOP + Math.floor(i / 4) * (CH + CG) });
@@ -921,9 +923,9 @@
     return s;
   });
   const logoDot = el("span", logo, { display: "inline-block", width: "36px", height: "36px", borderRadius: "50%", background: PAL.dot, marginLeft: "14px", alignSelf: "center", marginTop: "40px" });
-  const tagline = words(world, "Where intention & *journey* meet.", { left: "960px", top: "636px", fontSize: "42px", fontWeight: 300, transform: "translate(-50%,0)", color: "rgba(26,26,26,0.78)" });
+  const tagline = words(world, "Every *someday,* in one place.", { left: "960px", top: "636px", fontSize: "42px", fontWeight: 300, transform: "translate(-50%,0)", color: "rgba(26,26,26,0.78)" });
   const rule = el("div", world, { left: "960px", top: "738px", width: "64px", height: "1px", background: "rgba(26,26,26,0.25)", transformOrigin: "50% 50%" }, "abs");
-  const endCaps = letters(world, "Your personal travel experience planner", { left: "960px", top: "768px", transform: "translate(-50%,0)", color: "rgba(26,26,26,0.5)" }, "caps");
+  const endCaps = letters(world, "Discover  ·  Collect  ·  Find the best time to go", { left: "960px", top: "768px", transform: "translate(-50%,0)", color: "rgba(26,26,26,0.5)" }, "caps");
 
   const fxFrontCanvas = el("canvas", stage, {}, "full");
   fxFrontCanvas.width = W;
@@ -1248,15 +1250,15 @@
 
     // step index: 0 discover, 1 save, 2 complete
     const k1 = E.inOutExpo(seg(t, T.E, T.E + 0.6));
-    const k2 = E.inOutExpo(seg(t, T.F, T.F + 0.6));
+    const k2 = E.inOutExpo(seg(t, S3, S3 + 0.6));
     numCol.style.transform = `translate3d(0,${-(k1 + k2) * 150}px,0)`;
     revealLetters(eyebrow, t, 6.55, { stagger: 0.015, dur: 0.7, rise: 6, blur: 6 });
     fade(numSlot, E.outQuint(seg(t, 6.5, 7.1)));
     revealWords(titles[0], t, 6.62, { dur: 1.0, out: T.E, outDur: 0.35 });
-    revealWords(titles[1], t, T.E + 0.18, { dur: 0.95, out: T.F, outDur: 0.35 });
-    revealWords(titles[2], t, T.F + 0.18, { dur: 0.95 });
-    const descIn = [6.8, T.E + 0.3, T.F + 0.3];
-    const descOut = [T.E, T.F, 99];
+    revealWords(titles[1], t, T.E + 0.18, { dur: 0.95, out: S3, outDur: 0.35 });
+    revealWords(titles[2], t, S3 + 0.18, { dur: 0.95 });
+    const descIn = [6.8, T.E + 0.3, S3 + 0.3];
+    const descOut = [T.E, S3, 99];
     descs.forEach((d, i) => {
       const a = E.outQuint(seg(t, descIn[i], descIn[i] + 0.8));
       const b = E.inOut(seg(t, descOut[i], descOut[i] + 0.3));
@@ -1265,8 +1267,8 @@
     });
     fade(stepTicks, E.outQuint(seg(t, 6.9, 7.5)));
     tickFill.forEach((f, i) => {
-      const start = [6.9, T.E, T.F][i];
-      const end = [T.E, T.F, 11.9][i];
+      const start = [6.9, T.E, S3][i];
+      const end = [T.E, S3, 11.9][i];
       f.style.transform = `scaleX(${E.inOut(seg(t, start, end))})`;
     });
 
