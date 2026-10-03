@@ -104,7 +104,7 @@ async function shoot(page, t, file) {
 
     const ff = ["-y", "-framerate", String(FPS), "-i", path.join(frames, "f%05d.png")];
     if (fs.existsSync(AUDIO)) ff.push("-i", AUDIO);
-    ff.push("-c:v", "libx264", "-preset", "slow", "-crf", "14", "-tune", "film", "-pix_fmt", "yuv420p", "-color_primaries", "bt709", "-color_trc", "bt709", "-colorspace", "bt709", "-movflags", "+faststart");
+    ff.push("-c:v", "libx264", "-preset", "slow", "-crf", "20", "-tune", "film", "-pix_fmt", "yuv420p", "-color_primaries", "bt709", "-color_trc", "bt709", "-colorspace", "bt709", "-movflags", "+faststart");
     if (fs.existsSync(AUDIO)) ff.push("-c:a", "aac", "-b:a", "256k", "-shortest");
     ff.push(MP4);
     const r = spawnSync("ffmpeg", ff, { stdio: "inherit" });
