@@ -98,9 +98,10 @@ function encodeLoop(frames, { length, xfade }) {
   ffmpeg(["-i", master, "-an", "-vf", "scale=1280:720:flags=lanczos", "-c:v", "libx264", "-preset", "slow", "-crf", "21", "-tune", "film", "-pix_fmt", "yuv420p", ...color, "-movflags", "+faststart", path.join(LOOP_OUT, "myra-loop-720.mp4")]);
   ffmpeg(["-i", master, "-an", "-c:v", "libvpx-vp9", "-crf", "33", "-b:v", "0", "-row-mt", "1", "-deadline", "good", "-cpu-used", "2", "-pix_fmt", "yuv420p", path.join(LOOP_OUT, "myra-loop.webm")]);
   ffmpeg(["-ss", "3.1", "-i", master, "-frames:v", "1", "-q:v", "3", path.join(LOOP_OUT, "myra-loop-poster.jpg")]);
+  // GIF fallback: denoise the grain and use an ordered dither, or it balloons past 40 MB.
   ffmpeg([
-    "-i", master, "-filter_complex",
-    "fps=24,scale=800:-1:flags=lanczos,split[x][y];[x]palettegen=max_colors=256:stats_mode=full[p];[y][p]paletteuse=dither=sierra2_4a",
+    "-i", mp4, "-filter_complex",
+    "fps=15,scale=640:-1:flags=lanczos,hqdn3d=4:3:6:4,split[x][y];[x]palettegen=max_colors=192:stats_mode=diff[p];[y][p]paletteuse=dither=bayer:bayer_scale=4:diff_mode=rectangle",
     "-loop", "0", path.join(LOOP_OUT, "myra-loop.gif"),
   ]);
   fs.rmSync(master);

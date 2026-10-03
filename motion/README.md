@@ -24,11 +24,11 @@ One experience, followed from vision to memory, cut to a single beat map:
 
 | File | Use |
 | --- | --- |
-| `myra-loop.webm` | Main source (VP9, smallest) |
-| `myra-loop.mp4` | Universal fallback (H.264, 1080p60) |
-| `myra-loop-720.mp4` | Lighter version for mobile |
+| `myra-loop.webm` | Main source (VP9, 1080p60, 1.6 MB) |
+| `myra-loop.mp4` | Universal fallback (H.264, 1080p60, 3.8 MB) |
+| `myra-loop-720.mp4` | Lighter version for mobile (1.4 MB) |
 | `myra-loop-poster.jpg` | First paint, and the still for reduced-motion users |
-| `myra-loop.gif` | Only for places that can't play video (README files, Notion, email) |
+| `myra-loop.gif` | Only for places that can't play video, like README files, Notion or email (640px, 15fps, 5 MB) |
 
 Embed it as a muted, looping video rather than a GIF. A video is sharper and many times smaller:
 
