@@ -18,6 +18,48 @@ One experience, followed from vision to memory, cut to a single beat map:
 | 10.4 – 11.9 | 03 Complete | The card returns, gets stamped **Completed**, and petals burst out. |
 | 11.9 – 15.0 | The mark | Everything dissolves. "Myra" comes into focus, and a petal lands to become the dot, echoing the opening. |
 
+## Portfolio loop (silent, ~9.6s)
+
+`out/loop/` has a cut made for embedding on a website. It's the same film with smooth speed ramps, ending as the wordmark lifts away and the dot glides back to center. The last 0.6s crossfades into the first frames, so it loops without a visible seam.
+
+| File | Use |
+| --- | --- |
+| `myra-loop.webm` | Main source (VP9, smallest) |
+| `myra-loop.mp4` | Universal fallback (H.264, 1080p60) |
+| `myra-loop-720.mp4` | Lighter version for mobile |
+| `myra-loop-poster.jpg` | First paint, and the still for reduced-motion users |
+| `myra-loop.gif` | Only for places that can't play video (README files, Notion, email) |
+
+Embed it as a muted, looping video rather than a GIF. A video is sharper and many times smaller:
+
+```html
+<video
+  class="myra-loop"
+  autoplay muted loop playsinline
+  preload="metadata"
+  poster="/media/myra-loop-poster.jpg"
+  width="1920" height="1080"
+  aria-label="Myra: a bucket-list app for living with intention (animated preview)"
+>
+  <source src="/media/myra-loop.webm" type="video/webm" />
+  <source src="/media/myra-loop.mp4" type="video/mp4" />
+</video>
+
+<style>
+  .myra-loop { width: 100%; height: auto; aspect-ratio: 16 / 9; border-radius: 16px; display: block; background: #f7f5f0; }
+</style>
+<script>
+  // Respect reduced-motion: show the poster instead of playing.
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    document.querySelectorAll("video.myra-loop").forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
+  }
+</script>
+```
+
+All four attributes `autoplay muted loop playsinline` are required. Without `muted` and `playsinline`, iOS Safari won't autoplay the video. In React or Next.js, write them as `autoPlay muted loop playsInline`.
+
+To preview the loop live, open `myra-reel.html?loop` through a static server.
+
 ## Files
 
 - `myra-reel.html` + `reel.js`: the film. `renderFrame(t)` is a pure function of time, so every frame is reproducible. Open the HTML through any static server to watch it loop live (press space to pause).
@@ -31,6 +73,7 @@ One experience, followed from vision to memory, cut to a single beat map:
 node motion/score.cjs                          # → motion/out/myra-reel-score.wav
 node motion/render.cjs                         # → motion/out/myra-reel.mp4 (1080p60)
 node motion/render.cjs --stills 2.5,8.2,13.6   # quick PNG checks → motion/out/stills/
+node motion/render.cjs --loop                  # silent web loop → motion/out/loop/
 ```
 
 You need Playwright (global or local) and `ffmpeg` on your PATH.

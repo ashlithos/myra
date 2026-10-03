@@ -1153,9 +1153,8 @@
 
   let lastFrame = -1;
 
-  function renderFrame(t) {
+  function renderFrame(t, { frame = Math.round(clamp(t, 0, DURATION) * 60), loop = false } = {}) {
     t = clamp(t, 0, DURATION);
-    const frame = Math.round(t * 60);
 
     drawBackground(t);
 
@@ -1163,6 +1162,9 @@
     const petalA = landingPetal(t, 0.05, 1.42, { x: 690, y: -60 }, { x: 960, y: 540 }, 3);
     revealLetters(aWord, t, 0.45, { stagger: 0.07, dur: 1.0, rise: 18, blur: 7, out: 1.8, outDur: 0.35 });
     revealLetters(aGloss, t, 0.75, { stagger: 0.022, dur: 0.9, rise: 10, blur: 8, out: 1.8, outDur: 0.35 });
+    // The loop cut opens on the resting dot, so the "mira" gloss stays out of it.
+    fade(aWord.root, loop ? 0 : 1);
+    fade(aGloss.root, loop ? 0 : 1);
 
     /* --- hero (dot → iris → card) ---------------------------------- */
     const rowX = rowOffset(t);
@@ -1187,7 +1189,7 @@
     ripple.setAttribute("cy", 540);
     ripple.setAttribute("r", 9 + E.outExpo(rp) * 190);
     ripple.setAttribute("stroke-width", lerp(2, 0.5, rp));
-    ripple.setAttribute("opacity", rp > 0 && rp < 1 ? (1 - rp) * 0.9 : 0);
+    ripple.setAttribute("opacity", !loop && rp > 0 && rp < 1 ? (1 - rp) * 0.9 : 0);
 
     const lensR = hg.w / 2 + 26;
     const arcP = E.inOut(seg(t, 2.15, 3.5));
@@ -1436,7 +1438,9 @@
     stage.style.transform = `translate(${(window.innerWidth - W * s) / 2}px, ${(window.innerHeight - H * s) / 2}px) scale(${s})`;
   }
 
-  const capture = new URLSearchParams(location.search).has("capture");
+  const params = new URLSearchParams(location.search);
+  const capture = params.has("capture");
+  const loopPreview = params.has("loop");
 
   window.__ready = (async () => {
     await document.fonts.load('300 40px "Newsreader"');
@@ -1464,8 +1468,74 @@
     return true;
   })();
 
+  /* ------------------------------------------------------------ loop cut */
+
+  // A silent ~9.6s portfolio loop: the same film, speed-ramped through a smooth
+  // time warp, ending with the mark dissolving back into the dot it opened on.
+  // Frames run to LOOP.total; the last LOOP.xfade seconds are cross-faded over
+  // the first ones by render.cjs so the loop point is invisible.
+  const LOOP = { length: 9.6, xfade: 0.6, total: 10.2 };
+  const LOOP_KEYS = [[0, 1.86], [0.65, 1.93], [3.65, 6.35], [7.05, 11.9], [8.7, 14.0], [10.2, 14.6]];
+
+  // Monotone cubic (Fritsch–Carlson): speed ramps without overshooting time.
+  const warp = (() => {
+    const xs = LOOP_KEYS.map((k) => k[0]);
+    const ys = LOOP_KEYS.map((k) => k[1]);
+    const n = xs.length;
+    const d = xs.slice(0, -1).map((x, i) => (ys[i + 1] - ys[i]) / (xs[i + 1] - x));
+    const m = xs.map((_, i) => (i === 0 ? d[0] : i === n - 1 ? d[n - 2] : d[i - 1] * d[i] <= 0 ? 0 : (d[i - 1] + d[i]) / 2));
+    for (let i = 0; i < n - 1; i++) {
+      const a = m[i] / d[i], b = m[i + 1] / d[i];
+      const h = a * a + b * b;
+      if (h > 9) {
+        const k = 3 / Math.sqrt(h);
+        m[i] = k * a * d[i];
+        m[i + 1] = k * b * d[i];
+      }
+    }
+    return (u) => {
+      u = clamp(u, xs[0], xs[n - 1]);
+      let i = 0;
+      while (i < n - 2 && u > xs[i + 1]) i++;
+      const hx = xs[i + 1] - xs[i];
+      const s = (u - xs[i]) / hx;
+      const s2 = s * s, s3 = s2 * s;
+      return (2 * s3 - 3 * s2 + 1) * ys[i] + (s3 - 2 * s2 + s) * hx * m[i] + (-2 * s3 + 3 * s2) * ys[i + 1] + (s3 - s2) * hx * m[i + 1];
+    };
+  })();
+
+  function renderLoop(u) {
+    renderFrame(warp(u), { frame: Math.round(u * 60), loop: true });
+
+    // Outro: the wordmark lifts away and the dot glides home to centre.
+    logoLetters.forEach((el, i) => {
+      const q = E.inOut(seg(u, 8.85 + i * 0.05, 9.35 + i * 0.05));
+      if (q <= 0) return;
+      el.style.opacity = parseFloat(el.style.opacity) * (1 - q);
+      el.style.transform = `translate3d(0,${(-q * 26).toFixed(2)}px,0)`;
+      el.style.filter = `blur(${(q * 16).toFixed(2)}px)`;
+    });
+    const q2 = E.inOut(seg(u, 8.75, 9.2));
+    [tagline.root, rule, endCaps.root].forEach((el) => {
+      el.style.opacity = 1 - q2;
+      el.style.filter = q2 > 0.01 ? `blur(${(q2 * 8).toFixed(2)}px)` : "none";
+    });
+    const m = E.inOutExpo(seg(u, 9.0, 9.65));
+    if (m > 0) {
+      logoDot.style.transform = "none";
+      const sr = stage.getBoundingClientRect();
+      const sc = sr.width / W;
+      const dr = logoDot.getBoundingClientRect();
+      const cx = (dr.left - sr.left + dr.width / 2) / sc;
+      const cy = (dr.top - sr.top + dr.height / 2) / sc;
+      const arc = Math.sin(m * Math.PI) * -40;
+      logoDot.style.transform = `translate(${((960 - cx) * m).toFixed(2)}px,${((540 - cy) * m + arc).toFixed(2)}px) scale(${lerp(1, 0.51, m)})`;
+    }
+  }
+
   window.renderFrame = renderFrame;
-  window.REEL = { DURATION, W, H };
+  window.renderLoop = renderLoop;
+  window.REEL = { DURATION, W, H, LOOP };
 
   if (!capture) {
     window.addEventListener("resize", fit);
@@ -1474,8 +1544,9 @@
       let paused = false;
       let at = 0;
       const tick = (now) => {
-        if (!paused) at = ((now - start) / 1000) % DURATION;
-        renderFrame(at);
+        if (!paused) at = ((now - start) / 1000) % (loopPreview ? LOOP.length : DURATION);
+        if (loopPreview) renderLoop(at);
+        else renderFrame(at);
         requestAnimationFrame(tick);
       };
       window.addEventListener("keydown", (e) => {

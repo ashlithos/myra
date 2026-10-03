@@ -3,6 +3,8 @@
  *   node motion/render.cjs                       # full 1080p60 render → motion/out/myra-reel.mp4
  *   node motion/render.cjs --stills 1.2,3.4      # PNG stills → motion/out/stills/
  *   node motion/render.cjs --fps 30 --workers 2  # lighter render
+ *   node motion/render.cjs --loop                # silent seamless web loop → motion/out/loop/
+ *   node motion/render.cjs --loop --stills 3,9.3 # stills from the loop cut
  *
  * Needs Playwright (global or local) and ffmpeg on PATH.
  */
@@ -32,6 +34,8 @@ const OUT = path.join(ROOT, "out");
 const FPS = Number(opt("fps", 60));
 const WORKERS = Number(opt("workers", Math.max(1, Math.min(4, os.cpus().length - 1))));
 const STILLS = opt("stills", null);
+const LOOP = args.includes("--loop");
+const LOOP_OUT = path.join(OUT, "loop");
 const AUDIO = opt("audio", path.join(OUT, "myra-reel-score.wav"));
 const MP4 = opt("out", path.join(OUT, "myra-reel.mp4"));
 
@@ -61,8 +65,47 @@ async function openPage(browser, port) {
 }
 
 async function shoot(page, t, file) {
-  await page.evaluate((tt) => window.renderFrame(tt), t);
+  await page.evaluate(([tt, loop]) => (loop ? window.renderLoop(tt) : window.renderFrame(tt)), [t, LOOP]);
   await page.screenshot({ path: file, type: "png", clip: { x: 0, y: 0, width: 1920, height: 1080 } });
+}
+
+function ffmpeg(argv) {
+  const r = spawnSync("ffmpeg", ["-hide_banner", "-loglevel", "error", "-y", ...argv], { stdio: "inherit" });
+  if (r.status !== 0) throw new Error("ffmpeg failed: " + argv.join(" "));
+}
+
+// Seamless loop: the last `xfade` seconds dissolve into the first ones, so the
+// clip's final frame flows straight into its first.
+function encodeLoop(frames, { length, xfade }) {
+  fs.mkdirSync(LOOP_OUT, { recursive: true });
+  const L = Math.round(length * FPS);
+  const X = Math.round(xfade * FPS);
+  const master = path.join(LOOP_OUT, "master.mkv");
+  ffmpeg([
+    "-framerate", String(FPS), "-i", path.join(frames, "f%05d.png"),
+    "-filter_complex",
+    `[0]split=3[a][b][c];` +
+      `[a]trim=start_frame=${L}:end_frame=${L + X},setpts=PTS-STARTPTS[tail];` +
+      `[b]trim=start_frame=0:end_frame=${X},setpts=PTS-STARTPTS[head];` +
+      `[c]trim=start_frame=${X}:end_frame=${L},setpts=PTS-STARTPTS[mid];` +
+      `[tail][head]xfade=transition=fade:duration=${X / FPS}:offset=0[seam];` +
+      `[seam][mid]concat=n=2:v=1[out]`,
+    "-map", "[out]", "-c:v", "libx264rgb", "-crf", "0", "-preset", "ultrafast", master,
+  ]);
+  const color = ["-color_primaries", "bt709", "-color_trc", "bt709", "-colorspace", "bt709"];
+  const mp4 = path.join(LOOP_OUT, "myra-loop.mp4");
+  ffmpeg(["-i", master, "-an", "-c:v", "libx264", "-preset", "slow", "-crf", "21", "-tune", "film", "-pix_fmt", "yuv420p", ...color, "-movflags", "+faststart", mp4]);
+  ffmpeg(["-i", master, "-an", "-vf", "scale=1280:720:flags=lanczos", "-c:v", "libx264", "-preset", "slow", "-crf", "21", "-tune", "film", "-pix_fmt", "yuv420p", ...color, "-movflags", "+faststart", path.join(LOOP_OUT, "myra-loop-720.mp4")]);
+  ffmpeg(["-i", master, "-an", "-c:v", "libvpx-vp9", "-crf", "33", "-b:v", "0", "-row-mt", "1", "-deadline", "good", "-cpu-used", "2", "-pix_fmt", "yuv420p", path.join(LOOP_OUT, "myra-loop.webm")]);
+  ffmpeg(["-ss", "3.1", "-i", master, "-frames:v", "1", "-q:v", "3", path.join(LOOP_OUT, "myra-loop-poster.jpg")]);
+  ffmpeg([
+    "-i", master, "-filter_complex",
+    "fps=24,scale=800:-1:flags=lanczos,split[x][y];[x]palettegen=max_colors=256:stats_mode=full[p];[y][p]paletteuse=dither=sierra2_4a",
+    "-loop", "0", path.join(LOOP_OUT, "myra-loop.gif"),
+  ]);
+  fs.rmSync(master);
+  for (const f of fs.readdirSync(LOOP_OUT)) console.log(`  ${f}  ${(fs.statSync(path.join(LOOP_OUT, f)).size / 1e6).toFixed(2)} MB`);
+  console.log(`Done → ${LOOP_OUT}`);
 }
 
 (async () => {
@@ -86,7 +129,10 @@ async function shoot(page, t, file) {
       return;
     }
 
-    const duration = 15;
+    const page0 = await openPage(browser, port);
+    const loopSpec = await page0.evaluate(() => window.REEL.LOOP);
+    await page0.close();
+    const duration = LOOP ? loopSpec.total : 15;
     const total = Math.round(duration * FPS);
     const frames = fs.mkdtempSync(path.join(os.tmpdir(), "myra-frames-"));
     console.log(`Rendering ${total} frames @ ${FPS}fps with ${WORKERS} workers → ${frames}`);
@@ -101,6 +147,12 @@ async function shoot(page, t, file) {
         }
       })
     );
+
+    if (LOOP) {
+      encodeLoop(frames, loopSpec);
+      fs.rmSync(frames, { recursive: true, force: true });
+      return;
+    }
 
     const ff = ["-y", "-framerate", String(FPS), "-i", path.join(frames, "f%05d.png")];
     if (fs.existsSync(AUDIO)) ff.push("-i", AUDIO);
