@@ -13,7 +13,7 @@
 
   // Beat map (seconds)
   const T = { B: 1.9, C: 3.75, D: 6.35, E: 8.6, F: 10.4, G: 11.9 };
-  // Copy for step 3 ("Best time") lands with the best-time band, ahead of the visual beat F.
+  // Copy for step 3 ("Decide when") lands with the best-time band, ahead of the visual beat F.
   const S3 = 10.0;
 
   const PAL = {
@@ -806,7 +806,7 @@
   const bLine = words(world, "Give every *someday* a place.", { left: "960px", top: "842px", fontSize: "46px", fontWeight: 300, transform: "translate(-50%,0)", letterSpacing: "-0.01em" });
 
   // C — headline over the gallery
-  const cEyebrow = letters(world, "Discover  ·  Collect  ·  Find the best time", { left: "960px", top: "132px", transform: "translate(-50%,0)" }, "caps");
+  const cEyebrow = letters(world, "Discover  ·  Collect  ·  Decide when to go", { left: "960px", top: "132px", transform: "translate(-50%,0)" }, "caps");
   cEyebrow.root.style.color = "rgba(26,26,26,0.5)";
   const cHead = words(world, "Your bucket list, all in *one* place.", { left: "960px", top: "172px", fontSize: "92px", fontWeight: 300, transform: "translate(-50%,0)", letterSpacing: "-0.02em" });
 
@@ -818,7 +818,7 @@
   const numSlot = el("div", prodText, { left: "-6px", top: "300px", height: "150px", overflow: "hidden", fontSize: "150px", lineHeight: "150px", fontWeight: 200, color: "#DDAE96" }, "abs serif");
   const numCol = el("div", numSlot, {});
   ["01", "02", "03"].forEach((n) => (el("div", numCol, { height: "150px" }).textContent = n));
-  const titles = ["Discover", "Collect", "Best time"].map((txt) =>
+  const titles = ["Discover", "Collect", "Decide when"].map((txt) =>
     words(prodText, txt, { left: "0px", top: "468px", fontSize: "104px", fontWeight: 300, letterSpacing: "-0.025em" })
   );
   const descs = [
@@ -925,7 +925,7 @@
   const logoDot = el("span", logo, { display: "inline-block", width: "36px", height: "36px", borderRadius: "50%", background: PAL.dot, marginLeft: "14px", alignSelf: "center", marginTop: "40px" });
   const tagline = words(world, "Every *someday,* in one place.", { left: "960px", top: "636px", fontSize: "42px", fontWeight: 300, transform: "translate(-50%,0)", color: "rgba(26,26,26,0.78)" });
   const rule = el("div", world, { left: "960px", top: "738px", width: "64px", height: "1px", background: "rgba(26,26,26,0.25)", transformOrigin: "50% 50%" }, "abs");
-  const endCaps = letters(world, "Discover  ·  Collect  ·  Find the best time to go", { left: "960px", top: "768px", transform: "translate(-50%,0)", color: "rgba(26,26,26,0.5)" }, "caps");
+  const endCaps = letters(world, "Discover  ·  Collect  ·  Decide when to go", { left: "960px", top: "768px", transform: "translate(-50%,0)", color: "rgba(26,26,26,0.5)" }, "caps");
 
   const fxFrontCanvas = el("canvas", stage, {}, "full");
   fxFrontCanvas.width = W;

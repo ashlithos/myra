@@ -6,7 +6,7 @@ A brand film for Myra, made entirely in code: the landscapes, typography, petals
 
 ## The story
 
-The value prop in three steps (discover, collect, find the best time to go), told through one experience and cut to a single beat map:
+The value prop in three steps (discover, collect, decide when to go), told through one experience and cut to a single beat map:
 
 | Time | Beat | What happens |
 | --- | --- | --- |
@@ -15,7 +15,7 @@ The value prop in three steps (discover, collect, find the best time to go), tol
 | 3.75 – 6.35 | One place | The iris becomes a card, then pulls back into a floating gallery. "Your bucket list, all in *one* place." |
 | 6.35 – 8.6 | 01 Discover | A whip pan into the product. An intention gets typed and matching experiences land. |
 | 8.6 – 10.0 | 02 Collect | The Tokyo card is saved and flies into April, and the year fills with collected ideas. |
-| 10.0 – 11.9 | 03 Best time | *Best time to go* lights up across March and April. The card returns, lived and stamped **Completed**. |
+| 10.0 – 11.9 | 03 Decide when | *Best time to go* lights up across March and April. The card returns, lived and stamped **Completed**. |
 | 11.9 – 15.0 | The mark | "Myra" comes into focus as a petal lands to become the dot. "Every *someday*, in one place." |
 
 ## Portfolio loop (silent, ~9.6s)
@@ -39,7 +39,7 @@ Embed it as a muted, looping video rather than a GIF. A video is sharper and man
   preload="metadata"
   poster="/media/myra-loop-poster.jpg"
   width="1920" height="1080"
-  aria-label="Myra: discover and collect your bucket list in one place, and find the best time for each (animated preview)"
+  aria-label="Myra: discover and collect your bucket list in one place, and decide when to go (animated preview)"
 >
   <source src="/media/myra-loop.webm" type="video/webm" />
   <source src="/media/myra-loop.mp4" type="video/mp4" />
