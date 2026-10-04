@@ -44,3 +44,8 @@ travel.db-shm
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# motion reel scratch output (the final mp4 is committed)
+/motion/out/*
+!/motion/out/myra-reel.mp4
+!/motion/out/loop/
