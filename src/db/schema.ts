@@ -92,3 +92,15 @@ export const affinities = sqliteTable("affinities", {
     .notNull()
     .$defaultFn(() => new Date().toISOString()),
 });
+
+// Personal keys that let Claude (via the MCP endpoint) act on a user's bucket list.
+// Only a SHA-256 hash of the key is stored; the plain key is shown to the user once.
+export const mcpTokens = sqliteTable("mcp_tokens", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: text("user_id").notNull().unique(),
+  tokenHash: text("token_hash").notNull().unique(),
+  createdAt: text("created_at")
+    .notNull()
+    .$defaultFn(() => new Date().toISOString()),
+  lastUsedAt: text("last_used_at"),
+});

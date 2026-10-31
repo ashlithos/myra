@@ -228,6 +228,31 @@ const translations = {
   // User menu
   "user.signIn": { en: "SIGN IN", zh: "登录" },
   "user.signOut": { en: "Sign out", zh: "退出登录" },
+  "user.connectClaude": { en: "Connect Claude", zh: "连接 Claude" },
+
+  // Connect Claude (MCP)
+  "mcp.back": { en: "← Bucket list", zh: "← 心愿单" },
+  "mcp.heading": { en: "Connect Claude", zh: "连接 Claude" },
+  "mcp.intro": { en: "Let Claude add places to your wishlist, look up your bucket list, and mark trips as visited, just by asking in any Claude chat.", zh: "连接后，你可以在任何 Claude 对话中直接让 Claude 把地点加入心愿单、查看你的清单，或标记已去过的地方。" },
+  "mcp.example": { en: "Try: \u201cAdd cherry blossoms in Kyoto to my Myra wishlist for spring.\u201d", zh: "试试说：\u201c把京都赏樱加到我的 Myra 心愿单，春天去。\u201d" },
+  "mcp.statusOn": { en: "Connected", zh: "已连接" },
+  "mcp.statusOff": { en: "Not connected", zh: "未连接" },
+  "mcp.created": { en: "Link created", zh: "链接创建于" },
+  "mcp.lastUsed": { en: "Last used by Claude", zh: "Claude 最近使用" },
+  "mcp.never": { en: "Not yet", zh: "尚未使用" },
+  "mcp.create": { en: "CREATE MY CLAUDE LINK", zh: "生成我的 CLAUDE 链接" },
+  "mcp.replace": { en: "CREATE A NEW LINK", zh: "生成新链接" },
+  "mcp.replaceNote": { en: "A new link replaces the old one; the old link stops working.", zh: "新链接会替换旧链接，旧链接将失效。" },
+  "mcp.disconnect": { en: "DISCONNECT", zh: "断开连接" },
+  "mcp.yourLink": { en: "Your private link", zh: "你的专属链接" },
+  "mcp.onceWarning": { en: "Copy it now. For your privacy it's shown only once. Treat it like a password: anyone with it can edit your bucket list.", zh: "请立即复制，出于隐私保护只显示一次。请像密码一样保管：任何拿到链接的人都能编辑你的清单。" },
+  "mcp.copy": { en: "COPY", zh: "复制" },
+  "mcp.copied": { en: "COPIED", zh: "已复制" },
+  "mcp.stepsHeading": { en: "Add it to Claude", zh: "添加到 Claude" },
+  "mcp.step1": { en: "In Claude, open Settings → Connectors.", zh: "在 Claude 中打开 设置 → 连接器（Connectors）。" },
+  "mcp.step2": { en: "Choose \u201cAdd custom connector\u201d. Name it Myra.", zh: "选择\u201c添加自定义连接器\u201d，命名为 Myra。" },
+  "mcp.step3": { en: "Paste your link as the URL and save. Then ask Claude about your wishlist.", zh: "把链接粘贴到 URL 栏并保存，然后就可以让 Claude 管理你的心愿单了。" },
+  "mcp.error": { en: "Something went wrong. Please try again.", zh: "出了点问题，请重试。" },
 
   // Card menu
   "menu.more": { en: "More options", zh: "更多选项" },
