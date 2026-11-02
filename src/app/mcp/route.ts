@@ -19,7 +19,7 @@ import {
   setCover,
   type ItemResult,
 } from "@/lib/mcp/data";
-import { WIDGET_HTML } from "@/lib/mcp/widget-html.generated";
+import { WIDGET_HTML, WIDGET_VERSION } from "@/lib/mcp/widget-html.generated";
 import { MONTHS } from "@/lib/best-time";
 import { DO_BY_AGES, LOCALITIES, PARTNER_TYPES, SEASONS } from "@/lib/types";
 
@@ -29,7 +29,8 @@ import { DO_BY_AGES, LOCALITIES, PARTNER_TYPES, SEASONS } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
-const WIDGET_URI = "ui://myra/app.html";
+// Carries a hash of the widget HTML, so hosts never show a stale cached copy.
+const WIDGET_URI = `ui://myra/app-${WIDGET_VERSION}.html`;
 
 const text = (t: string) => ({ content: [{ type: "text" as const, text: t }] });
 const failed = (e: unknown) => ({

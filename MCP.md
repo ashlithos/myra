@@ -45,5 +45,6 @@ npx tsc --noEmit
 
 ## Known limits
 
+- Hosts cache the widget by URI, which carries a hash of the widget HTML (`WIDGET_VERSION`). Keep `structuredContent` changes backward-compatible anyway: an old cached widget may render new data until the host refreshes.
 - The widget bundle is ~600 KB, because the App SDK carries zod.
 - Calendar chips use the city name when there is one.
