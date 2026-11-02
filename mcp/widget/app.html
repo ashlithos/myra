@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Myra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* Myra's tokens (src/app/globals.css). The card keeps its cream paper in
+     light and dark hosts, like a printed postcard. */
+  :root {
+    --cream: #f7f5f0; --ink: #1a1a1a; --divider: #d4d0c8; --butter: #f2e6b5; --terracotta: #ebcfbe;
+    --ideal: #e8d48a; --shoulder: #f3e9c9; --soft: rgba(26, 26, 26, 0.7);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: transparent; }
+  body { font-family: Inter, system-ui, sans-serif; color: var(--ink); font-size: 14px; }
+  button, a { font: inherit; color: inherit; cursor: pointer; }
+  button:focus-visible, a:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+  .serif { font-family: Newsreader, Georgia, serif; font-weight: 400; }
+  .caps { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; }
+  .soft { color: var(--soft); }
+  .card { background: var(--cream); border: 1px solid var(--divider); }
+  .muted-pad { padding: 14px; }
+
+  /* Item */
+  .cover { position: relative; height: 180px; background: var(--terracotta) center / cover no-repeat; display: flex; align-items: flex-end; justify-content: space-between; padding: 10px 12px; }
+  .cover .tag { background: rgba(247, 245, 240, 0.88); padding: 3px 7px; }
+  .btn { min-height: 36px; border: 1px solid var(--ink); background: var(--cream); padding: 0 12px; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .picker { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; padding: 8px; border-bottom: 1px solid var(--divider); }
+  .picker button { height: 68px; border: 1px solid var(--divider); background: var(--terracotta) center / cover no-repeat; padding: 0; }
+  .picker button[aria-pressed="true"] { border: 2px solid var(--ink); }
+  .credit { padding: 10px 14px 0; font-size: 10px; color: var(--soft); }
+  .credit a { color: var(--soft); }
+  .body { padding: 8px 14px 14px; }
+  .title-row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  h2 { margin: 0; font-size: 26px; line-height: 1.15; }
+  .badge { flex-shrink: 0; border: 1px solid var(--divider); padding: 2px 8px; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .meta { margin-top: 6px; font-size: 13px; color: var(--soft); }
+  .tags { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px 14px; color: var(--soft); }
+  .strip { margin-top: 8px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 2px; }
+  .strip button { height: 44px; border: 1px solid var(--divider); padding: 0; font-size: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; }
+  .strip button[aria-pressed="true"] { border: 2px solid var(--ink); }
+  .pip { width: 4px; height: 4px; border-radius: 999px; background: transparent; }
+  [aria-pressed="true"] .pip { background: var(--ink); }
+  .r-ideal { background: var(--ideal); } .r-shoulder { background: var(--shoulder); } .r-skip { background: var(--cream); }
+  .legend { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 11px; color: var(--soft); }
+  .legend span { display: inline-flex; align-items: center; gap: 5px; }
+  .sw { width: 10px; height: 10px; border: 1px solid var(--divider); }
+  .desc { margin: 12px 0 0; font-size: 13px; line-height: 1.5; }
+  .foot { display: flex; border-top: 1px solid var(--divider); }
+  .foot > * { flex: 1; min-height: 46px; display: flex; align-items: center; justify-content: center; border: 0; background: transparent; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; }
+  .foot > * + * { border-left: 1px solid var(--divider); }
+  .foot .dark { background: var(--ink); color: var(--cream); }
+  .who { padding: 12px 14px; border-top: 1px solid var(--divider); display: flex; flex-direction: column; gap: 8px; font-size: 13px; }
+  .who-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tier { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; padding: 2px 8px; }
+  .t-take-me-there { background: var(--butter); } .t-interested { background: var(--terracotta); } .t-open { border: 1px solid var(--divider); }
+  .back { border: 0; background: transparent; padding: 10px 14px 0; color: var(--soft); }
+
+  /* Board */
+  .head { padding: 12px 14px 10px; display: flex; flex-direction: column; gap: 10px; }
+  .head-row { display: flex; align-items: baseline; justify-content: space-between; }
+  .head h2 { font-size: 22px; }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip { padding: 4px 8px; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; background: var(--ink); color: var(--cream); }
+  .chip.out { background: transparent; color: var(--ink); border: 1px solid var(--divider); padding: 3px 8px; }
+  .tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 1px solid var(--divider); }
+  .tabs button { min-height: 38px; border: 0; background: transparent; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; }
+  .tabs button + button { border-left: 1px solid var(--divider); }
+  .tabs button[aria-selected="true"] { background: var(--ink); color: var(--cream); }
+  .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; padding: 0 14px 4px; }
+  .tile { border: 1px solid var(--divider); background: var(--cream); padding: 0; text-align: left; display: flex; flex-direction: column; }
+  .thumb { height: 96px; width: 100%; background: var(--terracotta) center / cover no-repeat; display: flex; align-items: flex-end; padding: 6px; }
+  .thumb .tag { background: rgba(247, 245, 240, 0.88); padding: 2px 5px; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; }
+  .tile-body { padding: 8px 9px 10px; }
+  .tile-name { font-size: 15.5px; line-height: 1.2; }
+  .tile-place { margin-top: 3px; font-size: 11.5px; color: var(--soft); }
+  .rows { padding: 0 14px; }
+  .row { width: 100%; border: 0; border-top: 1px solid var(--divider); background: transparent; padding: 12px 0; display: flex; gap: 12px; align-items: flex-start; text-align: left; }
+  .idx { font-family: ui-monospace, monospace; font-size: 11px; color: var(--soft); padding-top: 3px; }
+  .row-main { flex: 1; min-width: 0; }
+  .row-name { font-size: 17px; }
+  .row-meta { margin-top: 6px; display: flex; gap: 10px; color: var(--soft); }
+  .cal { padding: 0 14px 6px; }
+  .cal-row { border-top: 1px solid var(--divider); padding: 10px 0; display: flex; gap: 12px; }
+  .cal-month { width: 44px; flex-shrink: 0; font-size: 16px; }
+  .cal-chips { flex: 1; display: flex; flex-wrap: wrap; gap: 5px; }
+  .cal-chips button { border: 1px solid transparent; font-size: 11.5px; padding: 4px 8px; }
+  .cal-chips button.planned { border-color: var(--ink); }
+  .empty { padding: 4px 14px 14px; color: var(--soft); font-size: 13px; }
+  .link-row { display: flex; align-items: center; justify-content: center; min-height: 46px; margin-top: 8px; border: 0; border-top: 1px solid var(--divider); background: transparent; width: 100%; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; }
+  .toast { margin: 8px 14px 14px; background: var(--ink); color: var(--cream); padding: 8px 12px; font-size: 13px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<!-- SCRIPT -->
+</body>
+</html>

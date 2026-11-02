@@ -92,3 +92,4 @@ export const affinities = sqliteTable("affinities", {
     .notNull()
     .$defaultFn(() => new Date().toISOString()),
 });
+

@@ -228,6 +228,22 @@ const translations = {
   // User menu
   "user.signIn": { en: "SIGN IN", zh: "登录" },
   "user.signOut": { en: "Sign out", zh: "退出登录" },
+  "user.connectClaude": { en: "Connect Claude", zh: "连接 Claude" },
+
+  // Connect Claude (MCP)
+  "mcp.back": { en: "← Bucket list", zh: "← 心愿单" },
+  "mcp.heading": { en: "Connect Claude", zh: "连接 Claude" },
+  "mcp.intro": { en: "Let Claude add places to your wishlist, show your bucket list as cards or a calendar, and plan months, just by asking in any Claude chat.", zh: "连接后，你可以在任何 Claude 对话中直接让 Claude 把地点加入心愿单、以卡片或日历查看清单，并规划出行月份。" },
+  "mcp.example": { en: "Try: \u201cAdd autumn in the English countryside to my Myra wishlist.\u201d", zh: "试试说：\u201c把英国乡村的秋天加到我的 Myra 心愿单。\u201d" },
+  "mcp.address": { en: "Myra's address for Claude", zh: "Myra 的 Claude 连接地址" },
+  "mcp.copy": { en: "COPY", zh: "复制" },
+  "mcp.copied": { en: "COPIED", zh: "已复制" },
+  "mcp.stepsHeading": { en: "Add it to Claude", zh: "添加到 Claude" },
+  "mcp.step1": { en: "In Claude on a laptop, open Customize → Connectors → + Add → Add custom connector.", zh: "在电脑上的 Claude 中打开 自定义 → 连接器 → + 添加 → 添加自定义连接器。" },
+  "mcp.step2": { en: "Name it Myra and paste the address above.", zh: "命名为 Myra，并粘贴上面的地址。" },
+  "mcp.step3": { en: "Sign in with Google (the same account you use for Myra) and tap Allow.", zh: "使用 Google 登录（与 Myra 相同的账号），然后点击允许。" },
+  "mcp.step4": { en: "In a new chat, switch Myra on under + → Connectors, then ask about your wishlist.", zh: "在新对话中，通过 + → 连接器 打开 Myra，然后就可以询问你的心愿单了。" },
+  "mcp.privacy": { en: "Claude only sees the bucket list of the Google account you sign in with. You can disconnect anytime in Claude's connector settings.", zh: "Claude 只能看到你登录的 Google 账号下的清单。你可以随时在 Claude 的连接器设置中断开。" },
 
   // Card menu
   "menu.more": { en: "More options", zh: "更多选项" },

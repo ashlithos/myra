@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import Image from "next/image";
+import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
 
 export default function UserMenu() {
@@ -80,6 +81,14 @@ export default function UserMenu() {
             <p className="text-xs font-medium text-[#1A1A1A] truncate">{session.user.name}</p>
             <p className="text-[10px] text-[#1A1A1A]/70 truncate mt-0.5">{session.user.email}</p>
           </div>
+          <Link
+            role="menuitem"
+            href="/connect-claude"
+            onClick={() => setOpen(false)}
+            className="flex items-center w-full text-left min-h-[44px] md:min-h-[44px] px-4 py-3 md:py-2.5 text-[10px] tracking-[0.15em] uppercase text-[#1A1A1A]/70 hover:text-[#1A1A1A] hover:bg-[#F7F5F0] transition-colors"
+          >
+            {t("user.connectClaude")}
+          </Link>
           <button
             role="menuitem"
             onClick={() => { setOpen(false); signOut(); }}
