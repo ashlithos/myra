@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Myra Typography Mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<!-- Current Myra fonts (Inter + Newsreader) and stand-ins for the four Timeless styles -->
+<link
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=Newsreader:ital,wght@0,300;0,400;1,300;1,400&family=Host+Grotesk:ital,wght@0,300..800;1,300..800&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300..700;1,8..60,300..700&family=Literata:ital,opsz,wght@0,7..72,300..700;1,7..72,300..700&display=swap"
+  rel="stylesheet"
+/>
+<style>
+  /*
+   * Typography roles. Each role points at the real Timeless family first
+   * (if it's installed, or dropped onto this page), then a free stand-in.
+   */
+  :root {
+    --cream: #f7f5f0;
+    --ink: #1a1a1a;
+    --divider: #d4d0c8;
+    --terracotta: #ebcfbe;
+    --butter: #f2e6b5;
+
+    --cur-serif: "Newsreader", Georgia, serif;
+    --cur-sans: "Inter", system-ui, sans-serif;
+
+    --tl-grotesk: "Timeless Grotesk", "Host Grotesk", system-ui, sans-serif;
+    --tl-sans: "Timeless Sans", "Instrument Sans", system-ui, sans-serif;
+    --tl-serif: "Timeless Serif", "Source Serif 4", Georgia, serif;
+    --tl-text: "Timeless Text", "Literata", Georgia, serif;
+
+    --wght: 400;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: var(--cur-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Page chrome ─────────────────────────────── */
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 48px 24px 96px; }
+  .eyebrow { font-size: 10px; letter-spacing: .3em; text-transform: uppercase; color: rgba(26,26,26,.6); margin-bottom: 8px; }
+  .page-title { font-family: var(--cur-serif); font-weight: 300; font-size: 40px; line-height: 1.1; margin-bottom: 12px; }
+  .lede { font-size: 15px; line-height: 1.6; color: rgba(26,26,26,.75); max-width: 640px; }
+  section { margin-top: 56px; }
+  h2.section { font-family: var(--cur-serif); font-weight: 400; font-size: 24px; margin-bottom: 6px; }
+  .section-sub { font-size: 13px; color: rgba(26,26,26,.65); margin-bottom: 24px; line-height: 1.5; }
+
+  /* License status */
+  .license {
+    border: 1px solid var(--divider);
+    background: #fff;
+    padding: 20px 24px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 16px;
+    align-items: start;
+  }
+  .license .dot { width: 10px; height: 10px; border-radius: 50%; background: #d9a441; margin-top: 6px; }
+  .license h3 { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+  .license p, .license li { font-size: 13px; line-height: 1.6; color: rgba(26,26,26,.8); }
+  .license ul { padding-left: 18px; margin-top: 6px; }
+
+  /* Controls */
+  .controls {
+    position: sticky; top: 0; z-index: 10;
+    background: rgba(247,245,240,.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--divider);
+    margin: 40px -24px 0; padding: 14px 24px;
+    display: flex; flex-wrap: wrap; gap: 16px 28px; align-items: center;
+  }
+  .seg { display: inline-flex; border: 1px solid var(--ink); }
+  .seg button {
+    font: inherit; font-size: 10px; letter-spacing: .2em; text-transform: uppercase;
+    background: transparent; color: var(--ink); border: 0; padding: 10px 16px; cursor: pointer; min-height: 40px;
+  }
+  .seg button[aria-pressed="true"] { background: var(--ink); color: #fff; }
+  .ctl-label { font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: rgba(26,26,26,.65); }
+  .slider { display: inline-flex; gap: 10px; align-items: center; }
+  .slider input { accent-color: var(--ink); width: 140px; }
+  .slider output { font-family: ui-monospace, monospace; font-size: 12px; width: 32px; }
+  .font-status { font-size: 12px; color: rgba(26,26,26,.7); margin-left: auto; }
+
+  /* Drop zone */
+  .drop {
+    display: block;
+    border: 1.5px dashed rgba(26,26,26,.35);
+    padding: 22px 24px; text-align: center; font-size: 13px; line-height: 1.6;
+    color: rgba(26,26,26,.75); cursor: pointer; transition: background .15s, border-color .15s;
+  }
+  .drop.over { background: var(--butter); border-color: var(--ink); }
+  .drop strong { color: var(--ink); }
+  .drop input { display: none; }
+  .loaded-list { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 10px; }
+  .loaded-list span { font-size: 11px; border: 1px solid var(--divider); background: #fff; padding: 3px 8px; }
+
+  /* ── Role cards ─────────────────────────────── */
+  .roles { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+  .role { background: #fff; border: 1px solid var(--divider); padding: 22px 22px 20px; display: flex; flex-direction: column; gap: 10px; }
+  .role .tag { font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: rgba(26,26,26,.6); }
+  .role .specimen { font-size: 44px; line-height: 1; font-weight: var(--wght); }
+  .role .specimen em { font-style: italic; }
+  .role .use { font-size: 12.5px; line-height: 1.55; color: rgba(26,26,26,.78); }
+  .role .replaces { font-size: 11px; color: rgba(26,26,26,.55); border-top: 1px solid var(--divider); padding-top: 10px; margin-top: auto; }
+  .role.grotesk .specimen { font-family: var(--tl-grotesk); letter-spacing: -.02em; }
+  .role.sans .specimen { font-family: var(--tl-sans); }
+  .role.serif .specimen { font-family: var(--tl-serif); }
+  .role.text .specimen { font-family: var(--tl-text); font-size: 36px; }
+
+  /* ── Myra mock frames ─────────────────────────── */
+  .frames { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 24px; align-items: start; }
+  @media (max-width: 860px) { .frames { grid-template-columns: 1fr; } }
+  .frame { background: var(--cream); border: 1px solid var(--divider); box-shadow: 0 1px 0 rgba(0,0,0,.02), 0 12px 40px -20px rgba(0,0,0,.18); overflow: hidden; }
+  .frame-bar { display: flex; gap: 6px; padding: 10px 12px; border-bottom: 1px solid var(--divider); background: #efece5; }
+  .frame-bar i { width: 9px; height: 9px; border-radius: 50%; background: #d4d0c8; }
+  .frame-cap { font-size: 11px; color: rgba(26,26,26,.6); margin-top: 8px; }
+
+  /*
+   * The mock app reads its fonts from these 4 variables so the toggle can swap
+   * the whole thing at once (same idea as Tailwind's --font-serif / --font-sans).
+   */
+  .app { --f-brand: var(--cur-serif); --f-display: var(--cur-serif); --f-ui: var(--cur-sans); --f-read: var(--cur-sans); --brand-track: -.01em; }
+  body.timeless .app { --f-brand: var(--tl-grotesk); --f-display: var(--tl-serif); --f-ui: var(--tl-sans); --f-read: var(--tl-text); --brand-track: -.035em; }
+
+  .app { font-family: var(--f-ui); }
+  .app .nav { border-bottom: 1px solid var(--divider); padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .app .logo { font-family: var(--f-brand); font-size: 22px; letter-spacing: var(--brand-track); display: flex; align-items: center; font-weight: 500; }
+  body:not(.timeless) .app .logo { font-weight: 400; }
+  .app .logo::after { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--terracotta); margin-left: 3px; }
+  .app .links { display: flex; gap: 24px; font-size: 10px; letter-spacing: .2em; color: rgba(26,26,26,.7); }
+  .app .links b { color: var(--ink); font-weight: 400; }
+  .app .body { padding: 36px 24px 28px; }
+  .app .head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; gap: 16px; }
+  .app .kicker { font-size: 10px; letter-spacing: .3em; text-transform: uppercase; color: rgba(26,26,26,.7); margin-bottom: 8px; }
+  .app h1 { font-family: var(--f-display); font-weight: var(--wght); font-size: 32px; line-height: 1.1; }
+  .app .btn { background: var(--ink); color: #fff; font-size: 10px; letter-spacing: .2em; text-transform: uppercase; padding: 12px 20px; white-space: nowrap; }
+  .app .card { border-top: 1px solid var(--divider); padding: 18px 0; display: flex; gap: 16px; align-items: flex-start; }
+  .app .idx { font-family: ui-monospace, monospace; font-size: 12px; color: rgba(26,26,26,.6); padding-top: 3px; }
+  .app .card h3 { font-family: var(--f-display); font-weight: var(--wght); font-size: 19px; line-height: 1.25; }
+  .app .meta { font-size: 13px; color: rgba(26,26,26,.7); margin-top: 4px; }
+  .app .chips { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 8px; font-size: 10px; letter-spacing: .15em; text-transform: uppercase; color: rgba(26,26,26,.7); }
+  .app .age { margin-left: auto; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; border: 1px solid var(--divider); padding: 2px 8px; color: rgba(26,26,26,.6); white-space: nowrap; }
+
+  /* Detail page */
+  .app .hero { height: 150px; background: linear-gradient(135deg, #e9d8c8 0%, #f2e6b5 55%, #dfe5df 100%); position: relative; }
+  .app .hero span { position: absolute; left: 20px; bottom: 14px; font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: rgba(26,26,26,.7); }
+  .app .detail { padding: 24px 22px 28px; }
+  .app .detail h1 { font-size: 30px; }
+  .app .detail h1 em { font-style: italic; }
+  .app .detail .meta { margin-top: 8px; }
+  .app .read { font-family: var(--f-read); font-size: 15px; line-height: 1.65; margin-top: 18px; color: rgba(26,26,26,.88); }
+  .app .read p + p { margin-top: 12px; }
+  .app .pull { font-family: var(--f-display); font-style: italic; font-size: 19px; line-height: 1.4; border-left: 2px solid var(--terracotta); padding-left: 14px; margin: 18px 0; }
+  .app .facts { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--divider); margin-top: 20px; }
+  .app .facts div { padding: 12px 0; border-bottom: 1px solid var(--divider); }
+  .app .facts div:nth-child(odd) { padding-right: 12px; }
+  .app .facts small { display: block; font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: rgba(26,26,26,.6); margin-bottom: 4px; }
+  .app .facts strong { font-family: var(--f-brand); font-weight: 500; font-size: 15px; letter-spacing: -.01em; }
+  body:not(.timeless) .app .facts strong { font-weight: 500; }
+
+  /* Comparison table */
+  table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid var(--divider); font-size: 13px; }
+  th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--divider); vertical-align: top; line-height: 1.5; }
+  th { font-size: 10px; letter-spacing: .2em; text-transform: uppercase; font-weight: 500; color: rgba(26,26,26,.65); background: #faf9f6; }
+  td code { font-size: 12px; background: #f3f0eb; padding: 1px 5px; }
+  .table-scroll { overflow-x: auto; }
+
+  @media (max-width: 560px) {
+    .wrap { padding-top: 32px; }
+    .page-title { font-size: 32px; }
+    .app .links { gap: 14px; }
+    .app .head { flex-direction: column; align-items: flex-start; }
+    .font-status { margin-left: 0; }
+  }
+</style>
+</head>
+<body class="timeless">
+<div class="wrap">
+  <p class="eyebrow">Typography exploration</p>
+  <h1 class="page-title">Myra × Timeless Type</h1>
+  <p class="lede">
+    A mockup of Myra set in the new Timeless super-family: Grotesk, Sans, Serif and Text,
+    all variable with matching italics. Use the toggle to compare it with today's Inter + Newsreader.
+  </p>
+
+  <section>
+    <div class="license">
+      <div class="dot" aria-hidden="true"></div>
+      <div>
+        <h3>Can we use it? Probably yes, but read the license first</h3>
+        <p>
+          The launch post says <em>"Free to use."</em> That usually means free for commercial use too,
+          but "free" can mean several things. Before Myra ships these fonts, check three things in the
+          license file that comes with the download from <strong>timeless.co/type</strong>:
+        </p>
+        <ul>
+          <li><strong>Commercial use</strong>: is it allowed in a product, or only in personal projects?</li>
+          <li><strong>Web embedding</strong>: can we self-host the .woff2 files on Myra's server? An SIL Open Font License (OFL) allows this.</li>
+          <li><strong>Attribution / renaming</strong>: do we need a credit line? OFL lets you bundle the fonts but not sell them on their own.</li>
+        </ul>
+        <p style="margin-top:8px">
+          Until the files are added, this page uses close free stand-ins (Host Grotesk, Instrument Sans,
+          Source Serif 4, Literata). <strong>Drop the real Timeless font files below</strong> to see the real thing.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="controls" role="toolbar" aria-label="Typography controls">
+    <div class="seg" role="group" aria-label="Typeface set">
+      <button type="button" data-set="current" aria-pressed="false">Current</button>
+      <button type="button" data-set="timeless" aria-pressed="true">Timeless</button>
+    </div>
+    <label class="slider">
+      <span class="ctl-label">Weight</span>
+      <input id="wght" type="range" min="300" max="700" step="10" value="400" />
+      <output for="wght" id="wghtOut">400</output>
+    </label>
+    <span class="font-status" id="fontStatus">Showing stand-ins: no Timeless files loaded</span>
+  </div>
+
+  <section>
+    <label class="drop" id="drop">
+      <input type="file" id="fileInput" accept=".woff2,.woff,.ttf,.otf" multiple />
+      <strong>Drop Timeless font files here</strong> (or click to pick).<br />
+      Name them however they come, as long as the filename includes <em>grotesk</em>, <em>sans</em>, <em>serif</em> or <em>text</em>.
+      Files stay in your browser; nothing is uploaded.
+      <span class="loaded-list" id="loadedList"></span>
+    </label>
+  </section>
+
+  <section>
+    <h2 class="section">One family, four jobs</h2>
+    <p class="section-sub">Each style gets one clear job in Myra. Swapping the whole family together keeps it feeling like one brand, not four fonts.</p>
+    <div class="roles">
+      <div class="role grotesk">
+        <span class="tag">Grotesk · Brand</span>
+        <div class="specimen">Myra <em>go</em></div>
+        <p class="use">Wordmark, big numbers, key facts (dates, ages, counts). Tight and confident.</p>
+        <p class="replaces">Replaces: Newsreader on the logo</p>
+      </div>
+      <div class="role serif">
+        <span class="tag">Serif · Display</span>
+        <div class="specimen">Kyoto <em>in</em> bloom</div>
+        <p class="use">Page titles and experience names. Keeps Myra's editorial, travel-journal feel.</p>
+        <p class="replaces">Replaces: Newsreader (<code>font-serif</code>)</p>
+      </div>
+      <div class="role sans">
+        <span class="tag">Sans · Interface</span>
+        <div class="specimen">Discover</div>
+        <p class="use">Navigation, buttons, labels, metadata, forms. Quiet and readable at small sizes.</p>
+        <p class="replaces">Replaces: Inter (<code>font-sans</code>)</p>
+      </div>
+      <div class="role text">
+        <span class="tag">Text · Reading</span>
+        <div class="specimen">Slow mornings</div>
+        <p class="use">Long notes, trip stories, AI suggestions. Built for paragraphs, so it stays easy on the eyes.</p>
+        <p class="replaces">New role: today this is Inter</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section">Myra, re-set</h2>
+    <p class="section-sub">The Bucket List page and an experience detail page, using real Myra layouts and copy.</p>
+    <div class="frames">
+      <div>
+        <div class="frame">
+          <div class="frame-bar"><i></i><i></i><i></i></div>
+          <div class="app">
+            <div class="nav">
+              <span class="logo">Myra</span>
+              <span class="links"><span>DISCOVER</span><b>BUCKET LIST</b><span>中文</span></span>
+            </div>
+            <div class="body">
+              <div class="head">
+                <div>
+                  <p class="kicker">The Vision Board</p>
+                  <h1>Bucket List</h1>
+                </div>
+                <span class="btn">+ Experience</span>
+              </div>
+              <div class="card">
+                <span class="idx">01</span>
+                <div>
+                  <h3>Cherry blossoms along the Philosopher's Path</h3>
+                  <div class="meta">Kyoto, Japan · 3 days</div>
+                  <div class="chips"><span>spring</span><span>·</span><span>solo</span><span>friends</span></div>
+                </div>
+                <span class="age">&lt; 40</span>
+              </div>
+              <div class="card">
+                <span class="idx">02</span>
+                <div>
+                  <h3>Northern lights from a glass igloo</h3>
+                  <div class="meta">Rovaniemi, Finland · 4 days</div>
+                  <div class="chips"><span>winter</span><span>·</span><span>romantic</span></div>
+                </div>
+                <span class="age">&lt; 50</span>
+              </div>
+              <div class="card">
+                <span class="idx">03</span>
+                <div>
+                  <h3>Hike the Tour du Mont Blanc</h3>
+                  <div class="meta">Chamonix, France · 11 days</div>
+                  <div class="chips"><span>summer</span><span>·</span><span>friends</span></div>
+                </div>
+                <span class="age">&lt; 45</span>
+              </div>
+              <div class="card" style="border-bottom:1px solid var(--divider)">
+                <span class="idx">04</span>
+                <div>
+                  <h3>Slow mornings in a riad, Marrakech</h3>
+                  <div class="meta">Marrakech, Morocco · 5 days</div>
+                  <div class="chips"><span>autumn</span><span>·</span><span>solo</span></div>
+                </div>
+                <span class="age">60+</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="frame-cap">Bucket List: Serif for names, Sans for metadata and labels, Grotesk wordmark.</p>
+      </div>
+
+      <div>
+        <div class="frame">
+          <div class="frame-bar"><i></i><i></i><i></i></div>
+          <div class="app">
+            <div class="hero"><span>Kyoto · Spring</span></div>
+            <div class="detail">
+              <p class="kicker">Experience 01</p>
+              <h1>Cherry blossoms <em>along</em> the Philosopher's Path</h1>
+              <div class="meta">Kyoto, Japan · Best in early April</div>
+              <div class="read">
+                <p>Start at Ginkaku-ji before the tour buses arrive. The canal path is two kilometres of petals, stone and quiet temples.</p>
+                <div class="pull">"Go at 7am; by ten it belongs to everyone else."</div>
+                <p>End at Nanzen-ji's brick aqueduct, then walk down to Okazaki for matcha.</p>
+              </div>
+              <div class="facts">
+                <div><small>Best time</small><strong>Apr 1–10</strong></div>
+                <div><small>Days</small><strong>3</strong></div>
+                <div><small>Do by age</small><strong>&lt; 40</strong></div>
+                <div><small>With</small><strong>Solo · Friends</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="frame-cap">Detail: Text for reading, Serif italic for quotes, Grotesk for key facts.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section">What changing it would take</h2>
+    <p class="section-sub">If we adopt it, the code change is small, because Myra already sends every font through two variables.</p>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Step</th><th>What</th><th>Where</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Confirm the license allows commercial use and web embedding.</td><td>License file in the download</td></tr>
+          <tr><td>2</td><td>Add the variable <code>.woff2</code> files (roman + italic) to the repo.</td><td><code>src/app/fonts/</code></td></tr>
+          <tr><td>3</td><td>Load them with <code>next/font/local</code> instead of the Inter / Newsreader Google imports.</td><td><code>src/app/layout.tsx</code></td></tr>
+          <tr><td>4</td><td>Point <code>--font-serif</code> / <code>--font-sans</code> at Timeless; add <code>--font-grotesk</code> and <code>--font-text</code>.</td><td><code>src/app/globals.css</code></td></tr>
+          <tr><td>5</td><td>Use Grotesk on the logo + key facts, Text on long notes. Keep Noto Serif SC for Chinese.</td><td><code>nav.tsx</code>, detail page</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<script>
+  // Current vs Timeless toggle
+  const segButtons = document.querySelectorAll(".seg button");
+  segButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.body.classList.toggle("timeless", btn.dataset.set === "timeless");
+      segButtons.forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
+    });
+  });
+
+  // Variable weight slider
+  const wght = document.getElementById("wght");
+  const wghtOut = document.getElementById("wghtOut");
+  wght.addEventListener("input", () => {
+    document.documentElement.style.setProperty("--wght", wght.value);
+    wghtOut.textContent = wght.value;
+  });
+
+  // Load real Timeless files in the browser (FontFace API, nothing uploaded)
+  const ROLES = ["grotesk", "serif", "text", "sans"]; // "sans" last: "grotesk sans" filenames
+  const drop = document.getElementById("drop");
+  const fileInput = document.getElementById("fileInput");
+  const loadedList = document.getElementById("loadedList");
+  const fontStatus = document.getElementById("fontStatus");
+  const loadedRoles = new Set();
+
+  function roleFor(name) {
+    const n = name.toLowerCase();
+    return ROLES.find((r) => n.includes(r));
+  }
+
+  async function loadFiles(files) {
+    for (const file of files) {
+      const role = roleFor(file.name);
+      if (!role) continue;
+      const family = "Timeless " + role[0].toUpperCase() + role.slice(1);
+      const italic = /italic/i.test(file.name);
+      try {
+        const face = new FontFace(family, await file.arrayBuffer(), {
+          style: italic ? "italic" : "normal",
+          weight: "100 900",
+        });
+        await face.load();
+        document.fonts.add(face);
+        loadedRoles.add(role);
+        const tag = document.createElement("span");
+        tag.textContent = family + (italic ? " Italic" : "");
+        loadedList.appendChild(tag);
+      } catch (err) {
+        console.error("Could not load", file.name, err);
+      }
+    }
+    fontStatus.textContent = loadedRoles.size
+      ? "Real Timeless loaded: " + [...loadedRoles].join(", ")
+      : "Showing stand-ins: no Timeless files loaded";
+  }
+
+  fileInput.addEventListener("change", () => loadFiles(fileInput.files));
+  ["dragenter", "dragover"].forEach((ev) =>
+    drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add("over"); })
+  );
+  ["dragleave", "drop"].forEach((ev) =>
+    drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.remove("over"); })
+  );
+  drop.addEventListener("drop", (e) => loadFiles(e.dataTransfer.files));
+</script>
+</body>
+</html>
